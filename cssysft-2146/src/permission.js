@@ -1,16 +1,9 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import constantRoutes from './routes'
-import store from '@/store'
+import router from './router'
+import store from './store'
 import { ElMessage } from 'element-plus'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
-
-const router = createRouter({
-  history: createWebHistory("/"), //history模式使用HTML5模式
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
-})
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
@@ -74,5 +67,3 @@ router.afterEach(() => {
   // finish progress bar
   NProgress.done()
 })
-
-export default router;

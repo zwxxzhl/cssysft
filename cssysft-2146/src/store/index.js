@@ -1,16 +1,17 @@
 import { createStore } from 'vuex'
 
-let files = import.meta.glob('./modules/*.js')
-let modules = {};
+const files = import.meta.glob('./modules/*.js')
+let modules = {}
 for (const path in files) {
   files[path]().then((file) => {
-      modules[path.replace(/\.\/|modules\/|\.js/g, '')] = file.default
-      //加入namespaced:true，用于解决vuex命名冲突
-      modules[path.replace(/\.\/|modules\/|\.js/g, '')]['namespaced'] = true
-      console.log(modules);
+    modules[path.replace(/^\.\/modules\/(.*)\.\w+$/, '$1')] = file.default
+    modules[path.replace(/^\.\/modules\/(.*)\.\w+$/, '$1')]['namespaced'] = true
+    console.log(path, file)
+    console.log(modules)
   })
 }
-
-export default createStore({
-    modules
+const store = createStore({
+  modules
 })
+
+export default store

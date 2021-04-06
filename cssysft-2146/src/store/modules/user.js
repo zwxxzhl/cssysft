@@ -1,45 +1,101 @@
-let state = {
-  username: 'admin',
-  total: 0,
-  accessToken: 'admin',
-  avatar: '随意设置',
-  rolename: '随意设置',
-  userList: [{ name: 'admin', age: 29 }]
-},
-getters = {
-  accessToken: state => state.accessToken,
-  username: state => state.username,
-  rolename: state => state.rolename,
-  avatar: state => state.avatar,
-  userList: state => state.userList,
-  total: state => state.total
-},
-mutations = {
-  setAccessToken(state, accessToken) {// 设置accessToken
-    state.accessToken = accessToken
+const user = {
+  state() {
+    return {
+      token: '',
+      name: '',
+      avatar: '',
+      buttons: [],
+      roles: []
+    }
   },
-  setUsername(state, username) {// 设置用户名
-    state.username = username
+  getters: {
+    token: state => state.user.token,
+    avatar: state => state.user.avatar,
+    name: state => state.user.name,
+    buttons: state => state.user.buttons,
+    roles: state => state.user.roles
   },
-  setRolename(state, rolename) {// 设置权限名
-    state.rolename = rolename
+  mutations: {
+    SET_TOKEN: (state, token) => {
+      state.token = token
+    },
+    SET_NAME: (state, name) => {
+      state.name = name
+    },
+    SET_AVATAR: (state, avatar) => {
+      state.avatar = avatar
+    },
+    SET_BUTTONS: (state, buttons) => {
+      state.buttons = buttons
+    },
+    SET_ROLES: (state, roles) => {
+      state.roles = roles
+    }
   },
-  setAvatar(state, avatar) {// 设置头像
-    state.avatar = avatar
-  },
-  setUserList(state, list) {// 设置用户列表
-    state.userList = list
-  },
-  setTotal(state, total) {
-    state.total = total
+  actions: {
+    // 登录
+    Login({ commit }, userInfo) {debugger
+      const username = userInfo.username.trim()
+      return new Promise((resolve, reject) => {
+        login(username, userInfo.password).then(response => {
+         // debugger
+          const data = response.data
+          setToken(data.token)
+          commit('SET_TOKEN', data.token)
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 获取用户信息
+    async GetInfo({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        getInfo(state.token).then(response => {
+          const data = response.data
+          if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
+            commit('SET_ROLES', data.roles)
+          } else {
+            reject('getInfo: roles must be a non-null array !')
+          }
+
+          const buttonAuthList = []
+          data.permissionValueList.forEach(button => {
+            buttonAuthList.push(button)
+          })
+
+          commit('SET_NAME', data.name)
+          commit('SET_AVATAR', data.avatar)
+          commit('SET_BUTTONS', buttonAuthList)
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 后台登出
+    LogOut({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        logout(state.token).then(() => {
+          commit('SET_TOKEN', '')// 清空前端vuex中存储的数据
+          commit('SET_ROLES', [])// 清空前端vuex中存储的数据
+          commit('SET_BUTTONS', [])
+          removeToken()// 清空cookie
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 前端登出
+    FedLogOut({ commit }) {
+      return new Promise(resolve => {
+        commit('SET_TOKEN', '')
+        removeToken()
+        resolve()
+      })
+    }
   }
-},
-actions = {
-  testActions({ commit }, num) {
-    setTimeout(() => {
-      commit('setTotal', num)
-      console.log(num)
-    }, 2000)
-  }
-};
-export default { state, getters, mutations, actions }
+}
+
+export default user
