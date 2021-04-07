@@ -14,8 +14,4 @@ import { hasBtnPermission } from './utils/permission' // button permission
 let app = createApp(App)
 app.config.globalProperties.hasPerm = hasBtnPermission
 
-app
-.use(router)
-.use(store)
-.use(ElementPlus, {locale})
-.mount('#app')
+app.use(router).use(store).use(ElementPlus, {locale}).mount('#app')
