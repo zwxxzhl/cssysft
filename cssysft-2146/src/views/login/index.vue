@@ -89,7 +89,7 @@ export default {
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
-        if (valid) {debugger
+        if (valid) {
          // debugger
           this.loading = true
           this.$store.dispatch('user/Login', this.loginForm).then(() => {

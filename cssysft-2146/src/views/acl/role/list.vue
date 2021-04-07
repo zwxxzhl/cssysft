@@ -34,16 +34,15 @@
         label="序号"
         width="70"
         align="center">
-        <template slot-scope="scope">
+        <template #default="scope">
           {{ (page - 1) * limit + scope.$index + 1 }}
         </template>
       </el-table-column>
 
       <el-table-column prop="roleName" label="角色名称" />
 
-
       <el-table-column label="操作" width="200" align="center">
-        <template slot-scope="scope">
+        <template #default="scope">
           <router-link :to="'/acl/role/distribution/'+scope.row.id">
             <el-button type="info" size="mini" icon="el-icon-info" v-if="hasPerm('role.acl')"></el-button>
           </router-link>

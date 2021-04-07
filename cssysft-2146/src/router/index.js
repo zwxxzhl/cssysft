@@ -30,26 +30,26 @@ router.beforeEach(async(to, from, next) => {debugger
       NProgress.done()
     } else {
       // determine whether the user has obtained his permission roles through getInfo
-      const hasRoles = store.getters.roles && store.getters.roles.length > 0
+      const hasRoles = store.getters['user/roles'] && store.getters['user/roles'].length > 0
       if (hasRoles) {
         next()
       } else {
         try {debugger
           // get user info
           // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
-          const { roles } = await store.dispatch('GetInfo')
+          const { roles } = await store.dispatch('user/GetInfo')
 
           // generate accessible routes map based on roles
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
 
           // dynamically add accessible routes
-
-          router.addRoutes(accessRoutes)
+          debugger
+          router.addRoute([accessRoutes[0]])
 
           next({ ...to, replace: true })
         } catch (error) {
           // remove token and go to login page to re-login
-          await store.dispatch('FedLogOut')
+          await store.dispatch('user/FedLogOut')
           ElMessage.error(error || 'Has Error')
           next(`/login?redirect=${to.path}`)
           NProgress.done()

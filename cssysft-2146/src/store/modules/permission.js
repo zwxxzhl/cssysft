@@ -27,15 +27,13 @@ function filterAsyncRouter(asyncRouterMap) { // 遍历后台传来的路由字�
 }
 
 const permission = {
-  state() {
-    return {
-      routes: [],
-      addRoutes: []
-    }
-  },
+  state: () => ({
+    routes: [],
+    addRoutes: []
+  }),
   getters: {
-    routes: state => state.permission.routes,
-    addRoutes: state => state.permission.addRoutes
+    routes: state => state.routes,
+    addRoutes: state => state.addRoutes
   },
   mutations: {
     SET_ROUTES: (state, routes) => {
@@ -44,7 +42,7 @@ const permission = {
     }
   },
   actions: {
-    async generateRoutes({ commit }, roles) {debugger
+    async generateRoutes({ commit }, roles) {
       // 取后台路由
       const asyncRouter = await getMenu()
 

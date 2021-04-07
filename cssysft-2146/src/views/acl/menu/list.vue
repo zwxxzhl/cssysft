@@ -59,7 +59,7 @@
       </el-table-column>
       <el-table-column
         label="操作">
-        <template slot-scope="scope">
+        <template #default="scope">
           <!-- v-if="node.level == 1 || node.level == 2" v-if="node.level == 3" v-if="node.level == 4"-->
           <el-button
             v-if="(scope.row.level == 1 || scope.row.level == 2) && hasPerm('permission.add')"
@@ -94,7 +94,7 @@
       </el-table-column>
     </el-table>
 
-    <el-dialog :visible.sync="dialogFormVisible" :title="dialogFormValue">
+    <el-dialog v-model="dialogFormVisible" :title="dialogFormValue">
       <el-form ref="menu" :model="menu" :rules="menuValidateRules" label-width="120px">
         <el-form-item label="菜单名称" prop="name">
           <el-input v-model="menu.name"/>
@@ -107,13 +107,15 @@
         </el-form-item>
 
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="restData()">取 消</el-button>
-        <el-button type="primary" @click="append()">确 定</el-button>
-      </div>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="restData()">取 消</el-button>
+          <el-button type="primary" @click="append()">确 定</el-button>
+        </div>
+      </template>
     </el-dialog>
     <!-- 添加功能的窗口 -->
-    <el-dialog :visible.sync="dialogPermissionVisible" title="添加功能">
+    <el-dialog v-model="dialogPermissionVisible" title="添加功能">
       <el-form ref="permission" :model="permission" :rules="permissionValidateRules" label-width="120px">
         <el-form-item label="功能名称" prop="name">
           <el-input v-model="permission.name"/>
@@ -127,12 +129,14 @@
         <el-form-item label="功能权限值" prop="permissionValue">
           <el-input v-model="permission.permissionValue"/>
         </el-form-item>
-
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="restData()">取 消</el-button>
-        <el-button type="primary" @click="appendPermission()">确 定</el-button>
-      </div>
+
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="restData()">取 消</el-button>
+          <el-button type="primary" @click="appendPermission()">确 定</el-button>
+        </div>
+      </template>
     </el-dialog>
 
   </div>

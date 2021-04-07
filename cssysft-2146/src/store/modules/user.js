@@ -1,19 +1,20 @@
+import { login, logout, getInfo } from '@/api/login'
+import { getToken, setToken, removeToken } from '@/utils/auth'
+
 const user = {
-  state() {
-    return {
-      token: '',
-      name: '',
-      avatar: '',
-      buttons: [],
-      roles: []
-    }
-  },
+  state: () => ({
+    token: '',
+    name: '',
+    avatar: '',
+    buttons: [],
+    roles: []
+  }),
   getters: {
-    token: state => state.user.token,
-    avatar: state => state.user.avatar,
-    name: state => state.user.name,
-    buttons: state => state.user.buttons,
-    roles: state => state.user.roles
+    token: state => state.token,
+    avatar: state => state.avatar,
+    name: state => state.name,
+    buttons: state => state.buttons,
+    roles: state => state.roles
   },
   mutations: {
     SET_TOKEN: (state, token) => {
@@ -34,11 +35,10 @@ const user = {
   },
   actions: {
     // 登录
-    Login({ commit }, userInfo) {debugger
+    Login({ commit }, userInfo) {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
         login(username, userInfo.password).then(response => {
-         // debugger
           const data = response.data
           setToken(data.token)
           commit('SET_TOKEN', data.token)
