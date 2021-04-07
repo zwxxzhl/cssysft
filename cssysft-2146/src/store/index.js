@@ -13,5 +13,6 @@ for (const path in files) {
 const store = createStore({
   modules
 })
+console.log(store);
 
 export default store
