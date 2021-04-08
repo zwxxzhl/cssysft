@@ -13,32 +13,31 @@
 import Layout from '@/views/layout/Layout.vue'
 
 export const constantRoutes = [
-    {
-      path: '/',
-      name: 'Layout',
-      component: Layout,
-      redirect: '/dashboard',
-      children: [
-        {
-            path: '/dashboard',
-            name: 'Dashboard',
-            component: () => import('@/views/dashboard/index.vue'),
-            meta: { title: '项目管理首页', icon: 'dashboard' }
-        },
-        {
-          path: '/hello',
-          name: 'HelloWorld',
-          component: () => import('@/components/HelloWorld.vue')
-        },
-        {
-          path: '/hel',
-          name: 'HelloWorld',
-          component: () => import('@/components/HelloWorld.vue')
-        }
-      ]
-    },
-  { path: '/login', component: () => import('@/views/login/index.vue'), hidden: true },
-  { path: '/404', component: () => import('@/views/404.vue'), hidden: true },
+  {
+    path: '/',
+    name: 'Layout',
+    component: Layout,
+    redirect: '/dashboard',
+    meta: { title: '项目管理', icon: '' },
+    children: [
+      {
+        path: '/dashboard',
+        name: 'Dashboard',
+        component: () => import('@/views/dashboard/index.vue'),
+        meta: { title: '管理页', icon: '' }
+      },
+    ]
+  },
+  {
+    path: '/login',
+    component: () => import('@/views/login/index.vue'),
+    hidden: true
+  },
+  {
+    path: '/404',
+    component: () => import('@/views/404.vue'),
+    hidden: true
+  },
 
   // // 首页
   // {

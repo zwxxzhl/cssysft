@@ -2,21 +2,25 @@ import { constantRoutes } from '@/router/routes'
 import { getMenu } from '@/api/login'
 import Layout from '@/views/layout/Layout.vue'
 
-function filterAsyncRouter(asyncRouterMap) { // 遍历后台传来的路由字符串，转换为组件对象
+function filterAsyncRouter(asyncRouterMap, path) { // 遍历后台传来的路由字符串，转换为组件对象
   try {
-    const accessedRouters = asyncRouterMap.filter(route => {
+    const accessedRouters = asyncRouterMap.filter(route => {debugger
       if (route.component) {
         if (route.component === 'Layout') { // Layout组件特殊处理
           route.component = Layout
         } else {
           const component = route.component
-          route.component = resolve => {
-            require(['@/views' + component + '.vue'], resolve)
-          }
+          let dir = '../../views' + component + '.vue';
+          let file = import.meta.globEager(dir);
+          route.component = import.meta.globEager('../../views' + component + '.vue');
+          // resolve => {
+          //   require(['@/views' + component + '.vue'], resolve)
+          // }
         }
+        path && (route.path = path + '/' + route.path)
       }
       if (route.children && route.children.length) {
-        route.children = filterAsyncRouter(route.children)
+        route.children = filterAsyncRouter(route.children, route.path)
       }
       return true
     })
@@ -50,8 +54,8 @@ const permission = {
         const tmp = asyncRouter.data.permissionList
         const accessedRoutes = filterAsyncRouter(tmp)
 
-        commit('SET_ROUTES', accessedRoutes)
-        resolve(accessedRoutes)
+        commit('SET_ROUTES', accessedRoutes[0])
+        resolve(accessedRoutes[0])
       })
     }
   }

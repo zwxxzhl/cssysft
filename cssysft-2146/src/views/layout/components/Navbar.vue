@@ -1,7 +1,9 @@
 <template>
-  <el-menu class="navbar" mode="horizontal">
-    <hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened" class="hamburger-container"/>
-    <breadcrumb />
+  <div class="navbar">
+    <div style="display: flex;">
+      <hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened"/>
+      <breadcrumb></breadcrumb>
+    </div>
 
     <el-dropdown class="avatar-container" trigger="click">
       <div class="avatar-wrapper">
@@ -17,32 +19,32 @@
         </el-dropdown-menu>
       </template>
     </el-dropdown>
-    <span>王小虎</span>
-  </el-menu>
+  </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb'
-import Hamburger from '@/components/Hamburger'
+import Hamburger from '@/components/Hamburger/index.vue'
+import Breadcrumb from '@/components/Breadcrumb/index.vue'
 
 export default {
+  name: 'Navbar',
   components: {
-    Breadcrumb,
-    Hamburger
+    Hamburger,
+    Breadcrumb
   },
   computed: {
-    ...mapGetters([
-      'sidebar',
-      'avatar'
-    ])
+    ...mapGetters({
+      sidebar: 'app/sidebar',
+      avatar: 'user/avatar'
+    })
   },
   methods: {
     toggleSideBar() {
-      this.$store.dispatch('ToggleSideBar')
+      this.$store.dispatch('app/ToggleSideBar')
     },
     logout() {
-      this.$store.dispatch('LogOut').then(() => {
+      this.$store.dispatch('user/LogOut').then(() => {
         location.reload() // 为了重新实例化vue-router对象 避免bug
       })
     }
@@ -55,6 +57,8 @@ export default {
   height: 50px;
   line-height: 50px;
   border-radius: 0px !important;
+  display: flex;
+  justify-content: space-between;
   .hamburger-container {
     line-height: 58px;
     height: 50px;

@@ -6,17 +6,8 @@
     </el-aside>
 
     <el-container>
-      <el-header style="text-align: right; font-size: 12px">
-        <el-dropdown>
-          <i class="el-icon-setting" style="margin-right: 15px"></i>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item>主页</el-dropdown-item>
-              <el-dropdown-item>登出</el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
-        <span>王小虎</span>
+      <el-header class="header-layout">
+        <navbar></navbar>
       </el-header>
 
       <el-main>
@@ -31,16 +22,28 @@
 </template>
 
 <script>
-import MenuTree from './components/MenuTree.vue';
+import { mapGetters } from "vuex";
+import MenuTree from "./components/MenuTree.vue";
+import Navbar from "./components/Navbar.vue";
+
 export default {
-  components: { MenuTree },
   name: "Layout",
+  components: {
+    MenuTree,
+    Navbar,
+  },
+  computed: {
+    ...mapGetters({
+      menuRoutes: "permission/routes",
+      sidebar: "app/sidebar",
+    }),
+  },
   data() {
     const item = {
       date: "2016-05-02",
       name: "王小虎",
       address: "上海市普陀区金沙江路 1518 弄",
-    }
+    };
     const menuRoutes = [
       {
         id: "1",
@@ -52,40 +55,39 @@ export default {
             id: "1-1",
             title: "明细1",
             icon: "",
-            path: '/hello'
+            path: "/hello",
           },
           {
             id: "1-2",
             title: "明细2",
             icon: "el-icon-message",
-            path: '/hel',
+            path: "/hel",
             children: [
               {
                 id: "1-2-1",
                 title: "明细3",
                 icon: "",
-                path: '/hello'
+                path: "/hello",
               },
               {
                 id: "1-2-2",
                 title: "明细4",
                 icon: "el-icon-message",
-                path: '/hel'
+                path: "/hel",
               },
-            ]
-          }
+            ],
+          },
         ],
       },
       {
         id: "2",
         title: "测试2",
         icon: "el-icon-message",
-        path: "/login"
-      }
-    ]
+        path: "/login",
+      },
+    ];
     return {
-      tableData: Array(20).fill(item),
-      menuRoutes
+      tableData: Array(20).fill(item)
     };
   },
 };
@@ -93,9 +95,10 @@ export default {
 
 <style>
 .el-header {
-  background-color: #b3c0d1;
+  /* background-color: #b3c0d1; */
   color: #333;
   line-height: 60px;
+  border-bottom: 1px solid #b3c0d1;
 }
 
 .el-aside {

@@ -9,7 +9,7 @@ import router from '@/router'
 import store from '@/store'
 
 // import '@/permission' // permission control
-import { hasBtnPermission } from './utils/permission' // button permission
+import { hasBtnPermission } from '@/utils/permission' // button permission
 
 let app = createApp(App)
 app.config.globalProperties.hasPerm = hasBtnPermission
