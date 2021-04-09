@@ -4,18 +4,13 @@ import Layout from '@/views/layout/Layout.vue'
 
 function filterAsyncRouter(asyncRouterMap, path) { // 遍历后台传来的路由字符串，转换为组件对象
   try {
-    const accessedRouters = asyncRouterMap.filter(route => {debugger
+    const accessedRouters = asyncRouterMap.filter(route => {
       if (route.component) {
         if (route.component === 'Layout') { // Layout组件特殊处理
           route.component = Layout
         } else {
           const component = route.component
-          let dir = '../../views' + component + '.vue';
-          let file = import.meta.globEager(dir);
-          route.component = import.meta.globEager('../../views' + component + '.vue');
-          // resolve => {
-          //   require(['@/views' + component + '.vue'], resolve)
-          // }
+          route.component = () => import(`../../views${component}.vue`)
         }
         path && (route.path = path + '/' + route.path)
       }
