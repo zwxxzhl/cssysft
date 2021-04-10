@@ -16,6 +16,7 @@ NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 const whiteList = ['/login', '/auth-redirect'] // no redirect whitelist
 
+let flag = 0
 router.beforeEach(async(to, from, next) => {
   // start progress bar
   NProgress.start()
@@ -31,22 +32,16 @@ router.beforeEach(async(to, from, next) => {
     } else {
       // determine whether the user has obtained his permission roles through getInfo
       const hasRoles = store.getters['user/roles'] && store.getters['user/roles'].length > 0
-      if (hasRoles) {
+      // flog handle refresh
+      if (flag > 0 && hasRoles) {
         next()
       } else {
         try {
+          flag ++
           // get user info
-          // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
-          const { roles } = await store.dispatch('user/GetInfo')
-          
+          await store.dispatch('user/GetInfo')
           // generate accessible routes map based on roles
-          const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
-          
-          // dynamically add accessible routes
-          
-          router.addRoute(accessRoutes)
-          console.log('路由');
-          console.log(accessRoutes);
+          await store.dispatch('permission/generateRoutes', router)
 
           next({ ...to, replace: true })
         } catch (error) {

@@ -1,7 +1,7 @@
 
 <template>
   <el-container style="height: 100%; border: 1px solid #eee">
-    <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
+    <el-aside width="180px" style="background-color: rgb(238, 241, 246)">
       <menu-tree :menuRoutes="menuRoutes"></menu-tree>
     </el-aside>
 
@@ -11,11 +11,7 @@
       </el-header>
 
       <el-main>
-        <router-view v-slot="{ Component }">
-          <transition name="fade-transform" mode="out-in">
-            <component :is="Component" />
-          </transition>
-        </router-view>
+        <router-view></router-view>
       </el-main>
     </el-container>
   </el-container>

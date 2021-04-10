@@ -124,8 +124,7 @@ export default {
     // 根据id查询记录
     fetchDataById(id) {
       userApi.getById(id).then(response => {
-       // debugger
-        this.user = response.data.item
+        this.user = response.data
       })
     }
 

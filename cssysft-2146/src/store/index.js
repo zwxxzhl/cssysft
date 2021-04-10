@@ -1,4 +1,5 @@
 import { createStore } from 'vuex'
+import createPersistedState from 'vuex-persistedstate'
 
 const files = import.meta.globEager('./modules/*.js')
 
@@ -10,7 +11,17 @@ for (const path in files) {
 console.log(modules)
 
 const store = createStore({
-  modules
+  modules,
+  plugins: [createPersistedState({
+    storage: window.sessionStorage,
+    reducer(val) {
+      return {
+        app: val.user,
+        permission: val.permission,
+        user: val.user
+      }
+    }
+  })]
 })
 
 export default store

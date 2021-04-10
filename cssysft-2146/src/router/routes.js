@@ -10,7 +10,7 @@
     icon: 'svg-name'             the icon show in the sidebar,
   }
 **/
-import Layout from '@/views/layout/Layout.vue'
+import Layout from '../views/layout/Layout.vue'
 
 export const constantRoutes = [
   {
@@ -23,19 +23,19 @@ export const constantRoutes = [
       {
         path: '/dashboard',
         name: 'Dashboard',
-        component: () => import('@/views/dashboard/index.vue'),
+        component: () => import('../views/dashboard/index.vue'),
         meta: { title: '管理页', icon: '' }
       },
     ]
   },
   {
     path: '/login',
-    component: () => import('@/views/login/index.vue'),
+    component: () => import('../views/login/index.vue'),
     hidden: true
   },
   {
     path: '/404',
-    component: () => import('@/views/404.vue'),
+    component: () => import('../views/404.vue'),
     hidden: true
   },
 

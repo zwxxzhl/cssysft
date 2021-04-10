@@ -2,7 +2,7 @@ import { constantRoutes } from '@/router/routes'
 import { getMenu } from '@/api/login'
 import Layout from '@/views/layout/Layout.vue'
 
-function filterAsyncRouter(asyncRouterMap, path) { // 遍历后台传来的路由字符串，转换为组件对象
+function filterAsyncRouter(asyncRouterMap, router, routeParent) { // 遍历后台传来的路由字符串，转换为组件对象
   try {
     const accessedRouters = asyncRouterMap.filter(route => {
       if (route.component) {
@@ -12,10 +12,11 @@ function filterAsyncRouter(asyncRouterMap, path) { // 遍历后台传来的路�
           const component = route.component
           route.component = () => import(`../../views${component}.vue`)
         }
-        path && (route.path = path + '/' + route.path)
+        routeParent && (route.path = routeParent.path + '/' + route.path)
+        routeParent && router.addRoute(routeParent.name, route) || router.addRoute(route)
       }
       if (route.children && route.children.length) {
-        route.children = filterAsyncRouter(route.children, route.path)
+        route.children = filterAsyncRouter(route.children, router, route)
       }
       return true
     })
@@ -41,14 +42,13 @@ const permission = {
     }
   },
   actions: {
-    async generateRoutes({ commit }, roles) {
+    async generateRoutes({ commit }, router) {
       // 取后台路由
       const asyncRouter = await getMenu()
 
       return new Promise(resolve => {
         const tmp = asyncRouter.data.permissionList
-        const accessedRoutes = filterAsyncRouter(tmp)
-
+        const accessedRoutes = filterAsyncRouter([tmp[0]], router)
         commit('SET_ROUTES', accessedRoutes[0])
         resolve(accessedRoutes[0])
       })

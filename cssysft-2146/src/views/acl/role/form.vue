@@ -50,7 +50,6 @@ export default {
 
     // 表单初始化
     init() {
-      debugger
       if (this.$route.params && this.$route.params.id) {
         const id = this.$route.params.id
         this.fetchDataById(id)
