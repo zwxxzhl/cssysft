@@ -1,10 +1,13 @@
 package com.atguigu.aclservice.controller;
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.atguigu.aclservice.entity.User;
 import com.atguigu.aclservice.service.RoleService;
 import com.atguigu.aclservice.service.UserService;
-import com.atguigu.utils.utils.*;
+import com.atguigu.utils.utils.MD5;
+import com.atguigu.utils.utils.R;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -14,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -63,6 +65,14 @@ public class UserController {
         user.setPassword(MD5.encrypt(user.getPassword()));
         userService.save(user);
         return R.ok();
+    }
+
+    @ApiOperation(value = "根据Id获取用户数据")
+    @GetMapping("/get/{userId}")
+    public R get(@PathVariable String userId) {
+        User user = userService.getById(userId);
+        return R.ok().data(JSON.parseObject(JSON.toJSONString(user),
+                new TypeReference<Map<String,Object>>(){}));
     }
 
     @ApiOperation(value = "根据用户获取角色数据")

@@ -1,6 +1,8 @@
 package com.atguigu.aclservice.controller;
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.atguigu.aclservice.entity.Role;
 import com.atguigu.aclservice.service.RoleService;
 import com.atguigu.utils.utils.R;
@@ -12,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -53,6 +55,14 @@ public class RoleController {
     public R save(@RequestBody Role role) {
         roleService.save(role);
         return R.ok();
+    }
+
+    @ApiOperation(value = "根据Id获取用户数据")
+    @GetMapping("/get/{roleId}")
+    public R get(@PathVariable String roleId) {
+        Role role = roleService.getById(roleId);
+        return R.ok().data(JSON.parseObject(JSON.toJSONString(role),
+                new TypeReference<Map<String,Object>>(){}));
     }
 }
 
