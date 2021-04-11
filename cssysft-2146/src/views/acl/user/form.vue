@@ -49,28 +49,16 @@ export default {
       }
     }
   },
-
-  // 监听器
   watch: {
     $route(to, from) {
-      console.log('路由变化......')
-      console.log(to)
-      console.log(from)
       this.init()
     }
   },
-
-  // 生命周期方法（在路由切换，组件不变的情况下不会被调用）
   created() {
-    console.log('form created ......')
     this.init()
   },
-
   methods: {
-
-    // 表单初始化
     init() {
-     // debugger
       if (this.$route.params && this.$route.params.id) {
         const id = this.$route.params.id
         this.fetchDataById(id)
@@ -79,7 +67,6 @@ export default {
         this.user = { ...defaultForm }
       }
     },
-
     saveOrUpdate() {
       this.$refs.user.validate(valid => {
         if (valid) {
@@ -92,8 +79,6 @@ export default {
         }
       })
     },
-
-    // 新增讲师
     saveData() {
       userApi.save(this.user).then(response => {
         // debugger
@@ -106,10 +91,7 @@ export default {
         }
       })
     },
-
-    // 根据id更新记录
     updateData() {
-      // teacher数据的获取
       userApi.updateById(this.user).then(response => {
         if (response.success) {
           this.$message({
@@ -120,8 +102,6 @@ export default {
         }
       })
     },
-
-    // 根据id查询记录
     fetchDataById(id) {
       userApi.getById(id).then(response => {
         this.user = response.data

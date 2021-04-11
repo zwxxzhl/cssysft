@@ -1,6 +1,6 @@
 <template>
-  <div class="containers" ref="content">
-    <div class="canvas" ref="canvas"></div>
+  <div class="containers" ref="content" style="height: 100%">
+    <div class="canvas" ref="canvas" style="height: 100%"></div>
     <div id="js-properties-panel" class="panel"></div>
   </div>
 </template>
@@ -48,8 +48,10 @@ export default {
         translate: ["value", customTranslate],
       };
 
+      this.canvas = this.$refs.canvas;
+
       bpmnModeler = new BpmnModeler({
-        container: this.$refs.canvas,
+        container: this.canvas,
         // 添加控制板(右边属性配置栏部分)
         propertiesPanel: {
           parent: "#js-properties-panel",
@@ -79,20 +81,22 @@ export default {
 };
 </script>
 
-<style scoped>
+<style rel="stylesheet/scss" lang="scss" scoped>
 .containers {
-  /* position: absolute; */
   display: flex;
   background-color: #ffffff;
   width: 100%;
   height: 100%;
+  position: page;
 }
 .canvas {
   width: 100%;
   height: 100%;
+  .properties-panel-parent {
+    display: none;
+  }
 }
 .panel {
-  /* position: absolute; */
   right: 0;
   top: 0;
   width: 300px;

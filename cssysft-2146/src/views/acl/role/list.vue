@@ -86,13 +86,12 @@ export default {
 
   // 生命周期函数：内存准备完毕，页面尚未渲染
   created() {
-    console.log('list created......')
     this.fetchData()
   },
 
   // 生命周期函数：内存准备完毕，页面渲染成功
   mounted() {
-    console.log('list mounted......')
+    
   },
 
   methods: {
@@ -110,7 +109,6 @@ export default {
 
     // 加载讲师列表数据
     fetchData(page = 1) {
-      console.log('翻页。。。' + page)
       // 异步获取远程数据（ajax）
       this.page = page
 
