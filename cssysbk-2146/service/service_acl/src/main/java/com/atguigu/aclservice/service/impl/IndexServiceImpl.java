@@ -68,6 +68,7 @@ public class IndexServiceImpl implements IndexService {
      * @param username
      * @return
      */
+    @Override
     public List<JSONObject> getMenu(String username) {
         User user = userService.selectByUsername(username);
 

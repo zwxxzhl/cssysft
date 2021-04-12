@@ -27,11 +27,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         //根据用户名查询数据
         User user = userService.selectByUsername(username);
         //判断
-        if(user == null) {
+        if (user == null) {
             throw new UsernameNotFoundException("用户不存在");
         }
         com.atguigu.security.entity.User curUser = new com.atguigu.security.entity.User();
-        BeanUtils.copyProperties(user,curUser);
+        BeanUtils.copyProperties(user, curUser);
 
         //根据用户查询用户权限列表
         List<String> permissionValueList = permissionService.selectPermissionValueByUserId(user.getId());

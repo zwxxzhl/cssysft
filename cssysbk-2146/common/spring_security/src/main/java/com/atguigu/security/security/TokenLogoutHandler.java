@@ -8,6 +8,7 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 //退出处理器
 public class TokenLogoutHandler implements LogoutHandler {
     private TokenManager tokenManager;

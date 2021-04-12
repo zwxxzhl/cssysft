@@ -1,12 +1,20 @@
 package com.atguigu.utils.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
 import lombok.Data;
 import java.util.HashMap;
 import java.util.Map;
 
-//统一返回结果的类
 @Data
 public class R {
+
+    public static final String ITEMS = "items";
+    public static final String TOTAL = "total";
+    public static final String DESC = "desc";
 
     private Boolean success;
 
@@ -14,12 +22,13 @@ public class R {
 
     private String message;
 
-    private Map<String, Object> data = new HashMap<String, Object>();
+    private Map<String, Object> data = new HashMap<>();
 
-    //把构造方法私有
+    /**
+     * 构造方法私有
+     */
     private R() {}
 
-    //成功静态方法
     public static R ok() {
         R r = new R();
         r.setSuccess(true);
@@ -28,7 +37,6 @@ public class R {
         return r;
     }
 
-    //失败静态方法
     public static R error() {
         R r = new R();
         r.setSuccess(false);
@@ -57,8 +65,13 @@ public class R {
         return this;
     }
 
-    public R data(Map<String, Object> map){
-        this.setData(map);
+    public R data(Object object){
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            this.setData(mapper.readValue(mapper.writeValueAsString(object), new TypeReference<Map<String, Object>>() {}));
+        } catch (JsonProcessingException e) {
+            this.setData(new HashMap<>(1));
+        }
         return this;
     }
 }
