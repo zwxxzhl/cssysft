@@ -1,0 +1,61 @@
+# 服务端口
+server:
+  port: 8009
+
+# 服务名
+spring:
+  application:
+    name: service-acl
+
+  # mysql数据库连接
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/acldb?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+    username: root
+    password: Mysql_123456
+
+  # redis连接
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 0
+    timeout: 1800000
+    lettuce:
+      pool:
+        max-active: 20
+        max-wait: -1
+        # 最大阻塞等待时间(负数表示没限制)
+        max-idle: 5
+        # 最小空闲
+        min-idle: 0
+
+  # nacos服务地址
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+
+  # 返回json的全局时间格式
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+  # activiti配置
+  activiti:
+    # 创建历史表，记录所有数据
+    history-level: full
+    db-history-used: true
+    # 自动部署验证设置:true-开启（默认）、false-关闭 【自动检测resource下的bpmn文件部署】
+    check-process-definitions: false
+    # 项目启动就激活AsyncExecutor,异步 true  false 关闭 （切记关闭，否则启动就不断的刷查询sql）
+    async-executor-activate: false
+# 配置mapper xml文件的路径
+mybatis-plus:
+  mapper-locations: classpath:com/atguigu/aclservice/mapper/xml/*.xml
+  configuration:
+    # mybatis日志
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# bpmn上传后预览映射路径： linux: file:/root/Activiti/
+bpmn-path-mapping: D:\\WangJianIDEA_Test\\activiti-imooc\\src\\main\\resources\\resources\\bpmn\\
+
