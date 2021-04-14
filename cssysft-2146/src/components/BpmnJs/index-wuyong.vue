@@ -12,27 +12,19 @@ import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn-codes.css";
 /* 左边工具栏内各个工具的样式，不添加该样式，左边工具栏内不显示任何工具 */
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css";
+
 /*右边工具栏样式*/
 import "bpmn-js-properties-panel/dist/assets/bpmn-js-properties-panel.css";
 
 // 导入模型图
-import Modeler from "bpmn-js/lib/Modeler";
-
-// 右边工具栏属性模块
+import BpmnModeler from "bpmn-js/lib/Modeler";
 import propertiesPanelModule from "bpmn-js-properties-panel";
-// 左边工具栏配置模块
-import propertiesProviderModule from "bpmn-js-properties-panel/lib/provider/camunda";
-// 扩展activiti描述功能模块
-import camundaModdleDescriptor from "camunda-bpmn-moddle/resources/camunda";
-
-//整合activiti
-// import activitiModdleDescriptor from "./resources/activiti.json";
-
-//汉化
-import customTranslate from "./customTranslate/customTranslate";
+import propertiesProviderModule from "./resources/properties-panel/provider/activiti";
+import customTranslate from "./resources/customTranslate/customTranslate";
+import customControlsModule from "./resources/customControls";
+import activitiModdleDescriptor from "./resources/activiti.json";
 
 import { xmlStr } from "./xmlStr.js";
-import tools from "./tools.js";
 
 let bpmnModeler = null;
 
@@ -40,7 +32,6 @@ export default {
   name: "BpmnJs",
   data() {
     return {
-      tools: null,
       canvas: null,
     };
   },
@@ -48,7 +39,6 @@ export default {
     this.initBpmnJs();
   },
   methods: {
-    ...tools,
     initBpmnJs() {
       let customTranslateModule = {
         translate: ["value", customTranslate],
@@ -56,23 +46,19 @@ export default {
 
       this.canvas = this.$refs.canvas;
 
-      bpmnModeler = new Modeler({
+      bpmnModeler = new BpmnModeler({
         container: this.canvas,
-        // 添加控制板(右边属性配置栏部分)
         propertiesPanel: {
           parent: "#js-properties-panel",
         },
         additionalModules: [
-          //左边工具栏及节点
           propertiesProviderModule,
-          //右边工具栏
           propertiesPanelModule,
-          //汉化
+          customControlsModule,
           customTranslateModule,
         ],
         moddleExtensions: {
-          //模块扩展，扩展activiti描述
-          camunda: camundaModdleDescriptor,
+          camunda: activitiModdleDescriptor,
         },
       });
       this.createNewDiagram();

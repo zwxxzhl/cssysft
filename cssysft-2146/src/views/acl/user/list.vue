@@ -102,10 +102,21 @@
     />
 
     <!-- 添加功能的窗口 -->
-    <el-dialog v-model="taskVisible" title="添加任务" width="80%" top="1vh" @opened="onOpenTask">
-      <bpmn-js ref="refBpmnJs"></bpmn-js>
+    <el-dialog
+      v-model="taskVisible"
+      title="添加任务"
+      width="80%"
+      top="1vh"
+      @opened="onOpenTask"
+    >
+      <div ref="refDialogDiv" class="dialog-layout">
+        <bpmn-js ref="refBpmnJs"></bpmn-js>
+      </div>
       <template #footer>
         <div class="dialog-footer">
+          <el-button @click="onExport"> 导 出 </el-button>
+          <el-button @click="onForward"> 前 进 </el-button>
+          <el-button @click="onRetreat"> 撤 销 </el-button>
           <el-button @click="restData()"> 取 消 </el-button>
           <el-button type="primary" @click="appendPermission()">
             确 定
@@ -117,6 +128,8 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 import userApi from "@/api/acl/user";
 import BpmnJs from "@/components/BpmnJs/index.vue";
 
@@ -137,13 +150,27 @@ export default {
       taskVisible: false,
     };
   },
+  computed: {
+    ...mapGetters({
+      bpmnModeler: "app/bpmnModeler",
+    }),
+  },
   created() {
     this.fetchData();
   },
   mounted() {},
   methods: {
-    onOpenTask(){
-      this.$refs.refBpmnJs.canvas.style.height = parent.innerHeight * 0.7 + "px";
+    onExport() {
+      this.$refs.refBpmnJs.export();
+    },
+    onForward() {
+      this.$refs.refBpmnJs.bpmnModelerCopy.get("commandStack").redo();
+    },
+    onRetreat() {
+      this.$refs.refBpmnJs.bpmnModelerCopy.get("commandStack").undo();
+    },
+    onOpenTask() {
+      this.$refs.refDialogDiv.style.height = parent.innerHeight * 0.7 + "px";
     },
     addTask() {
       this.taskVisible = true;
@@ -267,5 +294,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.dialog-layout {
+  overflow: auto;
+}
+</style>
 
 
