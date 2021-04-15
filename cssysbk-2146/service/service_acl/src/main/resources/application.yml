@@ -49,6 +49,8 @@ spring:
     check-process-definitions: false
     # 项目启动就激活AsyncExecutor,异步 true  false 关闭 （切记关闭，否则启动就不断的刷查询sql）
     async-executor-activate: false
+    # 关闭 SpringAutoDeployment
+    deployment-mode: never-fail
 # 配置mapper xml文件的路径
 mybatis-plus:
   mapper-locations: classpath:com/atguigu/aclservice/mapper/xml/*.xml

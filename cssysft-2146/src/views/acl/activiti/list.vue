@@ -4,7 +4,7 @@
     <!--查询表单-->
     <el-form :inline="true" class="demo-form-inline">
       <el-form-item>
-        <el-input v-model="searchObj.username" placeholder="用户名" />
+        <el-input v-model="searchObj.name" placeholder="流程名称" />
       </el-form-item>
 
       <el-button type="primary" icon="el-icon-search" @click="fetchData()"

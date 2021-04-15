@@ -17,15 +17,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.zip.ZipInputStream;
 
 
 @RestController
-@RequestMapping("/processDefinition")
+@RequestMapping("/admin/acl/processDefinition")
 public class ProcessDefinitionController {
 
     @Autowired
@@ -108,7 +105,7 @@ public class ProcessDefinitionController {
 
 
     /**
-     *
+     * 根据路径文件，部署流程
      * @param deploymentFileUUID
      * @return
      */
@@ -128,12 +125,15 @@ public class ProcessDefinitionController {
 
     }
 
+    /**
+     * 根据字符串部署流程，在线部署
+     */
     @PostMapping(value = "/addDeploymentByString")
-    public R addDeploymentByString(@RequestParam("stringBPMN") String stringBPMN) {
+    public R addDeploymentByString(@RequestBody Map<String, Object> map) {
         try {
             Deployment deployment = repositoryService.createDeployment()
-                    .addString("CreateWithBPMNJS.bpmn",stringBPMN)
-                    .name("不知道在哪显示的部署名称")
+                    .addString("CreateWithBPMNJS.bpmn", map.get("bpmnStr").toString())
+                    .name("在线部署名称")
                     .deploy();
             //System.out.println(deployment.getName());
             return R.ok().data(R.DESC, deployment.getId());
@@ -218,7 +218,10 @@ public class ProcessDefinitionController {
         }
     }
 
-
+    /**
+     * 获取所有部署流程
+     * @return
+     */
     @GetMapping(value = "/getDeployments")
     public R getDeployments() {
         try {

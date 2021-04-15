@@ -40,7 +40,6 @@ export default {
   name: "BpmnJs",
   data() {
     return {
-      tools: null,
       canvas: null,
     };
   },
@@ -48,7 +47,21 @@ export default {
     this.initBpmnJs();
   },
   methods: {
-    ...tools,
+    deploy(){
+      tools.deploy(bpmnModeler);
+    },
+    exportImg(){
+      tools.exportImg(bpmnModeler);
+    },
+    exportBpmn(){
+      tools.exportBpmn(bpmnModeler);
+    },
+    forward(){
+      tools.forward(bpmnModeler);
+    },
+    retreat(){
+      tools.retreat(bpmnModeler);
+    },
     initBpmnJs() {
       let customTranslateModule = {
         translate: ["value", customTranslate],
