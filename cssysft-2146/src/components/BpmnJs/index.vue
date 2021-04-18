@@ -47,8 +47,8 @@ export default {
     this.initBpmnJs();
   },
   methods: {
-    deploy(){
-      tools.deploy(bpmnModeler);
+    deploy(busvm){
+      tools.deploy(bpmnModeler, busvm);
     },
     exportImg(){
       tools.exportImg(bpmnModeler);

@@ -47,11 +47,10 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="username" label="用户名" width="150" />
-
-      <el-table-column prop="nickName" label="用户昵称" />
-
-      <el-table-column prop="gmtCreate" label="创建时间" width="180" />
+      <el-table-column prop="key" label="流程部署key" width="150" />
+      <el-table-column prop="username" label="流程定义名称" width="150" />
+      <el-table-column prop="resourceName" label="资源名称" width="180" />
+      <el-table-column prop="version" label="版本号" />
 
       <el-table-column label="操作" width="230" align="center">
         <template #default="scope">
@@ -132,6 +131,7 @@
 import { mapGetters } from "vuex";
 
 import userApi from "@/api/acl/user";
+import activitiApi from "@/api/acl/processDefinition";
 import BpmnJs from "@/components/BpmnJs/index.vue";
 
 export default {
@@ -197,11 +197,11 @@ export default {
       // 异步获取远程数据（ajax）
       this.page = page;
 
-      userApi
-        .getPageList(this.page, this.limit, this.searchObj)
-        .then((response) => {
-          this.list = response.data.items;
-          this.total = response.data.total;
+      activitiApi
+        .getProcessDefinition(this.page, this.limit, this.searchObj)
+        .then((res) => {
+          this.list = res.data.items;
+          this.total = res.data.total;
 
           // 数据加载并绑定成功
           this.listLoading = false;

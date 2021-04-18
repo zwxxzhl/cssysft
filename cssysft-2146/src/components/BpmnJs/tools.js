@@ -2,7 +2,7 @@ import activitiApi from "@/api/acl/processDefinition";
 
 const tools = {
   //部署
-  deploy(bpmnModeler) {
+  deploy(bpmnModeler, busvm) {
     bpmnModeler
       .saveXML({ format: true })
       .then((res) => {
@@ -13,7 +13,7 @@ const tools = {
               type: 'success',
               message: res.message
             })
-            this.$router.push({ path: '/acl/user/list' })
+            busvm.taskVisible = false;
           }
         })
       })

@@ -2,13 +2,16 @@ package com.atguigu.aclservice.controller.activiti;
 
 import com.atguigu.aclservice.mapper.activiti.ActivitiMapper;
 import com.atguigu.utils.utils.R;
+import io.swagger.annotations.ApiParam;
 import org.activiti.api.process.runtime.ProcessRuntime;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -170,29 +173,43 @@ public class ProcessDefinitionController {
 
 
     //import org.activiti.engine.RepositoryService;
-    @GetMapping(value = "/getDefinitions")
-    public R getDefinitions() {
+    @GetMapping(value = "/getDefinitions/{page}/{limit}")
+    public R getDefinitions(
+            @ApiParam(name = "page", value = "当前页码", required = true)
+            @PathVariable int page,
+
+            @ApiParam(name = "limit", value = "每页记录数", required = true)
+            @PathVariable int limit,
+
+            @ApiParam(name = "searchObj", value = "查询对象", required = false)
+                    ProcessDefinition searchObj) {
 
         try {
-            List<HashMap<String, Object>> listMap= new ArrayList<HashMap<String, Object>>();
-            List<ProcessDefinition> list = repositoryService.createProcessDefinitionQuery().list();
+            List<HashMap<String, Object>> listMap= new ArrayList<>();
+//            List<ProcessDefinition> list = repositoryService.createProcessDefinitionQuery().list();
 
-            list.sort((y,x)->x.getVersion()-y.getVersion());
+            ProcessDefinitionQuery query = repositoryService.createProcessDefinitionQuery();
+            if (!StringUtils.isEmpty(searchObj.getName())) {
+                query.processDefinitionNameLike(searchObj.getName());
+            }
+            query.orderByProcessDefinitionVersion().desc();
+
+            List<ProcessDefinition> list = query.listPage((page - 1) * limit, limit);
+            long count = query.count();
 
             for (ProcessDefinition pd : list) {
                 HashMap<String, Object> hashMap = new HashMap<>();
                 //System.out.println("流程定义ID："+pd.getId());
-                hashMap.put("processDefinitionID", pd.getId());
+                hashMap.put("id", pd.getId());
                 hashMap.put("name", pd.getName());
                 hashMap.put("key", pd.getKey());
                 hashMap.put("resourceName", pd.getResourceName());
-                hashMap.put("deploymentID", pd.getDeploymentId());
+                hashMap.put("deploymentId", pd.getDeploymentId());
                 hashMap.put("version", pd.getVersion());
                 listMap.add(hashMap);
             }
 
-
-            return R.ok().data(R.ITEMS, listMap);
+            return R.ok().data("items", listMap).data("total", count);
         }catch (Exception e) {
             return R.error().message("获取流程定义失败").data(R.DESC, e.toString());
         }

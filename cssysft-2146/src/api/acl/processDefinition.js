@@ -17,7 +17,7 @@ export default {
       method: 'get'
     })
   },
-
+  //部署流程
   addDeploymentByString(obj) {
     return request({
       url: `${api_name}/addDeploymentByString`,
@@ -25,7 +25,14 @@ export default {
       data: obj
     })
   },
-
+  //查询流程定义列表
+  getProcessDefinition(page, limit, searchObj) {
+    return request({
+      url: `${api_name}/getDefinitions/${page}/${limit}`,
+      method: 'get',
+      params: searchObj // url查询字符串或表单键值对
+    })
+  },
   updateById(user) {
     return request({
       url: `${api_name}/update`,
