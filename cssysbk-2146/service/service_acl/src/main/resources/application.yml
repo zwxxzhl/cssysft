@@ -1,6 +1,6 @@
 # 服务端口
 server:
-  port: 8009
+  port: 8010
 
 # 服务名
 spring:
@@ -12,7 +12,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/acldb?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
     username: root
-    password: Mysql_123456
+    password: root
 
   # redis连接
   redis:
