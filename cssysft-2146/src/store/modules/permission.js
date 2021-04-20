@@ -48,7 +48,7 @@ const permission = {
 
       return new Promise(resolve => {
         const tmp = asyncRouter.data.permissionList
-        const accessedRoutes = filterAsyncRouter([tmp[0]], router)
+        const accessedRoutes = filterAsyncRouter(tmp, router)
         commit('SET_ROUTES', accessedRoutes)
         console.log(accessedRoutes);
         resolve(accessedRoutes)

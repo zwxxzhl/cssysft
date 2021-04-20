@@ -18,15 +18,15 @@
       <el-button
         type="danger"
         size="mini"
-        @click="addUser()"
-        v-if="hasPerm('user.add')"
+        @click="onAddDeployment()"
+        v-if="hasPerm('process.add')"
         >添加</el-button
       >
       <el-button
         type="danger"
         size="mini"
         @click="removeRows()"
-        v-if="hasPerm('user.remove')"
+        v-if="hasPerm('process.remove')"
         >批量删除</el-button
       >
     </div>
@@ -59,22 +59,22 @@
               type="info"
               size="mini"
               icon="el-icon-info"
-              v-if="hasPerm('user.assgin')"
+              v-if="hasPerm('process.assgin')"
             ></el-button>
           </router-link>
           <el-button
             type="success"
             size="mini"
             icon="el-icon-timer"
-            @click="onAddTask()"
-            v-if="hasPerm('user.add')"
+            @click="onAddDeployment"
+            v-if="hasPerm('process.add')"
           ></el-button>
           <router-link :to="'/acl/user/update/' + scope.row.id">
             <el-button
               type="primary"
               size="mini"
               icon="el-icon-edit"
-              v-if="hasPerm('user.update')"
+              v-if="hasPerm('process.update')"
             ></el-button>
           </router-link>
           <el-button
@@ -82,7 +82,7 @@
             size="mini"
             icon="el-icon-delete"
             @click="removeDataById(scope.row.id)"
-            v-if="hasPerm('user.remove')"
+            v-if="hasPerm('process.remove')"
           ></el-button>
         </template>
       </el-table-column>
@@ -179,7 +179,7 @@ export default {
     onCancel(){
       this.taskVisible = false;
     },
-    onAddTask() {
+    onAddDeployment() {
       this.taskVisible = true;
     },
     onDeploy(){
