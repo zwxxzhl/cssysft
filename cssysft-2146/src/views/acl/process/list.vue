@@ -54,15 +54,6 @@
 
       <el-table-column label="操作" width="230" align="center">
         <template #default="scope">
-          <router-link :to="'/acl/user/role/' + scope.row.id">
-            <el-button
-              type="info"
-              size="mini"
-              icon="el-icon-info"
-              v-if="hasPerm('process.assgin')"
-            ></el-button>
-          </router-link>
-
           <el-tooltip
             v-if="hasPerm('process.add')"
             effect="dark"
@@ -84,6 +75,18 @@
             <i
               class="el-icon-view icon-layout-mini color-blue"
               @click="onViewBpmn(scope.row)"
+            ></i>
+          </el-tooltip>
+
+          <el-tooltip
+            v-if="hasPerm('process.list')"
+            effect="dark"
+            content="删除流程"
+            placement="left-start"
+          >
+            <i
+              class="el-icon-view icon-layout-mini color-blue"
+              @click="onDeleteBpmn(scope.row)"
             ></i>
           </el-tooltip>
 
@@ -222,6 +225,33 @@ export default {
       this.ifBpmnAdd = false;
       this.bpmnData = row;
       this.bpmnVisible = true;
+    },
+    onDeleteBpmn(row) {
+      this.$confirm("此操作将删除流程, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          // promise
+          // 点击确定，远程调用ajax
+          return userApi.removeById(id);
+        })
+        .then((response) => {
+          this.fetchData(this.page);
+          if (response.success) {
+            this.$message({
+              type: "success",
+              message: "删除成功!",
+            });
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
     },
     changeSize(size) {
       this.limit = size;

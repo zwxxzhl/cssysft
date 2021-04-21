@@ -232,7 +232,7 @@ public class ProcessDefinitionController {
      */
     @GetMapping(value = "/delDefinition")
     public R delDefinition(@RequestParam("deploymentId") String deploymentId,
-                           @RequestParam(value = "cascade", required = false, defaultValue = "0") Boolean cascade) {
+                           @RequestParam(value = "cascade", required = false, defaultValue = "0") boolean cascade) {
         try {
             repositoryService.deleteDeployment(deploymentId, cascade);
             return R.ok().message("删除成功");
