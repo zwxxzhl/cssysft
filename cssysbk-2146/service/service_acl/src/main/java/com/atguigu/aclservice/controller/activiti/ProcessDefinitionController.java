@@ -4,6 +4,8 @@ import com.atguigu.aclservice.mapper.activiti.ActivitiMapper;
 import com.atguigu.utils.utils.R;
 import io.swagger.annotations.ApiParam;
 import org.activiti.api.process.runtime.ProcessRuntime;
+import org.activiti.bpmn.converter.BpmnXMLConverter;
+import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
@@ -172,7 +174,6 @@ public class ProcessDefinitionController {
     }*/
 
 
-    //import org.activiti.engine.RepositoryService;
     @GetMapping(value = "/getDefinitions/{page}/{limit}")
     public R getDefinitions(
             @ApiParam(name = "page", value = "当前页码", required = true)
@@ -186,7 +187,6 @@ public class ProcessDefinitionController {
 
         try {
             List<HashMap<String, Object>> listMap= new ArrayList<>();
-//            List<ProcessDefinition> list = repositoryService.createProcessDefinitionQuery().list();
 
             ProcessDefinitionQuery query = repositoryService.createProcessDefinitionQuery();
             if (!StringUtils.isEmpty(searchObj.getName())) {
@@ -199,7 +199,6 @@ public class ProcessDefinitionController {
 
             for (ProcessDefinition pd : list) {
                 HashMap<String, Object> hashMap = new HashMap<>();
-                //System.out.println("流程定义ID："+pd.getId());
                 hashMap.put("id", pd.getId());
                 hashMap.put("name", pd.getName());
                 hashMap.put("key", pd.getKey());
@@ -211,27 +210,24 @@ public class ProcessDefinitionController {
 
             return R.ok().data("items", listMap).data("total", count);
         }catch (Exception e) {
-            return R.error().message("获取流程定义失败").data(R.DESC, e.toString());
+            return R.error().message("获取流程定义列表失败").data(R.DESC, e.toString());
         }
     }
 
-    //获取流程定义XML
-    @GetMapping(value = "/getDefinitionXML")
-    public void getProcessDefineXML(HttpServletResponse response,
-                                    @RequestParam("deploymentId") String deploymentId,
-                                    @RequestParam("resourceName") String resourceName) {
+
+    /**
+     * 获取流程定义xml
+     */
+    @GetMapping(value = "/getDefinitionXml")
+    public R getProcessDefineXml(@RequestParam("id") String processDefinitionId) {
         try {
-            InputStream inputStream = repositoryService.getResourceAsStream(deploymentId,resourceName);
-            int count = inputStream.available();
-            byte[] bytes = new byte[count];
-            response.setContentType("text/xml");
-            OutputStream outputStream = response.getOutputStream();
-            while (inputStream.read(bytes) != -1) {
-                outputStream.write(bytes);
-            }
-            inputStream.close();
+            BpmnModel bpmnModel = repositoryService.getBpmnModel(processDefinitionId);
+            BpmnXMLConverter converter = new BpmnXMLConverter();
+            String xml = new String(converter.convertToXML(bpmnModel));
+
+            return R.ok().data("xml", xml);
         } catch (Exception e) {
-            e.toString();
+            return R.error().message("获取流程定义xml失败").data(R.DESC, e.toString());
         }
     }
 

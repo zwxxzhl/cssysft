@@ -1,19 +1,32 @@
 import activitiApi from "@/api/acl/processDefinition";
 
 const tools = {
+  //查看流程
+  view(bpmnModeler, row) {
+    activitiApi.getProcessDefineXml({
+      id: row.id
+    }).then(res => {
+      if (res.success) {
+        bpmnModeler
+          .importXML(res.data.xml)
+          .then((res) => { })
+          .catch((err) => { });
+      }
+    })
+  },
   //部署
   deploy(bpmnModeler, busvm) {
     bpmnModeler
       .saveXML({ format: true })
       .then((res) => {
-        activitiApi.addDeploymentByString({bpmnStr: res.xml}).then(res => {debugger
-          // debugger
+        activitiApi.addDeploymentByString({ bpmnStr: res.xml }).then(res => {
           if (res.success) {
-            this.$message({
+            busvm.$message({
               type: 'success',
               message: res.message
             })
-            busvm.taskVisible = false;
+            busvm.bpmnVisible = false;
+            busvm.fetchData(1);
           }
         })
       })

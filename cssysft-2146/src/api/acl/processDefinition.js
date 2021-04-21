@@ -33,6 +33,14 @@ export default {
       params: searchObj // url查询字符串或表单键值对
     })
   },
+  //查看流程定义(获取xml)
+  getProcessDefineXml(params) {
+    return request({
+      url: `${api_name}/getDefinitionXml`,
+      method: 'get',
+      params: params
+    })
+  },
   updateById(user) {
     return request({
       url: `${api_name}/update`,

@@ -37,25 +37,29 @@ export default {
   data() {
     return {
       canvas: null,
+      createDiagram: true,
     };
   },
   mounted() {
     this.initBpmnJs();
   },
   methods: {
-    deploy(busvm){
+    view(row) {
+      tools.view(bpmnModeler, row);
+    },
+    deploy(busvm) {
       tools.deploy(bpmnModeler, busvm);
     },
-    exportImg(){
+    exportImg() {
       tools.exportImg(bpmnModeler);
     },
-    exportBpmn(){
+    exportBpmn() {
       tools.exportBpmn(bpmnModeler);
     },
-    forward(){
+    forward() {
       tools.forward(bpmnModeler);
     },
-    retreat(){
+    retreat() {
       tools.retreat(bpmnModeler);
     },
     initBpmnJs() {
@@ -83,14 +87,8 @@ export default {
           camunda: camundaModdleDescriptor,
         },
       });
-      this.createNewDiagram();
-      
-      // setTimeout(() => {
-      //   debugger
-      //   this.$refs.panel
-      // }, 2000);
     },
-    createNewDiagram() {
+    newDiagram() {
       bpmnModeler
         .importXML(xmlStr)
         .then((res) => {})
@@ -123,6 +121,4 @@ export default {
     padding-right: 0px !important;
   }
 }
-
-
 </style>

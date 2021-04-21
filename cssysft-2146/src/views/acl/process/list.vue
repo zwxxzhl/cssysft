@@ -18,7 +18,7 @@
       <el-button
         type="danger"
         size="mini"
-        @click="onAddDeployment()"
+        @click="onOpenBpmn"
         v-if="hasPerm('process.add')"
         >添加</el-button
       >
@@ -48,8 +48,8 @@
       </el-table-column>
 
       <el-table-column prop="key" label="流程部署key" width="150" />
-      <el-table-column prop="username" label="流程定义名称" width="150" />
-      <el-table-column prop="resourceName" label="资源名称" width="180" />
+      <el-table-column prop="name" label="流程定义名称" width="150" />
+      <el-table-column prop="resourceName" label="资源名称" width="200" />
       <el-table-column prop="version" label="版本号" />
 
       <el-table-column label="操作" width="230" align="center">
@@ -62,13 +62,31 @@
               v-if="hasPerm('process.assgin')"
             ></el-button>
           </router-link>
-          <el-button
-            type="success"
-            size="mini"
-            icon="el-icon-timer"
-            @click="onAddDeployment"
+
+          <el-tooltip
             v-if="hasPerm('process.add')"
-          ></el-button>
+            effect="dark"
+            content="创建流程"
+            placement="left-start"
+          >
+            <i
+              class="el-icon-plus icon-layout-mini color-green"
+              @click="onOpenBpmn"
+            ></i>
+          </el-tooltip>
+
+          <el-tooltip
+            v-if="hasPerm('process.list')"
+            effect="dark"
+            content="查看流程"
+            placement="left-start"
+          >
+            <i
+              class="el-icon-view icon-layout-mini color-green"
+              @click="onViewBpmn(scope.row)"
+            ></i>
+          </el-tooltip>
+
           <router-link :to="'/acl/user/update/' + scope.row.id">
             <el-button
               type="primary"
@@ -102,11 +120,11 @@
 
     <!-- 添加功能的窗口 -->
     <el-dialog
-      v-model="taskVisible"
-      title="添加任务"
+      v-model="bpmnVisible"
+      title="流程图"
       width="80%"
       top="1vh"
-      @opened="onOpenedTask"
+      @opened="onOpened"
     >
       <div ref="refDialogDiv" class="dialog-layout">
         <bpmn-js ref="refBpmnJs"></bpmn-js>
@@ -117,10 +135,8 @@
           <el-button @click="onExportBpmn">导出Bpmn</el-button>
           <el-button @click="onForward">前进</el-button>
           <el-button @click="onRetreat">撤销</el-button>
-          <el-button @click="onCancel">取消</el-button>
-          <el-button type="primary" @click="onDeploy">
-            部署
-          </el-button>
+          <el-button type="primary" @click="onDeploy"> 部署 </el-button>
+          <el-button @click="onCancel">关闭</el-button>
         </div>
       </template>
     </el-dialog>
@@ -148,7 +164,9 @@ export default {
       searchObj: {}, // 查询表单对象
       multipleSelection: [], // 批量选择中选择的记录列表
 
-      taskVisible: false,
+      bpmnVisible: false,
+      ifBpmnAdd: true,
+      bpmnData: null,
     };
   },
   computed: {
@@ -161,29 +179,49 @@ export default {
   },
   mounted() {},
   methods: {
+    //导出svg
     onExportImg() {
       this.$refs.refBpmnJs.exportImg();
     },
+    //导出bpmn
     onExportBpmn() {
       this.$refs.refBpmnJs.exportBpmn();
     },
+    //前进
     onForward() {
       this.$refs.refBpmnJs.forward();
     },
+    //后退
     onRetreat() {
       this.$refs.refBpmnJs.retreat();
     },
-    onOpenedTask() {
+    //bpmn模态框打开事件
+    onOpened() {
       this.$refs.refDialogDiv.style.height = parent.innerHeight * 0.7 + "px";
+      if (this.ifBpmnAdd) {
+        this.$refs.refBpmnJs.newDiagram();
+      } else {
+        this.$refs.refBpmnJs.view(this.bpmnData);
+      }
     },
-    onCancel(){
-      this.taskVisible = false;
+    //关闭bpmn
+    onCancel() {
+      this.bpmnVisible = false;
     },
-    onAddDeployment() {
-      this.taskVisible = true;
+    //创建bpmn
+    onOpenBpmn() {
+      this.ifBpmnAdd = true;
+      this.bpmnVisible = true;
     },
-    onDeploy(){
+    //部署流程
+    onDeploy() {
       this.$refs.refBpmnJs.deploy();
+    },
+    //查看流程
+    onViewBpmn(row) {
+      this.ifBpmnAdd = false;
+      this.bpmnData = row;
+      this.bpmnVisible = true;
     },
     changeSize(size) {
       this.limit = size;
