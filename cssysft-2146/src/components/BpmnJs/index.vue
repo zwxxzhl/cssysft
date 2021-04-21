@@ -116,9 +116,5 @@ export default {
   right: 0;
   top: 0;
   width: 300px;
-  //右侧面板，默认样式修改
-  .bpp-textfield input {
-    padding-right: 0px !important;
-  }
 }
 </style>

@@ -111,18 +111,16 @@ public class ProcessDefinitionController {
 
     /**
      * 根据路径文件，部署流程
-     * @param deploymentFileUUID
-     * @return
      */
-    @PostMapping(value = "/addDeploymentByFileNameBPMN")
-    public R addDeploymentByFileNameBPMN(@RequestParam("deploymentFileUUID") String deploymentFileUUID, @RequestParam("deploymentName") String deploymentName) {
+    @PostMapping(value = "/addDeploymentByFileNameBpmn")
+    public R addDeploymentByFileNameBpmn(@RequestParam("deploymentFileUuid") String deploymentFileUuid, @RequestParam("deploymentName") String deploymentName) {
         try {
-            String filename = "resources/bpmn/" + deploymentFileUUID;
-            Deployment deployment = repositoryService.createDeployment()//初始化流程
+            String filename = "resources/bpmn/" + deploymentFileUuid;
+            Deployment deployment = repositoryService.createDeployment()
                     .addClasspathResource(filename)
                     .name(deploymentName)
                     .deploy();
-            //System.out.println(deployment.getName());
+
             return R.ok().data(R.DESC, deployment.getId());
         } catch (Exception e) {
             return R.error().message("BPMN部署流程失败").data(R.DESC, e.toString());
@@ -147,33 +145,9 @@ public class ProcessDefinitionController {
         }
     }
 
-//缺失流程部署ID属性版本，import org.activiti.api.process.model.ProcessDefinition;
-    /*@GetMapping(value = "/getDefinitions")
-    public AjaxResponse getDefinitions() {
-
-        try {
-            if (GlobalConfig.Test) {
-                securityUtil.logInAs("wukong");
-            }
-            Page<ProcessDefinition> processDefinitions = processRuntime.processDefinitions(Pageable.of(0, 50));
-            System.out.println("流程定义数量： " + processDefinitions.getTotalItems());
-            for (ProcessDefinition pd : processDefinitions.getContent()) {
-                System.out.println("getId：" + pd.getId());
-                System.out.println("getName：" + pd.getName());
-                System.out.println("getStatus：" + pd.getKey());
-                System.out.println("getStatus：" + pd.getFormKey());
-            }
-
-
-            return AjaxResponse.AjaxData(GlobalConfig.ResponseCode.SUCCESS.getCode(),
-                    GlobalConfig.ResponseCode.SUCCESS.getDesc(), processDefinitions.getContent());
-        }catch (Exception e) {
-            return AjaxResponse.AjaxData(GlobalConfig.ResponseCode.ERROR.getCode(),
-                    "获取流程定义失败", e.toString());
-        }
-    }*/
-
-
+    /**
+     * 查询流程定义--分页
+     */
     @GetMapping(value = "/getDefinitions/{page}/{limit}")
     public R getDefinitions(
             @ApiParam(name = "page", value = "当前页码", required = true)
@@ -182,8 +156,7 @@ public class ProcessDefinitionController {
             @ApiParam(name = "limit", value = "每页记录数", required = true)
             @PathVariable int limit,
 
-            @ApiParam(name = "searchObj", value = "查询对象", required = false)
-                    ProcessDefinition searchObj) {
+            @ApiParam(name = "searchObj", value = "查询对象") ProcessDefinition searchObj) {
 
         try {
             List<HashMap<String, Object>> listMap= new ArrayList<>();
@@ -233,12 +206,10 @@ public class ProcessDefinitionController {
 
     /**
      * 获取所有部署流程
-     * @return
      */
     @GetMapping(value = "/getDeployments")
     public R getDeployments() {
         try {
-
             List<HashMap<String, Object>> listMap= new ArrayList<HashMap<String, Object>>();
             List<Deployment> list = repositoryService.createDeploymentQuery().list();
             for (Deployment dep : list) {
@@ -256,17 +227,14 @@ public class ProcessDefinitionController {
     }
 
 
-
-    //删除流程定义
+    /**
+     * 删除流程定义
+     */
     @GetMapping(value = "/delDefinition")
-    public R delDefinition(@RequestParam("depID") String depID, @RequestParam("pdID") String pdID) {
+    public R delDefinition(@RequestParam("deploymentId") String deploymentId,
+                           @RequestParam(value = "cascade", required = false, defaultValue = "0") Boolean cascade) {
         try {
-
-            //删除数据
-            int result = mapper.DeleteFormData(pdID);
-
-            repositoryService.deleteDeployment(depID, true);
-
+            repositoryService.deleteDeployment(deploymentId, cascade);
             return R.ok().message("删除成功");
         } catch (Exception e) {
             return R.error().message("删除失败").data(R.DESC, e.toString());

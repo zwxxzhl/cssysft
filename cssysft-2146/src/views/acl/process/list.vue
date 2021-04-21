@@ -82,7 +82,7 @@
             placement="left-start"
           >
             <i
-              class="el-icon-view icon-layout-mini color-green"
+              class="el-icon-view icon-layout-mini color-blue"
               @click="onViewBpmn(scope.row)"
             ></i>
           </el-tooltip>
