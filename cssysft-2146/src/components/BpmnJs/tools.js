@@ -3,7 +3,7 @@ import activitiApi from "@/api/acl/processDefinition";
 const tools = {
   //查看流程
   view(bpmnModeler, row) {
-    activitiApi.getProcessDefineXml({
+    activitiApi.getProcessDefinitionXml({
       id: row.id
     }).then(res => {
       if (res.success) {

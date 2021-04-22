@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form :inline="true" class="demo-form-inline">
       <el-form-item>
-        <el-input v-model="searchObj.name" placeholder="流程名称" />
+        <el-input v-model="searchObj.name" placeholder="实例名称" />
       </el-form-item>
 
       <el-button type="primary" icon="el-icon-search" @click="fetchData()"
@@ -43,9 +43,10 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="key" label="流程部署key" width="150" />
-      <el-table-column prop="name" label="流程定义名称" width="150" />
-      <el-table-column prop="resourceName" label="资源名称" width="200" />
+      <el-table-column prop="startDate" label="创建时间" width="150" />
+      <el-table-column prop="name" label="实例名称" width="150" />
+      <el-table-column prop="processDefinitionId" label="流程定义Id" width="200" />
+      <el-table-column prop="processDefinitionKey" label="流程定义Key" width="200" />
       <el-table-column prop="version" label="版本号" />
 
       <el-table-column label="操作" width="230" align="center">
@@ -53,7 +54,7 @@
           <el-tooltip
             v-if="hasPerm('process.add')"
             effect="dark"
-            content="创建流程"
+            content="挂起"
             placement="left-start"
           >
             <i
@@ -65,7 +66,7 @@
           <el-tooltip
             v-if="hasPerm('process.list')"
             effect="dark"
-            content="查看流程"
+            content="激活"
             placement="left-start"
           >
             <i
@@ -77,7 +78,19 @@
           <el-tooltip
             v-if="hasPerm('process.list')"
             effect="dark"
-            content="删除流程"
+            content="历史"
+            placement="left-start"
+          >
+            <i
+              class="el-icon-view icon-layout-mini color-blue"
+              @click="onViewBpmn(scope.row)"
+            ></i>
+          </el-tooltip>
+
+          <el-tooltip
+            v-if="hasPerm('process.list')"
+            effect="dark"
+            content="删除"
             placement="left-start"
           >
             <i
@@ -85,27 +98,10 @@
               @click="onDeleteBpmn(scope.row)"
             ></i>
           </el-tooltip>
-
-          <router-link :to="'/acl/user/update/' + scope.row.id">
-            <el-button
-              type="primary"
-              size="mini"
-              icon="el-icon-edit"
-              v-if="hasPerm('process.update')"
-            ></el-button>
-          </router-link>
-          <el-button
-            type="danger"
-            size="mini"
-            icon="el-icon-delete"
-            @click="removeDataById(scope.row.id)"
-            v-if="hasPerm('process.remove')"
-          ></el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <!-- 分页组件 -->
     <el-pagination
       :current-page="page"
       :total="total"
@@ -117,7 +113,6 @@
       @size-change="changeSize"
     />
 
-    <!-- 添加功能的窗口 -->
     <el-dialog
       v-model="bpmnVisible"
       title="流程图"

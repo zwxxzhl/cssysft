@@ -43,17 +43,19 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="key" label="流程部署key" width="150" />
-      <el-table-column prop="name" label="流程定义名称" width="150" />
-      <el-table-column prop="resourceName" label="资源名称" width="200" />
-      <el-table-column prop="version" label="版本号" />
+      <el-table-column prop="taskDefinitionKey" label="KEY" width="150" />
+      <el-table-column prop="name" label="流程名称" width="150" />
+      <el-table-column prop="processInstanceId" label="流程实例ID" width="200" />
+      <el-table-column prop="assignee" label="办理人" width="200" />
+      <el-table-column prop="startTime" label="开始时间" width="200" />
+      <el-table-column prop="createTime" label="创建时间" width="200" />
 
       <el-table-column label="操作" width="230" align="center">
         <template #default="scope">
           <el-tooltip
             v-if="hasPerm('process.add')"
             effect="dark"
-            content="创建流程"
+            content="挂起"
             placement="left-start"
           >
             <i
@@ -65,7 +67,7 @@
           <el-tooltip
             v-if="hasPerm('process.list')"
             effect="dark"
-            content="查看流程"
+            content="激活"
             placement="left-start"
           >
             <i
@@ -77,7 +79,7 @@
           <el-tooltip
             v-if="hasPerm('process.list')"
             effect="dark"
-            content="删除流程"
+            content="删除"
             placement="left-start"
           >
             <i
@@ -85,27 +87,10 @@
               @click="onDeleteBpmn(scope.row)"
             ></i>
           </el-tooltip>
-
-          <router-link :to="'/acl/user/update/' + scope.row.id">
-            <el-button
-              type="primary"
-              size="mini"
-              icon="el-icon-edit"
-              v-if="hasPerm('process.update')"
-            ></el-button>
-          </router-link>
-          <el-button
-            type="danger"
-            size="mini"
-            icon="el-icon-delete"
-            @click="removeDataById(scope.row.id)"
-            v-if="hasPerm('process.remove')"
-          ></el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <!-- 分页组件 -->
     <el-pagination
       :current-page="page"
       :total="total"
@@ -117,7 +102,6 @@
       @size-change="changeSize"
     />
 
-    <!-- 添加功能的窗口 -->
     <el-dialog
       v-model="bpmnVisible"
       title="流程图"

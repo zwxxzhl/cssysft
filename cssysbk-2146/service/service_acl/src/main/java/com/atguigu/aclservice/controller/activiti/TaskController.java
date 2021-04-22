@@ -2,8 +2,10 @@ package com.atguigu.aclservice.controller.activiti;
 
 import com.atguigu.aclservice.mapper.activiti.ActivitiMapper;
 import com.atguigu.utils.utils.R;
+import io.swagger.annotations.ApiParam;
 import org.activiti.api.process.model.ProcessInstance;
 import org.activiti.api.process.runtime.ProcessRuntime;
+import org.activiti.api.runtime.shared.query.Order;
 import org.activiti.api.runtime.shared.query.Page;
 import org.activiti.api.runtime.shared.query.Pageable;
 import org.activiti.api.task.model.Task;
@@ -12,6 +14,7 @@ import org.activiti.api.task.runtime.TaskRuntime;
 import org.activiti.bpmn.model.FormProperty;
 import org.activiti.bpmn.model.UserTask;
 import org.activiti.engine.RepositoryService;
+import org.activiti.engine.repository.ProcessDefinition;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -37,12 +40,22 @@ public class TaskController {
     @Autowired
     ActivitiMapper mapper;
 
-    //获取我的代办任务
-    @GetMapping(value = "/getTasks")
-    public R getTasks() {
+    /**
+     * 查询我的代办任务
+     */
+    @GetMapping(value = "/getTasks/{page}/{limit}")
+    public R getTasks(
+            @ApiParam(name = "page", value = "当前页码", required = true)
+            @PathVariable int page,
+
+            @ApiParam(name = "limit", value = "每页记录数", required = true)
+            @PathVariable int limit,
+
+            @ApiParam(name = "searchObj", value = "查询对象") ProcessDefinition searchObj) {
         try {
 
-            Page<Task> tasks = taskRuntime.tasks(Pageable.of(0, 100));
+            Page<Task> tasks = taskRuntime.tasks(Pageable.of((page - 1) * limit, limit,
+                    Order.by("createdDate", Order.Direction.DESC)));
 
             List<HashMap<String, Object>> listMap = new ArrayList<HashMap<String, Object>>();
 
@@ -53,7 +66,8 @@ public class TaskController {
                 hashMap.put("name", tk.getName());
                 hashMap.put("status", tk.getStatus());
                 hashMap.put("createdDate", tk.getCreatedDate());
-                if (tk.getAssignee() == null) {//执行人，null时前台显示未拾取
+                //执行人，null时前台显示未拾取
+                if (tk.getAssignee() == null) {
                     hashMap.put("assignee", "待拾取任务");
                 } else {
                     hashMap.put("assignee", tk.getAssignee());//
@@ -69,12 +83,14 @@ public class TaskController {
         }
     }
 
-    //完成待办任务
+    /**
+     *  直接完成代办
+     */
     @GetMapping(value = "/completeTask")
-    public R completeTask(@RequestParam("taskID") String taskID) {
+    public R completeTask(@RequestParam("taskId") String taskId) {
         try {
 
-            Task task = taskRuntime.task(taskID);
+            Task task = taskRuntime.task(taskId);
 
 
             if (task.getAssignee() == null) {

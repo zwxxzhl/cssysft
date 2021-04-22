@@ -4,19 +4,6 @@ const api_name = '/admin/acl/processDefinition'
 
 export default {
 
-  getPageList(page, limit, searchObj) {
-    return request({
-      url: `${api_name}/${page}/${limit}`,
-      method: 'get',
-      params: searchObj // url查询字符串或表单键值对
-    })
-  },
-  getById(id) {
-    return request({
-      url: `${api_name}/get/${id}`,
-      method: 'get'
-    })
-  },
   //部署流程
   addDeploymentByString(obj) {
     return request({
@@ -36,11 +23,64 @@ export default {
   //查看流程定义(获取xml)
   getProcessDefineXml(params) {
     return request({
-      url: `${api_name}/getDefinitionXml`,
+      url: `${api_name}/getProcessDefinitionXml`,
       method: 'get',
-      params: params
+      params: { id: params.id }
     })
   },
+  //删除流程定义
+  deleteProcessDefinition(params) {
+    return request({
+      url: `${api_name}/delDefinition`,
+      method: 'delete',
+      data: { deploymentId: params.deploymentId, cascade: params.cascade }
+    })
+  },
+  //--------------------------------------------------------------------//
+  //查询实例列表
+  getInstances(page, limit, searchObj) {
+    return request({
+      url: `${api_name}/getInstances/${page}/${limit}`,
+      method: 'get',
+      params: searchObj
+    })
+  },
+  //挂起实例
+  suspendInstance(instanceId) {
+    return request({
+      url: `${api_name}/suspendInstance`,
+      method: 'put',
+      data: { instanceId }
+    })
+  },
+  //激活实例
+  resumeInstance(instanceId) {
+    return request({
+      url: `${api_name}/resumeInstance`,
+      method: 'put',
+      data: { instanceId }
+    })
+  },
+  //删除实例
+  deleteInstance(instanceId) {
+    return request({
+      url: `${api_name}/deleteInstance`,
+      method: 'delete',
+      data: { instanceId }
+    })
+  },
+  //--------------------------------------------------------------------//
+  //查询我的任务列表
+  getTasks(page, limit, searchObj) {
+    return request({
+      url: `${api_name}/getTasks/${page}/${limit}`,
+      method: 'get',
+      params: searchObj
+    })
+  },
+
+
+
   updateById(user) {
     return request({
       url: `${api_name}/update`,

@@ -187,12 +187,11 @@ public class ProcessDefinitionController {
         }
     }
 
-
     /**
      * 获取流程定义xml
      */
-    @GetMapping(value = "/getDefinitionXml")
-    public R getProcessDefineXml(@RequestParam("id") String processDefinitionId) {
+    @GetMapping(value = "/getProcessDefinitionXml")
+    public R getProcessDefinitionXml(@RequestParam("id") String processDefinitionId) {
         try {
             BpmnModel bpmnModel = repositoryService.getBpmnModel(processDefinitionId);
             BpmnXMLConverter converter = new BpmnXMLConverter();
@@ -230,7 +229,7 @@ public class ProcessDefinitionController {
     /**
      * 删除流程定义
      */
-    @GetMapping(value = "/delDefinition")
+    @DeleteMapping(value = "/delDefinition")
     public R delDefinition(@RequestParam("deploymentId") String deploymentId,
                            @RequestParam(value = "cascade", required = false, defaultValue = "0") boolean cascade) {
         try {
