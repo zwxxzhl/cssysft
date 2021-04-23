@@ -14,6 +14,7 @@ import org.activiti.api.runtime.shared.query.Pageable;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -83,6 +84,9 @@ public class ProcessInstanceController {
     @PutMapping(value = "/startInstance")
     public R startInstance(@RequestBody JSONObject params) {
         try {
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            org.activiti.engine.impl.identity.Authentication.setAuthenticatedUserId(username);
+
             ProcessInstance processInstance = processRuntime.start(ProcessPayloadBuilder
                     .start()
                     .withProcessDefinitionKey(params.getString("key"))
