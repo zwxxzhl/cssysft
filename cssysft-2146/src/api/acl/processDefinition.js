@@ -1,13 +1,15 @@
 import request from '@/utils/request'
 
-const api_name = '/admin/acl/processDefinition'
+const api_definition_name = '/admin/acl/processDefinition';
+const api_instance_name = '/admin/acl/processInstance';
+const api_task_name = '/admin/acl/task';
 
 export default {
 
   //部署流程
   addDeploymentByString(obj) {
     return request({
-      url: `${api_name}/addDeploymentByString`,
+      url: `${api_definition_name}/addDeploymentByString`,
       method: 'post',
       data: obj
     })
@@ -15,7 +17,7 @@ export default {
   //查询流程定义列表
   getProcessDefinition(page, limit, searchObj) {
     return request({
-      url: `${api_name}/getDefinitions/${page}/${limit}`,
+      url: `${api_definition_name}/getDefinitions/${page}/${limit}`,
       method: 'get',
       params: searchObj // url查询字符串或表单键值对
     })
@@ -23,7 +25,7 @@ export default {
   //查看流程定义(获取xml)
   getProcessDefineXml(params) {
     return request({
-      url: `${api_name}/getProcessDefinitionXml`,
+      url: `${api_definition_name}/getProcessDefinitionXml`,
       method: 'get',
       params: { id: params.id }
     })
@@ -31,16 +33,24 @@ export default {
   //删除流程定义
   deleteProcessDefinition(params) {
     return request({
-      url: `${api_name}/delDefinition`,
+      url: `${api_definition_name}/delDefinition`,
       method: 'delete',
       data: { deploymentId: params.deploymentId, cascade: params.cascade }
     })
   },
   //--------------------------------------------------------------------//
+  //启动实例
+  startInstance(params) {
+    return request({
+      url: `${api_instance_name}/startInstance`,
+      method: 'put',
+      data: { key: params.key, name: params.name, variable: params.variable }
+    })
+  },
   //查询实例列表
   getInstances(page, limit, searchObj) {
     return request({
-      url: `${api_name}/getInstances/${page}/${limit}`,
+      url: `${api_instance_name}/getInstances/${page}/${limit}`,
       method: 'get',
       params: searchObj
     })
@@ -48,7 +58,7 @@ export default {
   //挂起实例
   suspendInstance(instanceId) {
     return request({
-      url: `${api_name}/suspendInstance`,
+      url: `${api_instance_name}/suspendInstance`,
       method: 'put',
       data: { instanceId }
     })
@@ -56,7 +66,7 @@ export default {
   //激活实例
   resumeInstance(instanceId) {
     return request({
-      url: `${api_name}/resumeInstance`,
+      url: `${api_instance_name}/resumeInstance`,
       method: 'put',
       data: { instanceId }
     })
@@ -64,7 +74,7 @@ export default {
   //删除实例
   deleteInstance(instanceId) {
     return request({
-      url: `${api_name}/deleteInstance`,
+      url: `${api_instance_name}/deleteInstance`,
       method: 'delete',
       data: { instanceId }
     })
@@ -73,45 +83,9 @@ export default {
   //查询我的任务列表
   getTasks(page, limit, searchObj) {
     return request({
-      url: `${api_name}/getTasks/${page}/${limit}`,
+      url: `${api_task_name}/getTasks/${page}/${limit}`,
       method: 'get',
       params: searchObj
-    })
-  },
-
-
-
-  updateById(user) {
-    return request({
-      url: `${api_name}/update`,
-      method: 'put',
-      data: user
-    })
-  },
-  getAssign(userId) {
-    return request({
-      url: `${api_name}/toAssign/${userId}`,
-      method: 'get'
-    })
-  },
-  saveAssign(userId, roleId) {
-    return request({
-      url: `${api_name}/doAssign`,
-      method: 'post',
-      params: { userId, roleId }
-    })
-  },
-  removeById(id) {
-    return request({
-      url: `${api_name}/remove/${id}`,
-      method: 'delete'
-    })
-  },
-  removeRows(idList) {
-    return request({
-      url: `${api_name}/batchRemove`,
-      method: 'delete',
-      data: idList
     })
   }
 }

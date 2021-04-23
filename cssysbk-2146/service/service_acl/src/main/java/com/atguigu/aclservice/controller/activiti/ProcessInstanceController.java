@@ -1,5 +1,6 @@
 package com.atguigu.aclservice.controller.activiti;
 
+import com.alibaba.fastjson.JSONObject;
 import com.atguigu.utils.utils.R;
 import io.swagger.annotations.ApiParam;
 import org.activiti.api.model.shared.model.VariableInstance;
@@ -20,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@RequestMapping("/processInstance")
+@RequestMapping("/admin/acl//processInstance")
 public class ProcessInstanceController {
 
     @Autowired
@@ -76,35 +77,38 @@ public class ProcessInstanceController {
     }
 
 
-    //启动
-    @GetMapping(value = "/startProcess")
-    public R startProcess(@RequestParam("processDefinitionKey") String processDefinitionKey,
-                                     @RequestParam("instanceName") String instanceName,
-                                     @RequestParam("instanceVariable") String instanceVariable) {
+    /**
+     * 启动实例
+     */
+    @PutMapping(value = "/startInstance")
+    public R startInstance(@RequestBody JSONObject params) {
         try {
             ProcessInstance processInstance = processRuntime.start(ProcessPayloadBuilder
                     .start()
-                    .withProcessDefinitionKey(processDefinitionKey)
-                    .withName(instanceName)
-                    //.withVariable("content", instanceVariable)
-                    //.withVariable("参数2", "参数2的值")
+                    .withProcessDefinitionKey(params.getString("key"))
+                    .withName(params.getString("name"))
+                    //.withVariable("content", variable)
                     .withBusinessKey("自定义BusinessKey")
                     .build());
 
             return R.ok().data("name", processInstance.getName()).data("id", processInstance.getId());
         } catch (Exception e) {
+            System.out.println("=======打印=======");
+            System.out.println(e);
             return R.error().message("创建流程实例失败").data(R.DESC, e.toString());
         }
     }
 
-    //删除
+    /**
+     * 删除实例
+     */
     @DeleteMapping(value = "/deleteInstance")
-    public R deleteInstance(@RequestParam("instanceId") String instanceId) {
+    public R deleteInstance(@RequestBody JSONObject params) {
         try {
 
             ProcessInstance processInstance = processRuntime.delete(ProcessPayloadBuilder
                     .delete()
-                    .withProcessInstanceId(instanceId)
+                    .withProcessInstanceId(params.getString("instanceId"))
                     .build()
             );
 
@@ -115,15 +119,17 @@ public class ProcessInstanceController {
         }
     }
 
-    //挂起冷冻
+    /**
+     * 挂起实例
+     */
     @PutMapping(value = "/suspendInstance")
-    public R suspendInstance(@RequestParam("instanceId") String instanceId) {
+    public R suspendInstance(@RequestBody JSONObject params) {
 
         try {
 
             ProcessInstance processInstance = processRuntime.suspend(ProcessPayloadBuilder
                     .suspend()
-                    .withProcessInstanceId(instanceId)
+                    .withProcessInstanceId(params.getString("instanceId"))
                     .build()
             );
 
@@ -134,7 +140,9 @@ public class ProcessInstanceController {
         }
     }
 
-    //激活
+    /**
+     * 激活实例
+     */
     @PutMapping(value = "/resumeInstance")
     public R resumeInstance(@RequestParam("instanceId") String instanceId) {
 

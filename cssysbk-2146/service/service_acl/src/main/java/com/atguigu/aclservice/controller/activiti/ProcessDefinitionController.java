@@ -1,5 +1,6 @@
 package com.atguigu.aclservice.controller.activiti;
 
+import com.alibaba.fastjson.JSONObject;
 import com.atguigu.aclservice.mapper.activiti.ActivitiMapper;
 import com.atguigu.utils.utils.R;
 import io.swagger.annotations.ApiParam;
@@ -230,10 +231,9 @@ public class ProcessDefinitionController {
      * 删除流程定义
      */
     @DeleteMapping(value = "/delDefinition")
-    public R delDefinition(@RequestParam("deploymentId") String deploymentId,
-                           @RequestParam(value = "cascade", required = false, defaultValue = "0") boolean cascade) {
+    public R delDefinition(@RequestBody JSONObject params) {
         try {
-            repositoryService.deleteDeployment(deploymentId, cascade);
+            repositoryService.deleteDeployment(params.getString("deploymentId"), params.getBoolean("cascade"));
             return R.ok().message("删除成功");
         } catch (Exception e) {
             return R.error().message("删除失败").data(R.DESC, e.toString());

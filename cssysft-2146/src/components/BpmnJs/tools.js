@@ -3,30 +3,32 @@ import activitiApi from "@/api/acl/processDefinition";
 const tools = {
   //查看流程
   view(bpmnModeler, row) {
-    activitiApi.getProcessDefinitionXml({
+    activitiApi.getProcessDefineXml({
       id: row.id
     }).then(res => {
       if (res.success) {
         bpmnModeler
           .importXML(res.data.xml)
-          .then((res) => { })
-          .catch((err) => { });
+          .then((res) => {
+          })
+          .catch((err) => {
+          });
       }
     })
   },
-  //部署
-  deploy(bpmnModeler, busvm) {
+  //部署流程
+  deploy(bpmnModeler, vm) {
     bpmnModeler
-      .saveXML({ format: true })
+      .saveXML({format: true})
       .then((res) => {
-        activitiApi.addDeploymentByString({ bpmnStr: res.xml }).then(res => {
+        activitiApi.addDeploymentByString({bpmnStr: res.xml}).then(res => {
           if (res.success) {
-            busvm.$message({
+            vm.$message({
               type: 'success',
               message: res.message
             })
-            busvm.bpmnVisible = false;
-            busvm.fetchData(1);
+            vm.bpmnVisible = false;
+            vm.fetchData(1);
           }
         })
       })
@@ -36,7 +38,7 @@ const tools = {
   },
   //导出图片
   exportImg(bpmnModeler) {
-    bpmnModeler.saveSVG({ format: true })
+    bpmnModeler.saveSVG({format: true})
       .then(res => {
         var encodedData = encodeURIComponent(res.svg);
 
@@ -49,13 +51,13 @@ const tools = {
         URL.revokeObjectURL(elink.href);
         document.body.removeChild(elink);
       }).catch(err => {
-        console.error('保存失败', err);
-      })
+      console.error('保存失败', err);
+    })
   },
   //导出xml
   exportBpmn(bpmnModeler) {
     bpmnModeler
-      .saveXML({ format: true })
+      .saveXML({format: true})
       .then((res) => {
         var encodedData = encodeURIComponent(res.xml);
 

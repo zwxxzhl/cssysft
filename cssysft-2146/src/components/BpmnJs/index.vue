@@ -27,7 +27,7 @@ import camundaModdleDescriptor from "camunda-bpmn-moddle/resources/camunda";
 //汉化
 import customTranslate from "./customTranslate/customTranslate";
 
-import { xmlStr } from "./xmlStr.js";
+import {xmlStr} from "./xmlStr.js";
 import tools from "./tools.js";
 
 let bpmnModeler = null;
@@ -47,8 +47,8 @@ export default {
     view(row) {
       tools.view(bpmnModeler, row);
     },
-    deploy(busvm) {
-      tools.deploy(bpmnModeler, busvm);
+    deploy(vm) {
+      tools.deploy(bpmnModeler, vm);
     },
     exportImg() {
       tools.exportImg(bpmnModeler);
@@ -90,9 +90,11 @@ export default {
     },
     newDiagram() {
       bpmnModeler
-        .importXML(xmlStr)
-        .then((res) => {})
-        .catch((err) => {});
+          .importXML(xmlStr)
+          .then((res) => {
+          })
+          .catch((err) => {
+          });
     },
   },
 };
@@ -105,13 +107,16 @@ export default {
   width: 100%;
   height: 100%;
 }
+
 .canvas {
   width: 100%;
   height: 100%;
+
   .properties-panel-parent {
     display: none;
   }
 }
+
 .panel {
   right: 0;
   top: 0;
