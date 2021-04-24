@@ -2,37 +2,17 @@
   <div class="app-container">
     <el-input v-model="filterText" placeholder="Filter keyword" style="margin-bottom:30px;"/>
 
-
     <el-table
       :data="menuList"
       style="width: 100%;margin-bottom: 20px;"
       row-key="id"
       border
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
-      <el-table-column
-        prop="name"
-        label="名称"
-        sortable
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="path"
-        label="访问路径"
-        sortable
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="component"
-        label="组件路径"
-        sortable
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="permissionValue"
-        label="权限值">
-      </el-table-column>
-      <el-table-column
-        label="操作">
+      <el-table-column prop="name" label="名称" sortable width="180"></el-table-column>
+      <el-table-column prop="path" label="访问路径" sortable width="180"></el-table-column>
+      <el-table-column prop="component" label="组件路径" sortable width="180"></el-table-column>
+      <el-table-column prop="permissionValue" label="权限值"></el-table-column>
+      <el-table-column label="操作">
         <template #default="scope">
           <!-- v-if="node.level == 1 || node.level == 2" v-if="node.level == 3" v-if="node.level == 4"-->
           <el-button
@@ -186,8 +166,6 @@ export default {
       return data.title.toLowerCase().indexOf(value.toLowerCase()) !== -1
     },
     remove(data) {
-      console.log(data)
-
       this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',

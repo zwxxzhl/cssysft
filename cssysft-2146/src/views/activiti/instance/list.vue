@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form :inline="true" class="demo-form-inline">
       <el-form-item>
-        <el-input v-model="searchObj.name" placeholder="任务名称" />
+        <el-input v-model="searchObj.name" placeholder="实例名称" />
       </el-form-item>
 
       <el-button type="primary" icon="el-icon-search" @click="fetchData()"
@@ -43,11 +43,10 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="instanceName" label="流程名称" width="150" />
-      <el-table-column prop="name" label="任务名称" width="150" />
-      <el-table-column prop="status" label="任务状态" width="200" />
-      <el-table-column prop="assignee" label="办理人" width="200" />
-      <el-table-column prop="createdDate" label="创建时间" width="200" />
+      <el-table-column prop="startDate" label="创建时间" width="150" />
+      <el-table-column prop="name" label="实例名称" width="150" />
+      <el-table-column prop="processDefinitionId" label="流程定义Id" width="200" />
+      <el-table-column prop="processDefinitionKey" label="流程定义Key" width="200" />
       <el-table-column prop="version" label="版本号" />
 
       <el-table-column label="操作" width="230" align="center">
@@ -55,12 +54,48 @@
           <el-tooltip
             v-if="hasPerm('process.add')"
             effect="dark"
-            content="办理"
+            content="挂起"
             placement="left-start"
           >
             <i
               class="el-icon-plus icon-layout-mini color-green"
-              @click="onOpenBpmn(scope.row)"
+              @click="onOpenBpmn"
+            ></i>
+          </el-tooltip>
+
+          <el-tooltip
+            v-if="hasPerm('process.list')"
+            effect="dark"
+            content="激活"
+            placement="left-start"
+          >
+            <i
+              class="el-icon-view icon-layout-mini color-blue"
+              @click="onViewBpmn(scope.row)"
+            ></i>
+          </el-tooltip>
+
+          <el-tooltip
+            v-if="hasPerm('process.list')"
+            effect="dark"
+            content="历史"
+            placement="left-start"
+          >
+            <i
+              class="el-icon-view icon-layout-mini color-blue"
+              @click="onViewBpmn(scope.row)"
+            ></i>
+          </el-tooltip>
+
+          <el-tooltip
+            v-if="hasPerm('process.list')"
+            effect="dark"
+            content="删除"
+            placement="left-start"
+          >
+            <i
+              class="el-icon-view icon-layout-mini color-blue"
+              @click="onDeleteBpmn(scope.row)"
             ></i>
           </el-tooltip>
         </template>
@@ -106,7 +141,7 @@
 import { mapGetters } from "vuex";
 
 import userApi from "@/api/acl/user";
-import activitiApi from "@/api/acl/processDefinition";
+import activitiApi from "@/api/acl/activiti";
 import BpmnJs from "@/components/BpmnJs/index.vue";
 
 export default {

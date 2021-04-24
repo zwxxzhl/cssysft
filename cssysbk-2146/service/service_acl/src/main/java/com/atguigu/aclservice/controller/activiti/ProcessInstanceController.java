@@ -12,6 +12,7 @@ import org.activiti.api.runtime.shared.query.Order;
 import org.activiti.api.runtime.shared.query.Page;
 import org.activiti.api.runtime.shared.query.Pageable;
 import org.activiti.engine.RepositoryService;
+import org.activiti.engine.impl.identity.Authentication;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -85,7 +86,7 @@ public class ProcessInstanceController {
     public R startInstance(@RequestBody JSONObject params) {
         try {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
-            org.activiti.engine.impl.identity.Authentication.setAuthenticatedUserId(username);
+            Authentication.setAuthenticatedUserId(username);
 
             ProcessInstance processInstance = processRuntime.start(ProcessPayloadBuilder
                     .start()

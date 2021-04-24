@@ -13,12 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * <p>
  * 权限 菜单管理
- * </p>
- *
- * @author testjava
- * @since 2020-01-12
  */
 @RestController
 @RequestMapping("/admin/acl/permission")
@@ -62,6 +57,14 @@ public class PermissionController {
     public R toAssign(@PathVariable String roleId) {
         List<Permission> list = permissionService.selectAllMenu(roleId);
         return R.ok().data("children", list);
+    }
+
+    @ApiOperation(value = "根据id删除菜单")
+    @DeleteMapping("remove/{id}")
+    public R removeById(@PathVariable String id) {
+        permissionService.removeChildById(id);
+        permissionService.removeById(id);
+        return R.ok();
     }
 
 }

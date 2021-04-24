@@ -1,4 +1,4 @@
-import activitiApi from "@/api/acl/processDefinition";
+import activitiApi from "@/api/acl/activiti";
 
 const tools = {
   //查看流程

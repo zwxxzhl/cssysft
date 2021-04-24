@@ -10,7 +10,7 @@
     </el-form>
 
     <div>
-      <el-button type="danger" size="mini" @click="onOpenBpmn" v-if="hasPerm('process.add')">添加</el-button>
+      <el-button type="danger" size="mini" @click="onOpenBpmn" v-if="hasPerm('definition.add')">添加</el-button>
     </div>
 
     <el-table
@@ -35,19 +35,19 @@
 
       <el-table-column label="操作" width="230" align="center">
         <template #default="scope">
-          <el-tooltip v-if="hasPerm('process.add')" effect="dark" content="创建流程" placement="left-start">
+          <el-tooltip v-if="hasPerm('definition.add')" effect="dark" content="创建流程" placement="left-start">
             <i class="el-icon-plus icon-layout-mini color-green" @click="onOpenBpmn"></i>
           </el-tooltip>
 
-          <el-tooltip v-if="hasPerm('process.list')" effect="dark" content="查看流程" placement="bottom-start">
+          <el-tooltip v-if="hasPerm('definition.list')" effect="dark" content="查看流程" placement="bottom-start">
             <i class="el-icon-view icon-layout-mini color-blue" @click="onViewBpmn(scope.row)"></i>
           </el-tooltip>
 
-          <el-tooltip v-if="hasPerm('process.remove')" effect="dark" content="删除流程" placement="bottom-start">
+          <el-tooltip v-if="hasPerm('definition.remove')" effect="dark" content="删除流程" placement="bottom-start">
             <i class="el-icon-delete icon-layout-mini color-gray" @click="onDeleteBpmn(scope.row)"></i>
           </el-tooltip>
 
-          <el-tooltip v-if="hasPerm('process.add')" effect="dark" content="启动实例" placement="bottom-start">
+          <el-tooltip v-if="hasPerm('definition.add')" effect="dark" content="启动实例" placement="bottom-start">
             <i class="el-icon-caret-right icon-layout-mini color-purple" @click="onStartInstance(scope.row)"></i>
           </el-tooltip>
         </template>
@@ -92,7 +92,7 @@
 <script>
 import {mapGetters} from "vuex";
 
-import activitiApi from "@/api/acl/processDefinition";
+import activitiApi from "@/api/acl/activiti";
 import BpmnJs from "@/components/BpmnJs/index.vue";
 
 export default {
