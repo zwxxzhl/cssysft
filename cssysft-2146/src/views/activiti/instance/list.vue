@@ -2,30 +2,19 @@
   <div class="app-container">
     <el-form :inline="true" class="demo-form-inline">
       <el-form-item>
-        <el-input v-model="searchObj.name" placeholder="实例名称" />
+        <el-input v-model="searchObj.name" placeholder="实例名称"/>
       </el-form-item>
 
       <el-button type="primary" icon="el-icon-search" @click="fetchData()"
-        >查询</el-button
+      >查询
+      </el-button
       >
       <el-button type="default" @click="resetData()">清空</el-button>
     </el-form>
 
     <div>
-      <el-button
-        type="danger"
-        size="mini"
-        @click="onOpenBpmn"
-        v-if="hasPerm('process.add')"
-        >添加</el-button
-      >
-      <el-button
-        type="danger"
-        size="mini"
-        @click="removeRows()"
-        v-if="hasPerm('process.remove')"
-        >批量删除</el-button
-      >
+      <el-button type="danger" size="mini" @click="onOpenBpmn" v-if="hasPerm('process.add')">添加</el-button>
+      <el-button type="danger" size="mini" @click="removeRows()" v-if="hasPerm('process.remove')">批量删除</el-button>
     </div>
 
     <el-table
@@ -35,7 +24,7 @@
       style="width: 100%"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" />
+      <el-table-column type="selection" width="55"/>
 
       <el-table-column label="序号" width="70" align="center">
         <template #default="scope">
@@ -43,60 +32,28 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="startDate" label="创建时间" width="150" />
-      <el-table-column prop="name" label="实例名称" width="150" />
-      <el-table-column prop="processDefinitionId" label="流程定义Id" width="200" />
-      <el-table-column prop="processDefinitionKey" label="流程定义Key" width="200" />
-      <el-table-column prop="version" label="版本号" />
+      <el-table-column prop="startDate" label="创建时间" width="150"/>
+      <el-table-column prop="name" label="实例名称" width="150"/>
+      <el-table-column prop="processDefinitionId" label="流程定义Id" width="200"/>
+      <el-table-column prop="processDefinitionKey" label="流程定义Key" width="200"/>
+      <el-table-column prop="version" label="版本号"/>
 
       <el-table-column label="操作" width="230" align="center">
         <template #default="scope">
-          <el-tooltip
-            v-if="hasPerm('process.add')"
-            effect="dark"
-            content="挂起"
-            placement="left-start"
-          >
-            <i
-              class="el-icon-plus icon-layout-mini color-green"
-              @click="onOpenBpmn"
-            ></i>
+          <el-tooltip v-if="hasPerm('process.add')" effect="dark" content="挂起" placement="left-start">
+            <i class="el-icon-plus icon-layout-mini color-green" @click="onOpenBpmn"></i>
           </el-tooltip>
 
-          <el-tooltip
-            v-if="hasPerm('process.list')"
-            effect="dark"
-            content="激活"
-            placement="left-start"
-          >
-            <i
-              class="el-icon-view icon-layout-mini color-blue"
-              @click="onViewBpmn(scope.row)"
-            ></i>
+          <el-tooltip v-if="hasPerm('process.list')" effect="dark" content="激活" placement="left-start">
+            <i class="el-icon-view icon-layout-mini color-blue" @click="onViewBpmn(scope.row)"></i>
           </el-tooltip>
 
-          <el-tooltip
-            v-if="hasPerm('process.list')"
-            effect="dark"
-            content="历史"
-            placement="left-start"
-          >
-            <i
-              class="el-icon-view icon-layout-mini color-blue"
-              @click="onViewBpmn(scope.row)"
-            ></i>
+          <el-tooltip v-if="hasPerm('process.list')" effect="dark" content="历史" placement="left-start">
+            <i class="el-icon-view icon-layout-mini color-blue" @click="onViewBpmn(scope.row)"></i>
           </el-tooltip>
 
-          <el-tooltip
-            v-if="hasPerm('process.list')"
-            effect="dark"
-            content="删除"
-            placement="left-start"
-          >
-            <i
-              class="el-icon-view icon-layout-mini color-blue"
-              @click="onDeleteBpmn(scope.row)"
-            ></i>
+          <el-tooltip v-if="hasPerm('process.list')" effect="dark" content="删除" placement="left-start">
+            <i class="el-icon-view icon-layout-mini color-blue" @click="onDeleteBpmn(scope.row)"></i>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -129,7 +86,7 @@
           <el-button @click="onExportBpmn">导出Bpmn</el-button>
           <el-button @click="onForward">前进</el-button>
           <el-button @click="onRetreat">撤销</el-button>
-          <el-button type="primary" @click="onDeploy"> 部署 </el-button>
+          <el-button type="primary" @click="onDeploy"> 部署</el-button>
           <el-button @click="onCancel">关闭</el-button>
         </div>
       </template>
@@ -138,7 +95,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import {mapGetters} from "vuex";
 
 import userApi from "@/api/acl/user";
 import activitiApi from "@/api/acl/activiti";
@@ -171,7 +128,8 @@ export default {
   created() {
     this.fetchData();
   },
-  mounted() {},
+  mounted() {
+  },
   methods: {
     //导出svg
     onExportImg() {
@@ -249,7 +207,7 @@ export default {
       this.fetchData(1);
     },
     addUser() {
-      this.$router.push({ path: "/acl/user/add" });
+      this.$router.push({path: "/acl/user/add"});
     },
     // 加载讲师列表数据
     fetchData(page = 1) {

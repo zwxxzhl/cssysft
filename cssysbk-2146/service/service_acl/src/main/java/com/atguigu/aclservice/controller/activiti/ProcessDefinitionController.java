@@ -19,10 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.*;
 import java.util.zip.ZipInputStream;
 
@@ -94,7 +92,7 @@ public class ProcessDefinitionController {
         filePath = filePath.replace("\\", "/");
         filePath = filePath.replace("file:", "");
 
-       // String filePath = request.getSession().getServletContext().getRealPath("/") + "bpmn/";
+        // String filePath = request.getSession().getServletContext().getRealPath("/") + "bpmn/";
         fileName = UUID.randomUUID() + suffixName; // 新文件名
         File file = new File(filePath + fileName);
         if (!file.getParentFile().exists()) {
@@ -160,7 +158,7 @@ public class ProcessDefinitionController {
             @ApiParam(name = "searchObj", value = "查询对象") ProcessDefinition searchObj) {
 
         try {
-            List<HashMap<String, Object>> listMap= new ArrayList<>();
+            List<HashMap<String, Object>> listMap = new ArrayList<>();
 
             ProcessDefinitionQuery query = repositoryService.createProcessDefinitionQuery();
             if (!StringUtils.isEmpty(searchObj.getName())) {
@@ -183,7 +181,7 @@ public class ProcessDefinitionController {
             }
 
             return R.ok().data("items", listMap).data("total", count);
-        }catch (Exception e) {
+        } catch (Exception e) {
             return R.error().message("获取流程定义列表失败").data(R.DESC, e.toString());
         }
     }
@@ -210,7 +208,7 @@ public class ProcessDefinitionController {
     @GetMapping(value = "/getDeployments")
     public R getDeployments() {
         try {
-            List<HashMap<String, Object>> listMap= new ArrayList<HashMap<String, Object>>();
+            List<HashMap<String, Object>> listMap = new ArrayList<HashMap<String, Object>>();
             List<Deployment> list = repositoryService.createDeploymentQuery().list();
             for (Deployment dep : list) {
                 HashMap<String, Object> hashMap = new HashMap<>();

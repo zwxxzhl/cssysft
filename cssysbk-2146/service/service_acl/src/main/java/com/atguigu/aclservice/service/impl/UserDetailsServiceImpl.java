@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service("userDetailsService")
@@ -35,6 +36,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         //根据用户查询用户权限列表
         List<String> permissionValueList = permissionService.selectPermissionValueByUserId(user.getId());
+        permissionValueList.addAll(Arrays.asList("ROLE_ACTIVITI_ADMIN", "ROLE_ACTIVITI_USER", "GROUP_activitiTeam", "GROUP_otherTeam"));
         SecurityUser securityUser = new SecurityUser();
         securityUser.setCurrentUserInfo(curUser);
         securityUser.setPermissionValueList(permissionValueList);

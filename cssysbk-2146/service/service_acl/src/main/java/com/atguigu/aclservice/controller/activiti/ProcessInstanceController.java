@@ -5,7 +5,6 @@ import com.atguigu.utils.utils.R;
 import io.swagger.annotations.ApiParam;
 import org.activiti.api.model.shared.model.VariableInstance;
 import org.activiti.api.process.model.ProcessInstance;
-import org.activiti.api.process.model.builders.GetProcessInstancesPayloadBuilder;
 import org.activiti.api.process.model.builders.ProcessPayloadBuilder;
 import org.activiti.api.process.runtime.ProcessRuntime;
 import org.activiti.api.runtime.shared.query.Order;
@@ -45,6 +44,7 @@ public class ProcessInstanceController {
             @PathVariable int limit,
 
             @ApiParam(name = "searchObj", value = "查询对象") ProcessDefinition searchObj) {
+        Authentication.setAuthenticatedUserId(SecurityContextHolder.getContext().getAuthentication().getName());
 
         Page<ProcessInstance> processInstances;
         try {
@@ -53,7 +53,7 @@ public class ProcessInstanceController {
             List<ProcessInstance> list = processInstances.getContent();
 
             List<HashMap<String, Object>> listMap = new ArrayList<>();
-            for(ProcessInstance pi:list){
+            for (ProcessInstance pi : list) {
                 HashMap<String, Object> hashMap = new HashMap<>();
                 hashMap.put("id", pi.getId());
                 hashMap.put("name", pi.getName());
@@ -85,9 +85,7 @@ public class ProcessInstanceController {
     @PutMapping(value = "/startInstance")
     public R startInstance(@RequestBody JSONObject params) {
         try {
-            String username = SecurityContextHolder.getContext().getAuthentication().getName();
-            Authentication.setAuthenticatedUserId(username);
-
+            Authentication.setAuthenticatedUserId(SecurityContextHolder.getContext().getAuthentication().getName());
             ProcessInstance processInstance = processRuntime.start(ProcessPayloadBuilder
                     .start()
                     .withProcessDefinitionKey(params.getString("key"))
@@ -110,7 +108,7 @@ public class ProcessInstanceController {
     @DeleteMapping(value = "/deleteInstance")
     public R deleteInstance(@RequestBody JSONObject params) {
         try {
-
+            Authentication.setAuthenticatedUserId(SecurityContextHolder.getContext().getAuthentication().getName());
             ProcessInstance processInstance = processRuntime.delete(ProcessPayloadBuilder
                     .delete()
                     .withProcessInstanceId(params.getString("instanceId"))
@@ -118,8 +116,7 @@ public class ProcessInstanceController {
             );
 
             return R.ok().data("name", processInstance.getName());
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             return R.error().message("删除流程实例失败").data(R.DESC, e.toString());
         }
     }
@@ -131,7 +128,7 @@ public class ProcessInstanceController {
     public R suspendInstance(@RequestBody JSONObject params) {
 
         try {
-
+            Authentication.setAuthenticatedUserId(SecurityContextHolder.getContext().getAuthentication().getName());
             ProcessInstance processInstance = processRuntime.suspend(ProcessPayloadBuilder
                     .suspend()
                     .withProcessInstanceId(params.getString("instanceId"))
@@ -139,8 +136,7 @@ public class ProcessInstanceController {
             );
 
             return R.ok().data("name", processInstance.getName());
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             return R.error().message("挂起流程实例失败").data(R.DESC, e.toString());
         }
     }
@@ -150,9 +146,8 @@ public class ProcessInstanceController {
      */
     @PutMapping(value = "/resumeInstance")
     public R resumeInstance(@RequestParam("instanceId") String instanceId) {
-
         try {
-
+            Authentication.setAuthenticatedUserId(SecurityContextHolder.getContext().getAuthentication().getName());
             ProcessInstance processInstance = processRuntime.resume(ProcessPayloadBuilder
                     .resume()
                     .withProcessInstanceId(instanceId)
@@ -160,8 +155,7 @@ public class ProcessInstanceController {
             );
 
             return R.ok().data("name", processInstance.getName());
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             return R.error().message("激活流程实例失败").data(R.DESC, e.toString());
         }
     }
@@ -170,14 +164,14 @@ public class ProcessInstanceController {
     @GetMapping(value = "/variables")
     public R variables(@RequestParam("instanceId") String instanceId) {
         try {
+            Authentication.setAuthenticatedUserId(SecurityContextHolder.getContext().getAuthentication().getName());
             List<VariableInstance> variableInstance = processRuntime.variables(ProcessPayloadBuilder
                     .variables()
                     .withProcessInstanceId(instanceId)
                     .build());
 
             return R.ok().data(variableInstance);
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             return R.error().message("获取流程参数失败").data(R.DESC, e.toString());
         }
     }
