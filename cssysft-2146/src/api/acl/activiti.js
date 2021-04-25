@@ -27,7 +27,7 @@ export default {
     return request({
       url: `${api_definition_name}/getProcessDefinitionXml`,
       method: 'get',
-      params: { id: params.id }
+      params: {id: params.id}
     })
   },
   //删除流程定义
@@ -35,7 +35,7 @@ export default {
     return request({
       url: `${api_definition_name}/delDefinition`,
       method: 'delete',
-      data: { deploymentId: params.deploymentId, cascade: params.cascade }
+      data: {deploymentId: params.deploymentId, cascade: params.cascade}
     })
   },
   //--------------------------------------------------------------------//
@@ -44,7 +44,7 @@ export default {
     return request({
       url: `${api_instance_name}/startInstance`,
       method: 'put',
-      data: { key: params.key, name: params.name, variable: params.variable }
+      data: {key: params.key, name: params.name, variable: params.variable}
     })
   },
   //查询实例列表
@@ -60,7 +60,7 @@ export default {
     return request({
       url: `${api_instance_name}/suspendInstance`,
       method: 'put',
-      data: { instanceId }
+      data: {instanceId}
     })
   },
   //激活实例
@@ -68,7 +68,7 @@ export default {
     return request({
       url: `${api_instance_name}/resumeInstance`,
       method: 'put',
-      data: { instanceId }
+      data: {instanceId}
     })
   },
   //删除实例
@@ -76,7 +76,7 @@ export default {
     return request({
       url: `${api_instance_name}/deleteInstance`,
       method: 'delete',
-      data: { instanceId }
+      data: {instanceId}
     })
   },
   //--------------------------------------------------------------------//

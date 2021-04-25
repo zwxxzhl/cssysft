@@ -127,9 +127,10 @@ export default {
   methods: {
     //启动流程实例
     onStartInstance(row) {
+      console.log("");
       activitiApi.startInstance({
         key: row.key,
-        name: '测试启动实例',
+        name: row.name,
         variable: '自定义变量'
       }).then(res => {
         if (res.success) {

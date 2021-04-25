@@ -7,6 +7,8 @@ import io.swagger.annotations.ApiParam;
 import org.activiti.api.process.runtime.ProcessRuntime;
 import org.activiti.bpmn.converter.BpmnXMLConverter;
 import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.core.common.project.model.ProjectManifest;
+import org.activiti.core.common.spring.project.ProjectModelService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
@@ -31,6 +33,9 @@ public class ProcessDefinitionController {
 
     @Autowired
     private RepositoryService repositoryService;
+
+    @Autowired
+    private ProjectModelService projectModelService;
 
     @Autowired
     private ProcessRuntime processRuntime;
@@ -133,7 +138,9 @@ public class ProcessDefinitionController {
     @PostMapping(value = "/addDeploymentByString")
     public R addDeploymentByString(@RequestBody Map<String, Object> map) {
         try {
+            ProjectManifest projectManifest = projectModelService.loadProjectManifest();
             Deployment deployment = repositoryService.createDeployment()
+                    .setProjectManifest(projectManifest)
                     .addString("CreateWithBPMNJS.bpmn", map.get("bpmnStr").toString())
                     .name("在线部署名称")
                     .deploy();

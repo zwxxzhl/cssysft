@@ -12,7 +12,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/acldb?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
     username: root
-    password: root
+    password: Mysql_123456
 
   # redis连接
   redis:
@@ -51,6 +51,10 @@ spring:
     async-executor-activate: false
     # 关闭 SpringAutoDeployment
     deployment-mode: never-fail
+project:
+  manifest:
+    file:
+      path: classpath:/default-app.json
 # 配置mapper xml文件的路径
 mybatis-plus:
   mapper-locations: classpath:com/atguigu/aclservice/mapper/xml/*.xml

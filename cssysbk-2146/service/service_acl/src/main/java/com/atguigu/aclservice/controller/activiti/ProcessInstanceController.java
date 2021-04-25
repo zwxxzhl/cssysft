@@ -98,7 +98,7 @@ public class ProcessInstanceController {
         } catch (Exception e) {
             System.out.println("=======打印=======");
             System.out.println(e);
-            return R.error().message("创建流程实例失败").data(R.DESC, e.toString());
+            return R.error().message("创建流程实例失败").data(R.DESC, e.toString() + "local:" + e.getLocalizedMessage());
         }
     }
 
