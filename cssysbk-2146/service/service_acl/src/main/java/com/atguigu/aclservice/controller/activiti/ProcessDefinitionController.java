@@ -141,6 +141,7 @@ public class ProcessDefinitionController {
             ProjectManifest projectManifest = projectModelService.loadProjectManifest();
             Deployment deployment = repositoryService.createDeployment()
                     .setProjectManifest(projectManifest)
+                    .enableDuplicateFiltering()
                     .addString("CreateWithBPMNJS.bpmn", map.get("bpmnStr").toString())
                     .name("在线部署名称")
                     .deploy();

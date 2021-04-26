@@ -13,8 +13,8 @@
     </el-form>
 
     <div>
-      <el-button type="danger" size="mini" @click="onOpenBpmn" v-if="hasPerm('process.add')">添加</el-button>
-      <el-button type="danger" size="mini" @click="removeRows()" v-if="hasPerm('process.remove')">批量删除</el-button>
+      <el-button type="danger" size="mini" @click="onOpenBpmn" v-if="hasPerm('instance.add')">添加</el-button>
+      <el-button type="danger" size="mini" @click="removeRows()" v-if="hasPerm('instance.remove')">批量删除</el-button>
     </div>
 
     <el-table
@@ -40,19 +40,19 @@
 
       <el-table-column label="操作" width="230" align="center">
         <template #default="scope">
-          <el-tooltip v-if="hasPerm('process.add')" effect="dark" content="挂起" placement="left-start">
+          <el-tooltip v-if="hasPerm('instance.update')" effect="dark" content="挂起" placement="left-start">
             <i class="el-icon-plus icon-layout-mini color-green" @click="onOpenBpmn"></i>
           </el-tooltip>
 
-          <el-tooltip v-if="hasPerm('process.list')" effect="dark" content="激活" placement="left-start">
+          <el-tooltip v-if="hasPerm('instance.update')" effect="dark" content="激活" placement="left-start">
             <i class="el-icon-view icon-layout-mini color-blue" @click="onViewBpmn(scope.row)"></i>
           </el-tooltip>
 
-          <el-tooltip v-if="hasPerm('process.list')" effect="dark" content="历史" placement="left-start">
+          <el-tooltip v-if="hasPerm('instance.list')" effect="dark" content="历史" placement="left-start">
             <i class="el-icon-view icon-layout-mini color-blue" @click="onViewBpmn(scope.row)"></i>
           </el-tooltip>
 
-          <el-tooltip v-if="hasPerm('process.list')" effect="dark" content="删除" placement="left-start">
+          <el-tooltip v-if="hasPerm('instance.remove')" effect="dark" content="删除" placement="left-start">
             <i class="el-icon-view icon-layout-mini color-blue" @click="onDeleteBpmn(scope.row)"></i>
           </el-tooltip>
         </template>
@@ -215,7 +215,7 @@ export default {
       this.page = page;
 
       activitiApi
-        .getProcessDefinition(this.page, this.limit, this.searchObj)
+        .getInstances(this.page, this.limit, this.searchObj)
         .then((res) => {
           this.list = res.data.items;
           this.total = res.data.total;
