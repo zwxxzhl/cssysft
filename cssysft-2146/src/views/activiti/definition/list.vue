@@ -127,7 +127,6 @@ export default {
   methods: {
     //启动流程实例
     onStartInstance(row) {
-      console.log("");
       activitiApi.startInstance({
         key: row.key,
         name: row.name,

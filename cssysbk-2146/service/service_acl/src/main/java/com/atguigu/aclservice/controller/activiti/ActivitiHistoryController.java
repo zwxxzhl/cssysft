@@ -1,26 +1,24 @@
 package com.atguigu.aclservice.controller.activiti;
 
-import com.atguigu.security.entity.SecurityUser;
 import com.atguigu.utils.utils.R;
+import io.swagger.annotations.ApiParam;
 import org.activiti.bpmn.model.Process;
 import org.activiti.bpmn.model.*;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.history.HistoricActivityInstance;
+import org.activiti.engine.history.HistoricDetail;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.repository.ProcessDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
 @RestController
-@RequestMapping("/activitiHistory")
+@RequestMapping("/admin/acl/activitiHistory")
 public class ActivitiHistoryController {
 
     @Autowired
@@ -29,21 +27,38 @@ public class ActivitiHistoryController {
     @Autowired
     private HistoryService historyService;
 
-    //用户历史
-    @GetMapping(value = "/getInstancesByUserName")
-    public R InstancesByUser() {
+    /**
+     * 用户历史任务
+     */
+    @GetMapping(value = "/getHistoryInstances/{page}/{limit}")
+    public R getHistoryInstances(
+            @ApiParam(name = "page", value = "当前页码", required = true)
+            @PathVariable int page,
+
+            @ApiParam(name = "limit", value = "每页记录数", required = true)
+            @PathVariable int limit,
+
+            @ApiParam(name = "searchObj", value = "查询对象") ProcessDefinition searchObj) {
         try {
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            List<HistoricActivityInstance> historicActivityInstance = historyService.createHistoricActivityInstanceQuery()
+                    .taskAssignee(username)
+                    .orderByHistoricActivityInstanceEndTime()
+                    .listPage((page - 1) * limit, limit);
+
+            List<HistoricProcessInstance> list1 = historyService.createHistoricProcessInstanceQuery().list();
+            List<HistoricDetail> list2 = historyService.createHistoricDetailQuery().list();
+            List<HistoricActivityInstance> list3 = historyService.createNativeHistoricActivityInstanceQuery().list();
 
             List<HistoricTaskInstance> historicTaskInstances = historyService.createHistoricTaskInstanceQuery()
+                    .taskAssignee(username)
                     .orderByHistoricTaskInstanceEndTime().asc()
-                    .taskAssignee("bajie")
-                    .list();
+                    .listPage((page - 1) * limit, limit);
 
-            return R.ok().data(R.ITEMS, historicTaskInstances);
+            return R.ok().data(R.ITEMS, historicActivityInstance);
         } catch (Exception e) {
             return R.error().message("获取历史任务失败").data(R.DESC, e.toString());
         }
-
     }
 
     //任务实例历史
@@ -64,10 +79,11 @@ public class ActivitiHistoryController {
 
     }
 
-
-    //流程图高亮
+    /**
+     * 流程图高亮
+     */
     @GetMapping("/gethighLine")
-    public R gethighLine(@RequestParam("instanceId") String instanceId, @AuthenticationPrincipal SecurityUser securityUser) {
+    public R gethighLine(@RequestParam("instanceId") String instanceId) {
         try {
             HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
                     .processInstanceId(instanceId).singleResult();
@@ -151,7 +167,6 @@ public class ActivitiHistoryController {
 
             highLine.removeAll(set);
 
-
             //获取当前用户
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -174,7 +189,7 @@ public class ActivitiHistoryController {
 
             return R.ok().data(reMap);
         } catch (Exception e) {
-            return R.error().message("获取历史任务失败").data(R.DESC, e.toString());
+            return R.error().message("获取实例详情失败").data(R.DESC, e.toString());
         }
     }
 

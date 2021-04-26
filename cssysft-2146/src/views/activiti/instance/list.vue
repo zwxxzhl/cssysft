@@ -5,17 +5,9 @@
         <el-input v-model="searchObj.name" placeholder="实例名称"/>
       </el-form-item>
 
-      <el-button type="primary" icon="el-icon-search" @click="fetchData()"
-      >查询
-      </el-button
-      >
+      <el-button type="primary" icon="el-icon-search" @click="fetchData()">查询</el-button
       <el-button type="default" @click="resetData()">清空</el-button>
     </el-form>
-
-    <div>
-      <el-button type="danger" size="mini" @click="onOpenBpmn" v-if="hasPerm('instance.add')">添加</el-button>
-      <el-button type="danger" size="mini" @click="removeRows()" v-if="hasPerm('instance.remove')">批量删除</el-button>
-    </div>
 
     <el-table
       v-loading="listLoading"
@@ -34,26 +26,26 @@
 
       <el-table-column prop="startDate" label="创建时间" width="150"/>
       <el-table-column prop="name" label="实例名称" width="150"/>
-      <el-table-column prop="processDefinitionId" label="流程定义Id" width="200"/>
       <el-table-column prop="processDefinitionKey" label="流程定义Key" width="200"/>
-      <el-table-column prop="version" label="版本号"/>
+      <el-table-column prop="status" label="状态"/>
+      <el-table-column prop="processDefinitionVersion" label="版本号"/>
 
       <el-table-column label="操作" width="230" align="center">
         <template #default="scope">
           <el-tooltip v-if="hasPerm('instance.update')" effect="dark" content="挂起" placement="left-start">
-            <i class="el-icon-plus icon-layout-mini color-green" @click="onOpenBpmn"></i>
+            <i class="el-icon-warning-outline icon-layout-mini color-orange" @click="onSuspend(scope.row)"></i>
           </el-tooltip>
 
           <el-tooltip v-if="hasPerm('instance.update')" effect="dark" content="激活" placement="left-start">
-            <i class="el-icon-view icon-layout-mini color-blue" @click="onViewBpmn(scope.row)"></i>
+            <i class="el-icon-circle-check icon-layout-mini color-green" @click="onResume(scope.row)"></i>
           </el-tooltip>
 
-          <el-tooltip v-if="hasPerm('instance.list')" effect="dark" content="历史" placement="left-start">
+          <el-tooltip v-if="hasPerm('instance.list')" effect="dark" content="进展" placement="left-start">
             <i class="el-icon-view icon-layout-mini color-blue" @click="onViewBpmn(scope.row)"></i>
           </el-tooltip>
 
           <el-tooltip v-if="hasPerm('instance.remove')" effect="dark" content="删除" placement="left-start">
-            <i class="el-icon-view icon-layout-mini color-blue" @click="onDeleteBpmn(scope.row)"></i>
+            <i class="el-icon-delete icon-layout-mini color-gray" @click="onDelete(scope.row)"></i>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -131,6 +123,48 @@ export default {
   mounted() {
   },
   methods: {
+    //挂起流程实例
+    onSuspend(row) {
+      activitiApi.suspendInstance(
+        row.id
+      ).then(res => {
+        if (res.success) {
+          this.fetchData();
+          this.$message({
+            type: 'success',
+            message: res.message
+          })
+        }
+      })
+    },
+    //激活流程实例
+    onResume(row) {
+      activitiApi.resumeInstance(
+        row.id
+      ).then(res => {
+        if (res.success) {
+          this.fetchData();
+          this.$message({
+            type: 'success',
+            message: res.message
+          })
+        }
+      })
+    },
+    //删除流程实例
+    onDelete(row) {
+      activitiApi.deleteInstance(
+          row.id
+      ).then(res => {
+        if (res.success) {
+          this.fetchData();
+          this.$message({
+            type: 'success',
+            message: res.message
+          })
+        }
+      })
+    },
     //导出svg
     onExportImg() {
       this.$refs.refBpmnJs.exportImg();
@@ -153,7 +187,7 @@ export default {
       if (this.ifBpmnAdd) {
         this.$refs.refBpmnJs.newDiagram();
       } else {
-        this.$refs.refBpmnJs.view(this.bpmnData);
+        this.$refs.refBpmnJs.viewColor(this.bpmnData);
       }
     },
     //关闭bpmn
@@ -167,7 +201,7 @@ export default {
     },
     //部署流程
     onDeploy() {
-      this.$refs.refBpmnJs.deploy();
+      this.$refs.refBpmnJs.deploy(this);
     },
     //查看流程
     onViewBpmn(row) {
@@ -175,149 +209,28 @@ export default {
       this.bpmnData = row;
       this.bpmnVisible = true;
     },
-    onDeleteBpmn(row) {
-      this.$confirm("此操作将删除流程, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(() => {
-          // promise
-          // 点击确定，远程调用ajax
-          return userApi.removeById(id);
-        })
-        .then((response) => {
-          this.fetchData(this.page);
-          if (response.success) {
-            this.$message({
-              type: "success",
-              message: "删除成功!",
-            });
-          }
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除",
-          });
-        });
-    },
-    changeSize(size) {
-      this.limit = size;
-      this.fetchData(1);
-    },
-    addUser() {
-      this.$router.push({path: "/acl/user/add"});
-    },
-    // 加载讲师列表数据
     fetchData(page = 1) {
-      // 异步获取远程数据（ajax）
       this.page = page;
-
       activitiApi
         .getInstances(this.page, this.limit, this.searchObj)
         .then((res) => {
           this.list = res.data.items;
           this.total = res.data.total;
 
-          // 数据加载并绑定成功
           this.listLoading = false;
         });
     },
-
-    // 重置查询表单
+    changeSize(size) {
+      this.limit = size;
+      this.fetchData(1);
+    },
     resetData() {
       this.searchObj = {};
       this.fetchData();
     },
-
-    // 根据id删除数据
-    removeDataById(id) {
-      // debugger
-      this.$confirm("此操作将永久删除该记录, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(() => {
-          // promise
-          // 点击确定，远程调用ajax
-          return userApi.removeById(id);
-        })
-        .then((response) => {
-          this.fetchData(this.page);
-          if (response.success) {
-            this.$message({
-              type: "success",
-              message: "删除成功!",
-            });
-          }
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除",
-          });
-        });
-    },
     handleSelectionChange(selection) {
       this.multipleSelection = selection;
-    },
-    removeRows() {
-      console.log("removeRows......");
-
-      if (this.multipleSelection.length === 0) {
-        this.$message({
-          type: "warning",
-          message: "请选择要删除的记录!",
-        });
-        return;
-      }
-
-      this.$confirm("此操作将永久删除该记录, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(() => {
-          // 遍历selection，将id取出放入id列表
-          var idList = [];
-          this.multipleSelection.forEach((item) => {
-            idList.push(item.id);
-            // console.log(idList)
-          });
-          // 调用api
-          return userApi.removeRows(idList);
-        })
-        .then((response) => {
-          this.fetchData(this.page);
-          if (response.success) {
-            this.$message({
-              type: "success",
-              message: "删除成功!",
-            });
-          }
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除",
-          });
-        });
-    },
-
-    // 执行搜索
-    // queryString：文本框中输入的值
-    // cb：一个函数
-    querySearch(queryString, cb) {
-      console.log(queryString);
-      console.log(cb);
-
-      // teacher.selectNameByKey(queryString).then(response => {
-      //   // 调用 callback 返回建议列表的数据
-      //   cb(response.data.items)
-      // })
-    },
+    }
   },
 };
 </script>

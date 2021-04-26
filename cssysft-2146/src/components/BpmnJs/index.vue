@@ -44,6 +44,9 @@ export default {
     this.initBpmnJs();
   },
   methods: {
+    viewColor(row) {
+      tools.viewColor(bpmnModeler, row);
+    },
     view(row) {
       tools.view(bpmnModeler, row);
     },
@@ -89,12 +92,11 @@ export default {
       });
     },
     newDiagram() {
-      bpmnModeler
-          .importXML(xmlStr)
-          .then((res) => {
-          })
-          .catch((err) => {
-          });
+      bpmnModeler.importXML(xmlStr)
+        .then((res) => {
+        })
+        .catch((err) => {
+        });
     },
   },
 };

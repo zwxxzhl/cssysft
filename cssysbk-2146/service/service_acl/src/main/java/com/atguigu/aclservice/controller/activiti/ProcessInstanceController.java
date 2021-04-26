@@ -145,12 +145,12 @@ public class ProcessInstanceController {
      * 激活实例
      */
     @PutMapping(value = "/resumeInstance")
-    public R resumeInstance(@RequestParam("instanceId") String instanceId) {
+    public R resumeInstance(@RequestBody JSONObject params) {
         try {
             Authentication.setAuthenticatedUserId(SecurityContextHolder.getContext().getAuthentication().getName());
             ProcessInstance processInstance = processRuntime.resume(ProcessPayloadBuilder
                     .resume()
-                    .withProcessInstanceId(instanceId)
+                    .withProcessInstanceId(params.getString("instanceId"))
                     .build()
             );
 

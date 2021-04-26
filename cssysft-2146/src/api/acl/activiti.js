@@ -3,6 +3,7 @@ import request from '@/utils/request'
 const api_definition_name = '/admin/acl/processDefinition';
 const api_instance_name = '/admin/acl/processInstance';
 const api_task_name = '/admin/acl/task';
+const api_history_name = '/admin/acl/activitiHistory';
 
 export default {
 
@@ -86,6 +87,23 @@ export default {
       url: `${api_task_name}/getTasks/${page}/${limit}`,
       method: 'get',
       params: searchObj
+    })
+  },
+  //--------------------------------------------------------------------//
+  //获取用户历史实例
+  getHistoryInstances(page, limit, searchObj) {
+    return request({
+      url: `${api_task_name}/getHistoryInstances/${page}/${limit}`,
+      method: 'get',
+      params: searchObj
+    })
+  },
+  //获取流程实例中高亮节点数据
+  gethighLine(instanceId) {
+    return request({
+      url: `${api_history_name}/gethighLine`,
+      method: 'get',
+      params: {instanceId}
     })
   }
 }
