@@ -138,6 +138,11 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
             selectPermissionList = baseMapper.selectPermissionByUserId(userId);
         }
 
+        if (selectPermissionList.size() > 0 && !this.isSysAdmin(userId)) {
+            Permission pid = baseMapper.selectOne(new QueryWrapper<Permission>().eq("pid", "0"));
+            selectPermissionList.add(pid);
+        }
+
         List<Permission> permissionList = PermissionHelper.bulid(selectPermissionList);
         List<JSONObject> result = MemuHelper.bulid(permissionList);
         return result;

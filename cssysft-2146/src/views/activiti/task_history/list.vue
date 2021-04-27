@@ -246,7 +246,7 @@ export default {
       this.page = page;
 
       activitiApi
-        .getProcessDefinition(this.page, this.limit, this.searchObj)
+        .getHistoricTaskInstance(this.page, this.limit, this.searchObj)
         .then((res) => {
           this.list = res.data.items;
           this.total = res.data.total;

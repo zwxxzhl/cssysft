@@ -1,5 +1,6 @@
 package com.atguigu.aclservice.controller.activiti;
 
+import com.alibaba.fastjson.JSONObject;
 import com.atguigu.aclservice.mapper.activiti.ActivitiMapper;
 import com.atguigu.utils.utils.R;
 import io.swagger.annotations.ApiParam;
@@ -14,9 +15,11 @@ import org.activiti.api.task.runtime.TaskRuntime;
 import org.activiti.bpmn.model.FormProperty;
 import org.activiti.bpmn.model.UserTask;
 import org.activiti.engine.RepositoryService;
+import org.activiti.engine.impl.identity.Authentication;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
@@ -24,9 +27,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-
 @RestController
-@RequestMapping("/task")
+@RequestMapping("/admin/acl/task")
 public class TaskController {
     @Autowired
     private TaskRuntime taskRuntime;
@@ -53,6 +55,7 @@ public class TaskController {
 
             @ApiParam(name = "searchObj", value = "查询对象") ProcessDefinition searchObj) {
         try {
+            Authentication.setAuthenticatedUserId(SecurityContextHolder.getContext().getAuthentication().getName());
 
             Page<Task> tasks = taskRuntime.tasks(Pageable.of((page - 1) * limit, limit,
                     Order.by("createdDate", Order.Direction.DESC)));
@@ -77,7 +80,7 @@ public class TaskController {
                 listMap.add(hashMap);
             }
 
-            return R.ok().data(R.ITEMS, listMap);
+            return R.ok().data(R.ITEMS, listMap).data("total", tasks.getTotalItems());
         } catch (Exception e) {
             return R.error().message("获取我的代办任务失败").data(R.DESC, e.toString());
         }
@@ -86,12 +89,12 @@ public class TaskController {
     /**
      *  直接完成代办
      */
-    @GetMapping(value = "/completeTask")
-    public R completeTask(@RequestParam("taskId") String taskId) {
+    @PutMapping(value = "/completeTask")
+    public R completeTask(@RequestBody JSONObject params) {
         try {
+            Authentication.setAuthenticatedUserId(SecurityContextHolder.getContext().getAuthentication().getName());
 
-            Task task = taskRuntime.task(taskId);
-
+            Task task = taskRuntime.task(params.getString("taskId"));
 
             if (task.getAssignee() == null) {
                 taskRuntime.claim(TaskPayloadBuilder.claim().withTaskId(task.getId()).build());

@@ -89,11 +89,19 @@ export default {
       params: searchObj
     })
   },
+  //完成任务
+  completeTask(taskId) {
+    return request({
+      url: `${api_task_name}/resumeInstance`,
+      method: 'put',
+      data: {taskId}
+    })
+  },
   //--------------------------------------------------------------------//
   //获取用户历史实例
-  getHistoryInstances(page, limit, searchObj) {
+  getHistoricTaskInstance(page, limit, searchObj) {
     return request({
-      url: `${api_task_name}/getHistoryInstances/${page}/${limit}`,
+      url: `${api_history_name}/getHistoricTaskInstance/${page}/${limit}`,
       method: 'get',
       params: searchObj
     })

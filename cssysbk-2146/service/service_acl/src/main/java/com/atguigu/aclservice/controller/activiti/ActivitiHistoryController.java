@@ -7,9 +7,9 @@ import org.activiti.bpmn.model.*;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.history.HistoricActivityInstance;
-import org.activiti.engine.history.HistoricDetail;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.history.HistoricTaskInstanceQuery;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,7 +30,7 @@ public class ActivitiHistoryController {
     /**
      * 用户历史任务
      */
-    @GetMapping(value = "/getHistoryInstances/{page}/{limit}")
+    @GetMapping(value = "/getHistoricTaskInstance/{page}/{limit}")
     public R getHistoryInstances(
             @ApiParam(name = "page", value = "当前页码", required = true)
             @PathVariable int page,
@@ -41,21 +41,14 @@ public class ActivitiHistoryController {
             @ApiParam(name = "searchObj", value = "查询对象") ProcessDefinition searchObj) {
         try {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
-            List<HistoricActivityInstance> historicActivityInstance = historyService.createHistoricActivityInstanceQuery()
-                    .taskAssignee(username)
-                    .orderByHistoricActivityInstanceEndTime()
-                    .listPage((page - 1) * limit, limit);
 
-            List<HistoricProcessInstance> list1 = historyService.createHistoricProcessInstanceQuery().list();
-            List<HistoricDetail> list2 = historyService.createHistoricDetailQuery().list();
-            List<HistoricActivityInstance> list3 = historyService.createNativeHistoricActivityInstanceQuery().list();
+            HistoricTaskInstanceQuery query = historyService.createHistoricTaskInstanceQuery();
+            query.taskAssignee(username).orderByHistoricTaskInstanceEndTime().asc();
 
-            List<HistoricTaskInstance> historicTaskInstances = historyService.createHistoricTaskInstanceQuery()
-                    .taskAssignee(username)
-                    .orderByHistoricTaskInstanceEndTime().asc()
-                    .listPage((page - 1) * limit, limit);
+            List<HistoricTaskInstance> historicTaskInstances = query.listPage((page - 1) * limit, limit);
+            long count = query.count();
 
-            return R.ok().data(R.ITEMS, historicActivityInstance);
+            return R.ok().data(R.ITEMS, historicTaskInstances).data("total", count);
         } catch (Exception e) {
             return R.error().message("获取历史任务失败").data(R.DESC, e.toString());
         }
