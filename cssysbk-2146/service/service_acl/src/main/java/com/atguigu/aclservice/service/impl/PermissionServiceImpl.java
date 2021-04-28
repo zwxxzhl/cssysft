@@ -123,7 +123,8 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         } else {
             selectPermissionValueList = baseMapper.selectPermissionValueByUserId(id);
         }
-        selectPermissionValueList.addAll(Arrays.asList("ROLE_ACTIVITI_ADMIN", "ROLE_ACTIVITI_USER", "GROUP_activitiTeam", "GROUP_otherTeam"));
+        //角色不能混合使用 "GROUP_otherTeam" "ROLE_ACTIVITI_ADMIN"
+        selectPermissionValueList.addAll(Arrays.asList("ROLE_ACTIVITI_USER", "GROUP_activitiTeam"));
 
         return selectPermissionValueList;
     }

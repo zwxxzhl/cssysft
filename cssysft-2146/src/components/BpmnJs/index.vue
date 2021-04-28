@@ -20,9 +20,10 @@ import Modeler from "bpmn-js/lib/Modeler";
 
 // 右边面板
 import propertiesPanelModule from "bpmn-js-properties-panel";
-import propertiesProviderModule from "bpmn-js-properties-panel/lib/provider/camunda";
+// import propertiesProviderModule from "bpmn-js-properties-panel/lib/provider/camunda";
+import propertiesProviderModule from "bpmn-js-properties-panel/lib/provider/bpmn";
 // 右边面板扩展，增加功能描述模块
-import camundaModdleDescriptor from "camunda-bpmn-moddle/resources/camunda";
+// import camundaModdleDescriptor from "camunda-bpmn-moddle/resources/camunda";
 
 //汉化
 import customTranslate from "./customTranslate/customTranslate";
@@ -85,10 +86,10 @@ export default {
           // 汉化
           customTranslateModule,
         ],
-        moddleExtensions: {
-          // 右边面板扩展，增加功能描述模块
-          camunda: camundaModdleDescriptor,
-        },
+        // moddleExtensions: {
+        //   // 右边面板扩展，增加功能描述模块
+        //   camunda: camundaModdleDescriptor,
+        // },
       });
     },
     newDiagram() {

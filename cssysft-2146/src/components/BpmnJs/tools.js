@@ -95,7 +95,8 @@ const tools = {
     bpmnModeler
       .saveXML({format: true})
       .then((res) => {
-        activitiApi.addDeploymentByString({bpmnStr: res.xml}).then(res => {
+        let str = res.xml.replaceAll('camunda', 'activiti')
+        activitiApi.addDeploymentByString({bpmnStr: str}).then(res => {
           if (res.success) {
             vm.$message({
               type: 'success',
