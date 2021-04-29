@@ -20,18 +20,15 @@ import Modeler from "bpmn-js/lib/Modeler";
 
 // 右边面板
 import propertiesPanelModule from "bpmn-js-properties-panel";
-// import propertiesProviderModule from "bpmn-js-properties-panel/lib/provider/camunda";
+import propertiesProviderModule from "bpmn-js-properties-panel/lib/provider/camunda";
 // 右边面板扩展，增加功能描述模块
-// import camundaModdleDescriptor from "camunda-bpmn-moddle/resources/camunda";
+import camundaModdleDescriptor from "camunda-bpmn-moddle/resources/camunda";
 
 //汉化
 import customTranslate from "./customTranslate/customTranslate";
 
 import {xmlStr} from "./xmlStr.js";
 import tools from "./tools.js";
-
-import activitiExtensionModule from "activiti-bpmn-moddle/lib";
-import activitiModdle from "activiti-bpmn-moddle/resources/activiti";
 
 let bpmnModeler = null;
 
@@ -77,18 +74,20 @@ export default {
 
       bpmnModeler = new Modeler({
         container: this.canvas,
+        // 右边面板挂载
         propertiesPanel: {
           parent: "#js-properties-panel",
         },
         additionalModules: [
+          // 右边面板内容
+          propertiesProviderModule,
           propertiesPanelModule,
-          // propertiesProviderModule,
+          // 汉化
           customTranslateModule,
-          activitiExtensionModule
         ],
         moddleExtensions: {
-          // camunda: camundaModdleDescriptor,
-          activiti: activitiModdle
+          // 右边面板扩展，增加功能描述模块
+          camunda: camundaModdleDescriptor,
         }
       });
     },
