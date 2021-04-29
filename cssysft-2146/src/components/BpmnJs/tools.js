@@ -95,7 +95,7 @@ const tools = {
     bpmnModeler
       .saveXML({format: true})
       .then((res) => {
-        let str = res.xml.replaceAll('camunda', 'activiti')
+        let str = tools.formXML(res.xml);
         activitiApi.addDeploymentByString({bpmnStr: str}).then(res => {
           if (res.success) {
             vm.$message({
@@ -110,6 +110,11 @@ const tools = {
       .catch((err) => {
         console.error("部署失败", err);
       });
+  },
+  formXML(data) {
+    var temp = data.replace(/camunda/ig, "activiti");
+    temp = temp.replace(/FormField/ig, 'formProperty');
+    return temp;
   },
   //导出图片
   exportImg(bpmnModeler) {

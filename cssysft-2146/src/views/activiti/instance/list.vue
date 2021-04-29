@@ -89,7 +89,6 @@
 <script>
 import {mapGetters} from "vuex";
 
-import userApi from "@/api/acl/user";
 import activitiApi from "@/api/acl/activiti";
 import BpmnJs from "@/components/BpmnJs/index.vue";
 

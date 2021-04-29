@@ -15,23 +15,17 @@ import "bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css";
 /*右边工具栏样式*/
 import "bpmn-js-properties-panel/dist/assets/bpmn-js-properties-panel.css";
 
-// 导入模型图
 import Modeler from "bpmn-js/lib/Modeler";
-
-// 右边面板
 import propertiesPanelModule from "bpmn-js-properties-panel";
-// import propertiesProviderModule from "bpmn-js-properties-panel/lib/provider/camunda";
-// 右边面板扩展，增加功能描述模块
-// import camundaModdleDescriptor from "camunda-bpmn-moddle/resources/camunda";
 
-//汉化
-import customTranslate from "./customTranslate/customTranslate";
+//activiti
+import propertiesProviderModule from './properties-panel/provider/activiti';
+import activitiModdleDescriptor from './activiti.json';
+import customTranslate from './customTranslate/customTranslate';
+import customControlsModule from './customControls';
 
-import {xmlStr} from "./xmlStr.js";
-import tools from "./tools.js";
-
-import activitiExtensionModule from "activiti-bpmn-moddle/lib";
-import activitiModdle from "activiti-bpmn-moddle/resources/activiti";
+import {xmlStr} from "./newDiagram.js";
+import tools from "../tools.js";
 
 let bpmnModeler = null;
 
@@ -77,18 +71,18 @@ export default {
 
       bpmnModeler = new Modeler({
         container: this.canvas,
+        // 右边面板挂载
         propertiesPanel: {
           parent: "#js-properties-panel",
         },
         additionalModules: [
           propertiesPanelModule,
-          // propertiesProviderModule,
-          customTranslateModule,
-          activitiExtensionModule
+          propertiesProviderModule,
+          customControlsModule,
+          customTranslateModule
         ],
         moddleExtensions: {
-          // camunda: camundaModdleDescriptor,
-          activiti: activitiModdle
+          activiti:activitiModdleDescriptor
         }
       });
     },
