@@ -65,3 +65,9 @@ mybatis-plus:
 # bpmn上传后预览映射路径： linux: file:/root/Activiti/
 bpmn-path-mapping: D:\\WangJianIDEA_Test\\activiti-imooc\\src\\main\\resources\\resources\\bpmn\\
 
+<dependency>
+    <groupId>org.activiti</groupId>
+    <artifactId>activiti-spring-boot-starter</artifactId>
+    <version>7.1.0.M6</version>
+</dependency>
+

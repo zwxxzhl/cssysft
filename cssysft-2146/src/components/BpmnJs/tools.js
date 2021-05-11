@@ -95,7 +95,9 @@ const tools = {
     bpmnModeler
       .saveXML({format: true})
       .then((res) => {
-        let str = tools.formXML(res.xml);
+          //todo
+        // let str = tools.formXML(res.xml);
+        let str = res.xml;
         activitiApi.addDeploymentByString({bpmnStr: str}).then(res => {
           if (res.success) {
             vm.$message({
