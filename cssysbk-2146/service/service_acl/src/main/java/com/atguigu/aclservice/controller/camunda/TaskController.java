@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/admin/acl/task")
@@ -45,23 +46,30 @@ public class TaskController {
             query.taskAssignee(username);
             List<Task> list = query.listPage((page - 1) * limit, limit);
 
-            List<HashMap<String, Object>> listMap = new ArrayList<HashMap<String, Object>>();
+            List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
             for (Task tk : list) {
-                HashMap<String, Object> hashMap = new HashMap<>();
-                hashMap.put("id", tk.getId());
-                hashMap.put("name", tk.getName());
-                hashMap.put("createdDate", tk.getCreateTime());
+                Map<String, Object> map = new HashMap<>();
+                ProcessDefinition def = repositoryService.getProcessDefinition(tk.getProcessDefinitionId());
+
+                map.put("id", tk.getId());
+                map.put("name", tk.getName());
+                map.put("createTime", tk.getCreateTime());
 
                 //执行人，null时前台显示未拾取
                 if (tk.getAssignee() == null) {
-                    hashMap.put("assignee", "待拾取任务");
+                    map.put("assignee", "待拾取任务");
                 } else {
-                    hashMap.put("assignee", tk.getAssignee());//
+                    map.put("assignee", tk.getAssignee());
                 }
 
-                ProcessDefinition processDefinition = repositoryService.getProcessDefinition(tk.getProcessDefinitionId());
-                hashMap.put("instanceName", processDefinition.getName());
-                listMap.add(hashMap);
+                map.put("processDefinitionId", tk.getProcessDefinitionId());
+                map.put("processInstanceId", tk.getProcessInstanceId());
+
+                map.put("processName", def.getName());
+                map.put("processDefinitionKey", def.getKey());
+                map.put("version", def.getVersion());
+
+                listMap.add(map);
             }
 
             long count = query.count();

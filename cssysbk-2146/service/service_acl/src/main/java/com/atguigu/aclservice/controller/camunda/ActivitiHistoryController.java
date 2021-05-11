@@ -48,9 +48,30 @@ public class ActivitiHistoryController {
             query.taskAssignee(username).orderByHistoricTaskInstanceEndTime().asc();
 
             List<HistoricTaskInstance> historicTaskInstances = query.listPage((page - 1) * limit, limit);
+
+            ArrayList<Map<String, Object>> listMap = new ArrayList<>();
+            for (HistoricTaskInstance instance : historicTaskInstances) {
+                Map<String, Object> map = new HashMap<>();
+                ProcessDefinition def = repositoryService.getProcessDefinition(instance.getProcessDefinitionId());
+
+                map.put("id", instance.getId());
+                map.put("name", instance.getName());
+                map.put("assignee", instance.getAssignee());
+                map.put("startTime", instance.getStartTime());
+                map.put("endTime", instance.getEndTime());
+                map.put("processDefinitionId", instance.getProcessDefinitionId());
+                map.put("processDefinitionKey", instance.getProcessDefinitionKey());
+                map.put("processInstanceId", instance.getProcessInstanceId());
+
+                map.put("processName", def.getName());
+                map.put("version", def.getVersion());
+
+                listMap.add(map);
+            }
+
             long count = query.count();
 
-            return R.ok().data(R.ITEMS, historicTaskInstances).data("total", count);
+            return R.ok().data(R.ITEMS, listMap).data("total", count);
         } catch (Exception e) {
             return R.error().message("获取历史任务失败").data(R.DESC, e.toString());
         }
