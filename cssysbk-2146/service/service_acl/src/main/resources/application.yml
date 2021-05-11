@@ -40,21 +40,6 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
 
-  # activiti配置
-  activiti:
-    # 创建历史表，记录所有数据
-    history-level: full
-    db-history-used: true
-    # 自动部署验证设置:true-开启（默认）、false-关闭 【自动检测resource下的bpmn文件部署】
-    check-process-definitions: false
-    # 项目启动就激活AsyncExecutor,异步 true  false 关闭 （切记关闭，否则启动就不断的刷查询sql）
-    async-executor-activate: false
-    # 关闭 SpringAutoDeployment
-    deployment-mode: never-fail
-project:
-  manifest:
-    file:
-      path: classpath:/default-app.json
 # 配置mapper xml文件的路径
 mybatis-plus:
   mapper-locations: classpath:com/atguigu/aclservice/mapper/xml/*.xml
