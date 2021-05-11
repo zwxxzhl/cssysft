@@ -28,12 +28,12 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="key" label="流程部署key" width="150"/>
-      <el-table-column prop="name" label="流程定义名称" width="150"/>
+      <el-table-column prop="key" label="流程key"/>
+      <el-table-column prop="name" label="流程名称"/>
       <el-table-column prop="resourceName" label="资源名称" width="200"/>
       <el-table-column prop="version" label="版本号"/>
 
-      <el-table-column label="操作" width="230" align="center">
+      <el-table-column label="操作" width="180" align="center">
         <template #default="scope">
           <el-tooltip v-if="hasPerm('definition.add')" effect="dark" content="创建流程" placement="left-start">
             <i class="el-icon-plus icon-layout-mini color-green" @click="onOpenBpmn"></i>

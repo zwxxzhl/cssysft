@@ -24,17 +24,19 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="instanceName" label="流程名称" width="150"/>
-      <el-table-column prop="name" label="任务名称" width="150"/>
-      <el-table-column prop="status" label="任务状态" width="200"/>
-      <el-table-column prop="assignee" label="办理人" width="200"/>
-      <el-table-column prop="createdDate" label="创建时间" width="200"/>
-      <el-table-column prop="version" label="版本号"/>
+      <el-table-column prop="processName" label="流程名称"/>
+      <el-table-column prop="name" label="任务名称"/>
+      <el-table-column prop="assignee" label="办理人" width="100"/>
+      <el-table-column prop="createTime" label="创建时间" width="160"/>
+      <el-table-column prop="version" label="版本号" width="80"/>
 
-      <el-table-column label="操作" width="230" align="center">
+      <el-table-column label="操作" width="100" align="center">
         <template #default="scope">
-          <el-tooltip v-if="hasPerm('process.add')" effect="dark" content="办理" placement="left-start">
+          <el-tooltip v-if="hasPerm('task_todo.handle')" effect="dark" content="办理" placement="left-start">
             <i class="el-icon-plus icon-layout-mini color-green" @click="onComplete(scope.row)"></i>
+          </el-tooltip>
+          <el-tooltip v-if="hasPerm('task_history.list')" effect="dark" content="查看" placement="left-start">
+            <i class="el-icon-view icon-layout-mini color-blue" @click="onViewBpmn(scope.row)"></i>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -148,7 +150,7 @@ export default {
       if (this.ifBpmnAdd) {
         this.$refs.refBpmnJs.newDiagram();
       } else {
-        this.$refs.refBpmnJs.view(this.bpmnData);
+        this.$refs.refBpmnJs.viewColor(this.bpmnData);
       }
     },
     //关闭bpmn

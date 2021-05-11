@@ -5,28 +5,9 @@
         <el-input v-model="searchObj.name" placeholder="流程名称" />
       </el-form-item>
 
-      <el-button type="primary" icon="el-icon-search" @click="fetchData()"
-        >查询</el-button
-      >
+      <el-button type="primary" icon="el-icon-search" @click="fetchData()">查询</el-button>
       <el-button type="default" @click="resetData()">清空</el-button>
     </el-form>
-
-    <div>
-      <el-button
-        type="danger"
-        size="mini"
-        @click="onOpenBpmn"
-        v-if="hasPerm('process.add')"
-        >添加</el-button
-      >
-      <el-button
-        type="danger"
-        size="mini"
-        @click="removeRows()"
-        v-if="hasPerm('process.remove')"
-        >批量删除</el-button
-      >
-    </div>
 
     <el-table
       v-loading="listLoading"
@@ -43,49 +24,17 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="taskDefinitionKey" label="KEY" width="150" />
-      <el-table-column prop="name" label="流程名称" width="150" />
-      <el-table-column prop="processInstanceId" label="流程实例ID" width="200" />
-      <el-table-column prop="assignee" label="办理人" width="200" />
-      <el-table-column prop="startTime" label="开始时间" width="200" />
-      <el-table-column prop="createTime" label="创建时间" width="200" />
+      <el-table-column prop="processName" label="流程名称" />
+      <el-table-column prop="name" label="任务名称" />
+      <el-table-column prop="assignee" label="办理人" width="100" />
+      <el-table-column prop="startTime" label="开始时间" width="160" />
+      <el-table-column prop="endTime" label="结束时间" width="160" />
+      <el-table-column prop="version" label="版本号" width="80"/>
 
-      <el-table-column label="操作" width="230" align="center">
+      <el-table-column label="操作" width="80" align="center">
         <template #default="scope">
-          <el-tooltip
-            v-if="hasPerm('process.add')"
-            effect="dark"
-            content="挂起"
-            placement="left-start"
-          >
-            <i
-              class="el-icon-plus icon-layout-mini color-green"
-              @click="onOpenBpmn"
-            ></i>
-          </el-tooltip>
-
-          <el-tooltip
-            v-if="hasPerm('process.list')"
-            effect="dark"
-            content="激活"
-            placement="left-start"
-          >
-            <i
-              class="el-icon-view icon-layout-mini color-blue"
-              @click="onViewBpmn(scope.row)"
-            ></i>
-          </el-tooltip>
-
-          <el-tooltip
-            v-if="hasPerm('process.list')"
-            effect="dark"
-            content="删除"
-            placement="left-start"
-          >
-            <i
-              class="el-icon-view icon-layout-mini color-blue"
-              @click="onDeleteBpmn(scope.row)"
-            ></i>
+          <el-tooltip v-if="hasPerm('task_history.list')" effect="dark" content="查看" placement="left-start">
+            <i class="el-icon-view icon-layout-mini color-blue" @click="onViewBpmn(scope.row)"></i>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -184,7 +133,7 @@ export default {
       if (this.ifBpmnAdd) {
         this.$refs.refBpmnJs.newDiagram();
       } else {
-        this.$refs.refBpmnJs.view(this.bpmnData);
+        this.$refs.refBpmnJs.viewColor(this.bpmnData);
       }
     },
     //关闭bpmn

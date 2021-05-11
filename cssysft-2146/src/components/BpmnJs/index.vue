@@ -17,6 +17,7 @@ import "bpmn-js-properties-panel/dist/assets/bpmn-js-properties-panel.css";
 
 // 导入模型图
 import Modeler from "bpmn-js/lib/Modeler";
+import Viewer from 'bpmn-js/lib/Viewer'
 
 // 右边面板
 import propertiesPanelModule from "bpmn-js-properties-panel";
@@ -38,9 +39,13 @@ export default {
     return {
       canvas: null,
       createDiagram: true,
+      ifBpmnAdd: 'add'
     };
   },
-  mounted() {
+  mounted() {debugger
+    this.$parent
+    this.$refs
+    parent
     this.initBpmnJs();
   },
   methods: {
@@ -71,6 +76,10 @@ export default {
       };
 
       this.canvas = this.$refs.canvas;
+
+      bpmnModeler = new Viewer({
+        container: this.canvas
+      })
 
       bpmnModeler = new Modeler({
         container: this.canvas,

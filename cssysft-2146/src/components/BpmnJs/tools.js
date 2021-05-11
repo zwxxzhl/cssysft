@@ -3,7 +3,9 @@ import activitiApi from "@/api/acl/activiti";
 const tools = {
   //查看流程实例详情带颜色
   viewColor(bpmnModeler, row) {
-    activitiApi.gethighLine(row.id).then(ret => {
+    let processInstanceId = row.processInstanceId || row.id;
+
+    activitiApi.gethighLine(processInstanceId).then(ret => {
       if (ret.success) {
         const ColorJson = tools.getByColor(ret.data);
         activitiApi.getProcessDefineXml({
@@ -23,7 +25,6 @@ const tools = {
         })
       }
     })
-
   },
   //设置颜色
   setColor(json, bpmnModeler) {

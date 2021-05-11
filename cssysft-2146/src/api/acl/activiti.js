@@ -3,7 +3,7 @@ import request from '@/utils/request'
 const api_definition_name = '/admin/acl/processDefinition';
 const api_instance_name = '/admin/acl/processInstance';
 const api_task_name = '/admin/acl/task';
-const api_history_name = '/admin/acl/activitiHistory';
+const api_history_name = '/admin/acl/camundaHistory';
 
 export default {
 
