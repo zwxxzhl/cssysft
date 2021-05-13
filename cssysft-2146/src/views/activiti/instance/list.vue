@@ -36,15 +36,15 @@
             <i class="el-icon-warning-outline icon-layout-mini color-orange" @click="onSuspend(scope.row)"></i>
           </el-tooltip>
 
-          <el-tooltip v-if="hasPerm('instance.update')" effect="dark" content="激活" placement="left-start">
+          <el-tooltip v-if="hasPerm('instance.update')" effect="dark" content="激活" placement="bottom-start">
             <i class="el-icon-circle-check icon-layout-mini color-green" @click="onResume(scope.row)"></i>
           </el-tooltip>
 
-          <el-tooltip v-if="hasPerm('instance.list')" effect="dark" content="进展" placement="left-start">
+          <el-tooltip v-if="hasPerm('instance.list')" effect="dark" content="进展" placement="bottom-start">
             <i class="el-icon-view icon-layout-mini color-blue" @click="onViewBpmn(scope.row)"></i>
           </el-tooltip>
 
-          <el-tooltip v-if="hasPerm('instance.remove')" effect="dark" content="删除" placement="left-start">
+          <el-tooltip v-if="hasPerm('instance.remove')" effect="dark" content="删除" placement="bottom-start">
             <i class="el-icon-delete icon-layout-mini color-gray" @click="onDelete(scope.row)"></i>
           </el-tooltip>
         </template>
@@ -63,6 +63,7 @@
     />
 
     <el-dialog
+      ref="refDialog"
       v-model="bpmnVisible"
       title="流程图"
       width="80%"
@@ -107,8 +108,7 @@ export default {
       multipleSelection: [], // 批量选择中选择的记录列表
 
       bpmnVisible: false,
-      ifBpmnAdd: 'add',
-      bpmnData: null,
+      ifBpmnAdd: 'add'
     };
   },
   computed: {
@@ -180,15 +180,6 @@ export default {
     onRetreat() {
       this.$refs.refBpmnJs.retreat();
     },
-    //bpmn模态框打开事件
-    onOpened() {debugger
-      this.$refs.refDialogDiv.style.height = parent.innerHeight * 0.7 + "px";
-      if (this.ifBpmnAdd === 'add') {
-        this.$refs.refBpmnJs.newDiagram();
-      } else {
-        this.$refs.refBpmnJs.viewColor(this.bpmnData);
-      }
-    },
     //关闭bpmn
     onCancel() {
       this.bpmnVisible = false;
@@ -205,8 +196,16 @@ export default {
     //查看流程
     onViewBpmn(row) {
       this.ifBpmnAdd = 'view';
-      this.bpmnData = row;
       this.bpmnVisible = true;
+    },
+    //bpmn模态框打开事件
+    onOpened() {
+      this.$refs.refDialogDiv.style.height = parent.innerHeight * 0.7 + "px";
+      if (this.ifBpmnAdd === 'add') {
+        this.$refs.refBpmnJs.newDiagram();
+      } else {
+        this.$refs.refBpmnJs.viewColor();
+      }
     },
     fetchData(page = 1) {
       this.page = page;

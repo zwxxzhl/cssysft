@@ -38,14 +38,10 @@ export default {
   data() {
     return {
       canvas: null,
-      createDiagram: true,
-      ifBpmnAdd: 'add'
+      createDiagram: true
     };
   },
-  mounted() {debugger
-    this.$parent
-    this.$refs
-    parent
+  mounted() {
     this.initBpmnJs();
   },
   methods: {
@@ -77,28 +73,30 @@ export default {
 
       this.canvas = this.$refs.canvas;
 
-      bpmnModeler = new Viewer({
-        container: this.canvas
-      })
-
-      bpmnModeler = new Modeler({
-        container: this.canvas,
-        // 右边面板挂载
-        propertiesPanel: {
-          parent: "#js-properties-panel",
-        },
-        additionalModules: [
-          // 右边面板内容
-          propertiesProviderModule,
-          propertiesPanelModule,
-          // 汉化
-          customTranslateModule,
-        ],
-        moddleExtensions: {
-          // 右边面板扩展，增加功能描述模块
-          camunda: camundaModdleDescriptor,
-        }
-      });
+      if ('view' === this.$parent.$parent.$parent.$parent.ifBpmnAdd) {
+        bpmnModeler = new Viewer({
+          container: this.canvas
+        })
+      } else {
+        bpmnModeler = new Modeler({
+          container: this.canvas,
+          // 右边面板挂载
+          propertiesPanel: {
+            parent: "#js-properties-panel",
+          },
+          additionalModules: [
+            // 右边面板内容
+            propertiesProviderModule,
+            propertiesPanelModule,
+            // 汉化
+            customTranslateModule,
+          ],
+          moddleExtensions: {
+            // 右边面板扩展，增加功能描述模块
+            camunda: camundaModdleDescriptor,
+          }
+        });
+      }
     },
     newDiagram() {
       bpmnModeler.importXML(xmlStr)
