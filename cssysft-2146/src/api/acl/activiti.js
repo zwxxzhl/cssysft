@@ -92,7 +92,7 @@ export default {
   //完成任务
   completeTask(taskId) {
     return request({
-      url: `${api_task_name}/resumeInstance`,
+      url: `${api_task_name}/completeTask`,
       method: 'put',
       data: {taskId}
     })
