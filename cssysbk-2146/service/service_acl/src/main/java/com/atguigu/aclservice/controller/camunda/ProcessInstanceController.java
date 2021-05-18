@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/admin/acl//processInstance")
@@ -80,6 +81,9 @@ public class ProcessInstanceController {
     @PutMapping(value = "/startInstance")
     public R startInstance(@RequestBody JSONObject params) {
         try {
+
+            //Map<String, Object> variables = new HashMap<>();
+            //variables.put("userId", "test");
 
             ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(
                     params.getString("key"),

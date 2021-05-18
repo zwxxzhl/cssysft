@@ -108,7 +108,8 @@ export default {
       multipleSelection: [], // 批量选择中选择的记录列表
 
       bpmnVisible: false,
-      ifBpmnAdd: 'add'
+      ifBpmnAdd: 'add',
+      bpmnData: null
     };
   },
   computed: {
@@ -196,6 +197,7 @@ export default {
     //查看流程
     onViewBpmn(row) {
       this.ifBpmnAdd = 'view';
+      this.bpmnData = row;
       this.bpmnVisible = true;
     },
     //bpmn模态框打开事件
@@ -204,7 +206,7 @@ export default {
       if (this.ifBpmnAdd === 'add') {
         this.$refs.refBpmnJs.newDiagram();
       } else {
-        this.$refs.refBpmnJs.viewColor();
+        this.$refs.refBpmnJs.viewColor(this.bpmnData);
       }
     },
     fetchData(page = 1) {

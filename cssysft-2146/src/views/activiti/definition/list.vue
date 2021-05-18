@@ -111,7 +111,7 @@ export default {
 
       bpmnVisible: false,
       ifBpmnAdd: true,
-      bpmnData: null,
+      bpmnData: null
     };
   },
   computed: {
