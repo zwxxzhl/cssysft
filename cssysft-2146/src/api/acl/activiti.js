@@ -48,6 +48,14 @@ export default {
       data: {key: params.key, name: params.name, variable: params.variable}
     })
   },
+  //启动子实例
+  startSubInstance(params) {
+    return request({
+      url: `${api_instance_name}/startSubInstance`,
+      method: 'put',
+      data: {key: params.key, procinstId: params.procinstId, name: params.name, variable: params.variable}
+    })
+  },
   //查询实例列表
   getInstances(page, limit, searchObj) {
     return request({

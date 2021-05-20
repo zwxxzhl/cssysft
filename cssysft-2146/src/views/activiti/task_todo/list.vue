@@ -32,6 +32,9 @@
 
       <el-table-column label="操作" width="100" align="center">
         <template #default="scope">
+          <el-tooltip v-if="hasPerm('task_todo.handle')" effect="dark" content="派发任务" placement="bottom-start">
+            <i class="el-icon-caret-right icon-layout-mini color-purple" @click="onStartSubInstance(scope.row)"></i>
+          </el-tooltip>
           <el-tooltip v-if="hasPerm('task_todo.handle')" effect="dark" content="办理" placement="left-start">
             <i class="el-icon-plus icon-layout-mini color-green" @click="onComplete(scope.row)"></i>
           </el-tooltip>
@@ -114,6 +117,22 @@ export default {
   mounted() {
   },
   methods: {
+    //启动子流程实例
+    onStartSubInstance(row) {
+      activitiApi.startSubInstance({
+        key: row.processDefinitionKey,
+        procinstId: row.processInstanceId,
+        name: row.name,
+        variable: '自定义变量'
+      }).then(res => {
+        if (res.success) {
+          this.$message({
+            type: 'success',
+            message: res.message
+          })
+        }
+      })
+    },
     //完成任务
     onComplete(row) {
       activitiApi.completeTask(

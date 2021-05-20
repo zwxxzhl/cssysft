@@ -47,7 +47,7 @@
             <i class="el-icon-delete icon-layout-mini color-gray" @click="onDeleteBpmn(scope.row)"></i>
           </el-tooltip>
 
-          <el-tooltip v-if="hasPerm('definition.add')" effect="dark" content="启动实例" placement="bottom-start">
+          <el-tooltip v-if="hasPerm('definition.add')" effect="dark" content="派发任务" placement="bottom-start">
             <i class="el-icon-caret-right icon-layout-mini color-purple" @click="onStartInstance(scope.row)"></i>
           </el-tooltip>
         </template>

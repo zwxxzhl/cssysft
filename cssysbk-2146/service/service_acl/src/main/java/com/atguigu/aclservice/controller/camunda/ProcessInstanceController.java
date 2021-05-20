@@ -1,6 +1,10 @@
 package com.atguigu.aclservice.controller.camunda;
 
 import com.alibaba.fastjson.JSONObject;
+import com.atguigu.aclservice.entity.ProcinstSub;
+import com.atguigu.aclservice.entity.User;
+import com.atguigu.aclservice.service.IProcinstSubService;
+import com.atguigu.aclservice.service.UserService;
 import com.atguigu.utils.utils.R;
 import io.swagger.annotations.ApiParam;
 import org.camunda.bpm.engine.HistoryService;
@@ -11,6 +15,7 @@ import org.camunda.bpm.engine.history.HistoricProcessInstanceQuery;
 import org.camunda.bpm.engine.repository.ProcessDefinition;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -30,6 +35,12 @@ public class ProcessInstanceController {
 
     @Autowired
     private RepositoryService repositoryService;
+
+    @Autowired
+    private IProcinstSubService procinstSubService;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * 分页查询流程实例
@@ -94,6 +105,50 @@ public class ProcessInstanceController {
             System.out.println("=======打印=======");
             System.out.println(e);
             return R.error().message("创建流程实例失败").data(R.DESC, e.toString() + "local:" + e.getLocalizedMessage());
+        }
+    }
+
+    /**
+     * 启动子实例
+     */
+    @PutMapping(value = "/startSubInstance")
+    public R startSubInstance(@RequestBody JSONObject params) {
+        try {
+
+            String key = params.getString("key");
+            String procinstId = params.getString("procinstId");
+
+            //携带变量
+            //Map<String, Object> variables = new HashMap<>();
+            //variables.put("userId", "test");
+
+            //启动子实例
+            ProcessInstance subProcinst = runtimeService.startProcessInstanceByKey(
+                    key,
+                    "BusinessKey");
+
+            //保存关系
+            try {
+                String username = SecurityContextHolder.getContext().getAuthentication().getName();
+                User user = userService.selectByUsername(username);
+
+                ProcinstSub procinstSub = new ProcinstSub();
+                procinstSub.setUserId(user.getId());
+                procinstSub.setProcinstId(procinstId);
+                procinstSub.setSubProcinstId(subProcinst.getId());
+                procinstSub.setGmtCreateUser(user.getId());
+                procinstSub.setGmtUpdateUser(user.getId());
+                procinstSubService.save(procinstSub);
+            } catch (Exception e) {
+                runtimeService.deleteProcessInstance(subProcinst.getId(), "创建流程子实例关系失败，删除");
+                throw new RuntimeException("创建流程子实例失败");
+            }
+
+            return R.ok().data("name", subProcinst.getBusinessKey()).data("id", subProcinst.getId());
+        } catch (Exception e) {
+            System.out.println("=======打印=======");
+            System.out.println(e);
+            return R.error().message("创建流程子实例失败").data(R.DESC, e.toString() + "local:" + e.getLocalizedMessage());
         }
     }
 

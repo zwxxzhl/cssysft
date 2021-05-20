@@ -1,6 +1,8 @@
 package com.atguigu.aclservice.controller.camunda;
 
 import com.alibaba.fastjson.JSONObject;
+import com.atguigu.aclservice.entity.User;
+import com.atguigu.aclservice.service.UserService;
 import com.atguigu.utils.utils.R;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.io.FilenameUtils;
@@ -12,6 +14,7 @@ import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,6 +35,9 @@ public class ProcessDefinitionController {
 
     @Value("${bpmn-path-mapping}")
     private String bpmnPathMapping;
+
+    @Autowired
+    private UserService userService;
 
 
     @PostMapping(value = "/uploadStreamAndDeployment")
@@ -125,9 +131,13 @@ public class ProcessDefinitionController {
     @PostMapping(value = "/addDeploymentByString")
     public R addDeploymentByString(@RequestBody Map<String, Object> map) {
         try {
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userService.selectByUsername(username);
+
             Deployment deployment = repositoryService.createDeployment()
                     .addString("CreateWithBPMNJS.bpmn", map.get("bpmnStr").toString())
                     .name("在线部署名称")
+                    .tenantId(user.getId())
                     .deploy();
 
             return R.ok().data(R.DESC, deployment.getId());
@@ -155,6 +165,9 @@ public class ProcessDefinitionController {
             ProcessDefinitionQuery query = repositoryService.createProcessDefinitionQuery();
             if (!StringUtils.isEmpty(searchObj.getName())) {
                 query.processDefinitionNameLike(searchObj.getName());
+            }
+            if (!StringUtils.isEmpty(searchObj.getTenantId())) {
+                query.tenantIdIn(searchObj.getTenantId());
             }
             query.orderByProcessDefinitionVersion().desc();
 
