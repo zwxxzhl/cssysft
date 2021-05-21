@@ -1,11 +1,11 @@
 <template>
-  <div class="containers" ref="content" style="height: 100%">
-    <div class="canvas" ref="canvas" style="height: 100%"></div>
-    <div id="js-properties-panel" class="panel" ref="panel"></div>
+  <div class="containers" style="height: 100%">
+    <div ref="canvas" class="canvas" style="height: 100%"></div>
+    <div ref="panel" v-if="useOpenBpmnAdd" id="js-properties-panel" class="panel"></div>
   </div>
 </template>
 
-<script>
+<script setup>
 /* 左边工具栏的样式 去掉该样式左边工具栏不显示 */
 import "bpmn-js/dist/assets/diagram-js.css";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
@@ -31,87 +31,79 @@ import camundaModdleDescriptor from "camunda-bpmn-moddle/resources/camunda";
 import customTranslate from "./customTranslate/customTranslate";
 
 import {xmlStr} from "./xmlStr.js";
-import tools from "./tools.js";
 
-let bpmnModeler = null;
+/** ----------------------------------------------------------------------------------- **/
 
-export default {
-  name: "BpmnJs",
-  data() {
-    return {
-      canvas: null,
-      createDiagram: true
-    };
-  },
-  mounted() {
-    this.initBpmnJs();
-  },
-  methods: {
-    viewColor(row) {
-      tools.viewColor(bpmnModeler, row);
-    },
-    view(row) {
-      tools.view(bpmnModeler, row);
-    },
-    deploy(vm) {
-      tools.deploy(bpmnModeler, vm);
-    },
-    exportImg() {
-      tools.exportImg(bpmnModeler);
-    },
-    exportBpmn() {
-      tools.exportBpmn(bpmnModeler);
-    },
-    forward() {
-      tools.forward(bpmnModeler);
-    },
-    retreat() {
-      tools.retreat(bpmnModeler);
-    },
-    initBpmnJs() {
-      let customTranslateModule = {
-        translate: ["value", customTranslate],
-      };
+import {useContext, ref, onMounted, inject} from 'vue'
 
-      this.canvas = this.$refs.canvas;
+const {expose} = useContext();
 
-      if ('view' === this.$parent.$parent.$parent.$parent.ifBpmnAdd) {
-        bpmnModeler = new Viewer({
-          container: this.canvas,
-          additionalModules: [
-            ModelingModule
-          ]
-        })
-      } else {
-        bpmnModeler = new Modeler({
-          container: this.canvas,
-          // 右边面板挂载
-          propertiesPanel: {
-            parent: "#js-properties-panel",
-          },
-          additionalModules: [
-            // 右边面板内容
-            propertiesProviderModule,
-            propertiesPanelModule,
-            // 汉化
-            customTranslateModule,
-          ],
-          moddleExtensions: {
-            // 右边面板扩展，增加功能描述模块
-            camunda: camundaModdleDescriptor,
-          }
-        });
-      }
+const canvas = ref(null);
+let bpmnModeler = ref(null);
+
+const useOpenBpmnAdd = inject('openBpmnAdd');
+
+const newDiagram = () => {
+  bpmnModeler.importXML(xmlStr)
+    .then((res) => {
+    })
+    .catch((err) => {
+    })
+}
+
+const initModeler = () => {
+  let customTranslateModule = {
+    translate: ["value", customTranslate],
+  };
+
+  bpmnModeler = new Modeler({
+    container: canvas.value,
+    // 右边面板挂载
+    propertiesPanel: {
+      parent: "#js-properties-panel",
     },
-    newDiagram() {
-      bpmnModeler.importXML(xmlStr)
-        .then((res) => {
-        })
-        .catch((err) => {
-        });
-    },
-  },
-};
+    additionalModules: [
+      // 右边面板内容
+      propertiesProviderModule,
+      propertiesPanelModule,
+      // 汉化
+      customTranslateModule,
+    ],
+    moddleExtensions: {
+      // 右边面板扩展，增加功能描述模块
+      camunda: camundaModdleDescriptor,
+    }
+  });
+
+  newDiagram();
+}
+
+const initViewer = () => {
+  let customTranslateModule = {
+    translate: ["value", customTranslate],
+  };
+
+  bpmnModeler = new Viewer({
+    container: canvas.value,
+    additionalModules: [
+      ModelingModule,
+      customTranslateModule
+    ]
+  })
+}
+
+onMounted(() => {
+  if (useOpenBpmnAdd) {
+    initModeler();
+  } else {
+    initViewer();
+  }
+})
+
+expose({
+  bpmnModeler
+})
+
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>

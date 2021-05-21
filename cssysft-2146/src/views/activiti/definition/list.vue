@@ -10,15 +10,15 @@
     </el-form>
 
     <div>
-      <el-button type="danger" size="mini" @click="onOpenBpmn" v-if="hasPerm('definition.add')">添加</el-button>
+      <el-button v-if="hasPerm('definition.add')" type="danger" size="mini" @click="onOpenBpmn">添加</el-button>
     </div>
 
     <el-table
-        v-loading="listLoading"
-        :data="list"
-        stripe
-        style="width: 100%"
-        @selection-change="handleSelectionChange"
+      v-loading="listLoading"
+      :data="list"
+      stripe
+      style="width: 100%"
+      @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55"/>
 
@@ -55,187 +55,97 @@
     </el-table>
 
     <el-pagination
-        :current-page="page"
-        :total="total"
-        :page-size="limit"
-        :page-sizes="[5, 10, 20, 30, 40, 50, 100]"
-        style="padding: 30px 0; text-align: center"
-        layout="sizes, prev, pager, next, jumper, ->, total, slot"
-        @current-change="fetchData"
-        @size-change="changeSize"
+      :current-page="page"
+      :total="total"
+      :page-size="limit"
+      :page-sizes="[5, 10, 20, 30, 40, 50, 100]"
+      style="padding: 30px 0; text-align: center"
+      layout="sizes, prev, pager, next, jumper, ->, total, slot"
+      @current-change="fetchData"
+      @size-change="changeSize"
     />
 
-    <el-dialog
-        v-model="bpmnVisible"
-        title="流程图"
-        width="80%"
-        top="1vh"
-        @opened="onOpened"
-    >
-      <div ref="refDialogDiv" class="dialog-layout">
-        <bpmn-js ref="refBpmnJs"></bpmn-js>
-      </div>
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button @click="onExportImg">导出图片</el-button>
-          <el-button @click="onExportBpmn">导出Bpmn</el-button>
-          <el-button @click="onForward">前进</el-button>
-          <el-button @click="onRetreat">撤销</el-button>
-          <el-button type="primary" @click="onDeploy"> 部署</el-button>
-          <el-button @click="onCancel">关闭</el-button>
-        </div>
-      </template>
-    </el-dialog>
+    <dialog-bpmn-js ref="refDialogBpmnJs"></dialog-bpmn-js>
+
   </div>
 </template>
 
-<script>
-import {mapGetters} from "vuex";
+<script setup>
+import DialogBpmnJs from "@/components/BpmnJs/dialog_bpmnjs.vue";
 
 import activitiApi from "@/api/acl/activiti";
-import BpmnJs from "@/components/BpmnJs/index.vue";
+import {ref, onMounted, reactive, getCurrentInstance} from "vue";
 
-export default {
-  components: {
-    BpmnJs,
-  },
-  data() {
-    return {
-      listLoading: true,
-      list: null,
-      total: 0,
-      page: 1,
-      limit: 10,
-      searchObj: {},
-      multipleSelection: [],
+const globalProperties = getCurrentInstance().appContext.config.globalProperties;
 
-      bpmnVisible: false,
-      ifBpmnAdd: true,
-      bpmnData: null
-    };
-  },
-  computed: {
-    ...mapGetters({
-      bpmnModeler: "app/bpmnModeler",
-    }),
-  },
-  created() {
-    this.fetchData();
-  },
-  mounted() {
-  },
-  methods: {
-    //启动流程实例
-    onStartInstance(row) {
-      activitiApi.startInstance({
-        key: row.key,
-        name: row.name,
-        variable: '自定义变量'
-      }).then(res => {
-        if (res.success) {
-          this.$message({
-            type: 'success',
-            message: res.message
-          })
-        }
-      })
-    },
-    //导出svg
-    onExportImg() {
-      this.$refs.refBpmnJs.exportImg();
-    },
-    //导出bpmn
-    onExportBpmn() {
-      this.$refs.refBpmnJs.exportBpmn();
-    },
-    //前进
-    onForward() {
-      this.$refs.refBpmnJs.forward();
-    },
-    //后退
-    onRetreat() {
-      this.$refs.refBpmnJs.retreat();
-    },
-    //bpmn模态框打开事件
-    onOpened() {
-      this.$refs.refDialogDiv.style.height = parent.innerHeight * 0.7 + "px";
-      if (this.ifBpmnAdd) {
-        this.$refs.refBpmnJs.newDiagram();
-      } else {
-        this.$refs.refBpmnJs.view(this.bpmnData);
+const listLoading = ref(true);
+const list = ref([]);
+const total = ref(0);
+const page = ref(1);
+const limit = ref(10);
+let searchObj = reactive({});
+const multipleSelection = ref([]);
+
+const refDialogBpmnJs = ref(null);
+
+const onOpenBpmn = () => {
+  refDialogBpmnJs.value.onOpenBpmn({}, true);
+}
+
+const onViewBpmn = (row) => {
+  refDialogBpmnJs.value.onOpenBpmn(row, true);
+}
+
+const onDeleteBpmn = (row) => {
+  this.$confirm("此操作将删除流程, 是否继续?", "提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  }).then((res) => {
+    activitiApi.deleteProcessDefinition({
+      deploymentId: row.deploymentId,
+      cascade: 1
+    }).then(res => {
+      if (res.success) {
+        globalProperties.$message.success(res.message);
+        fetchData();
       }
-    },
-    //关闭bpmn
-    onCancel() {
-      this.bpmnVisible = false;
-    },
-    //创建bpmn
-    onOpenBpmn() {
-      this.ifBpmnAdd = true;
-      this.bpmnVisible = true;
-    },
-    //部署流程
-    onDeploy() {
-      this.$refs.refBpmnJs.deploy(this);
-    },
-    //查看流程
-    onViewBpmn(row) {
-      this.ifBpmnAdd = false;
-      this.bpmnData = row;
-      this.bpmnVisible = true;
-    },
-    //删除流程
-    onDeleteBpmn(row) {
-      this.$confirm("此操作将删除流程, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      }).then((res) => {
-        activitiApi.deleteProcessDefinition({
-          deploymentId: row.deploymentId,
-          cascade: 1
-        }).then(res => {
-          if (res.success) {
-            this.$message({
-              type: 'success',
-              message: res.message
-            })
-            this.fetchData();
-          }
-        })
-      }).catch((err) => {
-        this.$message({
-          type: "info",
-          message: "已取消删除",
-        });
-      });
-    },
-    // 获取流程定义
-    fetchData(page = 1) {
-      this.page = page;
-      activitiApi
-          .getProcessDefinition(this.page, this.limit, this.searchObj)
-          .then((res) => {
-            this.list = res.data.items;
-            this.total = res.data.total;
+    })
+  }).catch((err) => {
+    globalProperties.$message.info("已取消删除");
+  });
+}
 
-            // 数据加载并绑定成功
-            this.listLoading = false;
-          });
-    },
-    changeSize(size) {
-      this.limit = size;
-      this.fetchData(1);
-    },
-    resetData() {
-      this.searchObj = {};
-      this.fetchData();
-    },
-    handleSelectionChange(selection) {
-      this.multipleSelection = selection;
-    }
-  },
-};
+const fetchData = (pages = 1) => {
+  page.value = pages;
+  activitiApi
+    .getProcessDefinition(page.value, limit.value, searchObj)
+    .then((res) => {
+      list.value = res.data.items;
+      total.value = res.data.total;
+
+      listLoading.value = false;
+    });
+}
+
+const changeSize = (size) => {
+  limit.value = size;
+  fetchData(1);
+}
+
+const resetData = () => {
+  searchObj = {};
+  fetchData();
+}
+
+const handleSelectionChange = (selection) => {
+  multipleSelection.value = selection;
+}
+
+onMounted(() => {
+  fetchData();
+})
+
 </script>
 
 <style scoped>

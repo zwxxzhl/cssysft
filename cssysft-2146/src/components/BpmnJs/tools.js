@@ -1,6 +1,6 @@
 import activitiApi from "@/api/acl/activiti";
 
-const tools = {
+export default {
   //查看流程实例详情带颜色
   viewColor(bpmnModeler, row) {
     let processInstanceId = row.processInstanceId || row.id;
@@ -96,8 +96,6 @@ const tools = {
     bpmnModeler
       .saveXML({format: true})
       .then((res) => {
-          //todo
-        // let str = tools.formXML(res.xml);
         let str = res.xml;
         activitiApi.addDeploymentByString({bpmnStr: str}).then(res => {
           if (res.success) {
@@ -113,11 +111,6 @@ const tools = {
       .catch((err) => {
         console.error("部署失败", err);
       });
-  },
-  formXML(data) {
-    var temp = data.replace(/camunda/ig, "activiti");
-    temp = temp.replace(/FormField/ig, 'formProperty');
-    return temp;
   },
   //导出图片
   exportImg(bpmnModeler) {
@@ -164,7 +157,5 @@ const tools = {
   //后退
   retreat(bpmnModeler) {
     bpmnModeler.get("commandStack").undo();
-  },
+  }
 }
-
-export default tools

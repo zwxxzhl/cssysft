@@ -1,7 +1,7 @@
 import userApi from "@/api/acl/user";
 import activitiApi from "@/api/acl/activiti";
 
-export default function () {
+export default function (globalProperties) {
   //启动子流程实例
   const onStartSubInstance = (row) => {
     activitiApi.startSubInstance({
@@ -11,7 +11,7 @@ export default function () {
       variable: '自定义变量'
     }).then(res => {
       if (res.success) {
-        this.$message({
+        globalProperties.$message({
           type: 'success',
           message: res.message
         })
@@ -24,8 +24,8 @@ export default function () {
       row.id
     ).then(res => {
       if (res.success) {
-        this.fetchData();
-        this.$message({
+        fetchData();
+        globalProperties.$message({
           type: 'success',
           message: res.message
         })
@@ -83,21 +83,19 @@ export default function () {
       type: "warning",
     })
       .then(() => {
-        // promise
-        // 点击确定，远程调用ajax
         return userApi.removeById(id);
       })
       .then((response) => {
         this.fetchData(this.page);
         if (response.success) {
-          this.$message({
+          globalProperties.$message({
             type: "success",
             message: "删除成功!",
           });
         }
       })
       .catch(() => {
-        this.$message({
+        globalProperties.$message({
           type: "info",
           message: "已取消删除",
         });

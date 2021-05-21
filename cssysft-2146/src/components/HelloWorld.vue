@@ -16,13 +16,23 @@
 </template>
 
 <script setup>
-import { defineProps, reactive } from 'vue'
+import { defineProps, reactive, useContext } from 'vue';
+const { expose } = useContext();
 
 defineProps({
   msg: String
 })
 
 const state = reactive({ count: 0 })
+
+const ceshi = () => {
+  console.log("进入子组件方法")
+}
+
+expose({
+  ceshi
+});
+
 </script>
 
 <style scoped>
