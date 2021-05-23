@@ -2,12 +2,16 @@
   <div class="app-container">
     <el-form :inline="true" class="demo-form-inline">
       <el-form-item>
-        <el-input v-model="searchObj.name" placeholder="实例名称"/>
+        <el-input v-model="searchObj.name" placeholder="流程名称"/>
       </el-form-item>
 
       <el-button type="primary" icon="el-icon-search" @click="fetchData()">查询</el-button>
       <el-button type="default" @click="resetData()">清空</el-button>
     </el-form>
+
+    <div>
+      <el-button v-if="hasPerm('definition.add')" type="danger" size="mini" @click="onOpenBpmn">创建新流程派发任务</el-button>
+    </div>
 
     <el-table
       v-loading="listLoading"
@@ -24,28 +28,23 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="startDate" label="创建时间" width="160"/>
-      <el-table-column prop="name" label="实例名称"/>
-      <el-table-column prop="processDefinitionKey" label="流程Key"/>
-      <el-table-column prop="status" label="状态"/>
-      <el-table-column prop="processDefinitionVersion" label="版本号"/>
+      <el-table-column prop="key" label="流程key"/>
+      <el-table-column prop="name" label="流程名称"/>
+      <el-table-column prop="resourceName" label="资源名称" width="200"/>
+      <el-table-column prop="version" label="版本号"/>
 
       <el-table-column label="操作" width="180" align="center">
         <template #default="scope">
-          <el-tooltip v-if="hasPerm('instance.update')" effect="dark" content="挂起" placement="left-start">
-            <i class="el-icon-warning-outline icon-layout-mini color-orange" @click="onSuspend(scope.row)"></i>
+          <el-tooltip v-if="hasPerm('definition.add')" effect="dark" content="派发任务" placement="bottom-start">
+            <i class="el-icon-caret-right icon-layout-mini color-purple" @click="onStartInstance(scope.row)"></i>
           </el-tooltip>
 
-          <el-tooltip v-if="hasPerm('instance.update')" effect="dark" content="激活" placement="bottom-start">
-            <i class="el-icon-circle-check icon-layout-mini color-green" @click="onResume(scope.row)"></i>
-          </el-tooltip>
-
-          <el-tooltip v-if="hasPerm('instance.list')" effect="dark" content="进展" placement="bottom-start">
+          <el-tooltip v-if="hasPerm('definition.list')" effect="dark" content="查看流程" placement="bottom-start">
             <i class="el-icon-view icon-layout-mini color-blue" @click="onViewBpmn(scope.row)"></i>
           </el-tooltip>
 
-          <el-tooltip v-if="hasPerm('instance.remove')" effect="dark" content="删除" placement="bottom-start">
-            <i class="el-icon-delete icon-layout-mini color-gray" @click="onDelete(scope.row)"></i>
+          <el-tooltip v-if="hasPerm('definition.remove')" effect="dark" content="删除流程" placement="bottom-start">
+            <i class="el-icon-delete icon-layout-mini color-gray" @click="onDeleteBpmn(scope.row)"></i>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -62,15 +61,15 @@
       @size-change="changeSize"
     />
 
-    <dialog-bpmn-js ref="refDialogBpmnJs"></dialog-bpmn-js>
+    <dialog-bpmn-js ref="refDialogBpmnJs" @deployed="onDeployed"></dialog-bpmn-js>
   </div>
 </template>
 
 <script setup>
-import DialogBpmnJs from "../../../components/BpmnJs/dialog_bpmnjs.vue";
-import enums from "../../../utils/enums";
+import DialogBpmnJs from "../../../../components/BpmnJs/dialog_bpmnjs.vue";
+import enums from "../../../../utils/enums";
 
-import activitiApi from "../../../api/acl/activiti";
+import activitiApi from "../../../../api/acl/activiti";
 import {ref, onMounted, reactive, getCurrentInstance} from "vue";
 
 const globalProperties = getCurrentInstance().appContext.config.globalProperties;
@@ -85,47 +84,54 @@ const multipleSelection = ref([]);
 
 const refDialogBpmnJs = ref(null);
 
-const onSuspend = (row) => {
-  activitiApi.suspendInstance(
-    row.id
-  ).then(res => {
-    if (res.success) {
-      fetchData();
-      globalProperties.$message.success(res.message);
-    }
-  })
-}
-
-const onResume = (row) => {
-  activitiApi.resumeInstance(
-    row.id
-  ).then(res => {
-    if (res.success) {
-      fetchData();
-      globalProperties.$message.success(res.message);
-    }
-  })
+const onOpenBpmn = () => {
+  refDialogBpmnJs.value.onOpenBpmn({}, enums.bpmnjs.modeler, enums.bpmnjs.new);
 }
 
 const onViewBpmn = (row) => {
-  refDialogBpmnJs.value.onOpenBpmn(row, enums.bpmnjs.viewer, enums.bpmnjs.detailColor);
+  refDialogBpmnJs.value.onOpenBpmn(row, enums.bpmnjs.modeler, enums.bpmnjs.detail);
 }
 
-const onDelete = (row) => {
-  activitiApi.deleteInstance(
-    row.id
-  ).then(res => {
+const onDeleteBpmn = (row) => {
+  globalProperties.$confirm("此操作将删除流程, 是否继续?", "提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  }).then((res) => {
+    activitiApi.deleteProcessDefinition({
+      deploymentId: row.deploymentId,
+      cascade: 1
+    }).then(res => {
+      if (res.success) {
+        globalProperties.$message.success(res.message);
+        fetchData();
+      }
+    })
+  }).catch((err) => {
+    globalProperties.$message.info("已取消删除");
+  });
+}
+
+const onStartInstance = (row) => {
+  activitiApi.startInstance({
+    key: row.key,
+    name: row.name,
+    variable: '自定义变量'
+  }).then(res => {
     if (res.success) {
-      fetchData();
       globalProperties.$message.success(res.message);
     }
   })
+}
+
+const onDeployed = () => {
+  fetchData();
 }
 
 const fetchData = (pages = 1) => {
   page.value = pages;
   activitiApi
-    .getInstances(page.value, limit.value, searchObj)
+    .getProcessDefinition(page.value, limit.value, searchObj)
     .then((res) => {
       list.value = res.data.items;
       total.value = res.data.total;

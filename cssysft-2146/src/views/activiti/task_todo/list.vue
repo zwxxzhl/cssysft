@@ -33,7 +33,7 @@
       <el-table-column label="操作" width="100" align="center">
         <template #default="scope">
           <el-tooltip v-if="hasPerm('task_todo.handle')" effect="dark" content="派发任务" placement="bottom-start">
-            <i class="el-icon-caret-right icon-layout-mini color-purple" @click="onStartSubInstance(scope.row)"></i>
+            <i class="el-icon-caret-right icon-layout-mini color-purple" @click="onOpenSubInstance(scope.row)"></i>
           </el-tooltip>
           <el-tooltip v-if="hasPerm('task_todo.handle')" effect="dark" content="办理" placement="left-start">
             <i class="el-icon-plus icon-layout-mini color-green" @click="onComplete(scope.row)"></i>
@@ -56,230 +56,97 @@
       @size-change="changeSize"
     />
 
-    <el-dialog
-      v-model="bpmnVisible"
-      title="流程图"
-      width="80%"
-      top="1vh"
-      @opened="onOpened"
-    >
-      <div ref="refDialogDiv" class="dialog-layout">
-        <bpmn-js ref="refBpmnJs"></bpmn-js>
-      </div>
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button @click="onExportImg">导出图片</el-button>
-          <el-button @click="onExportBpmn">导出Bpmn</el-button>
-          <el-button @click="onForward">前进</el-button>
-          <el-button @click="onRetreat">撤销</el-button>
-          <el-button type="primary" @click="onDeploy"> 部署</el-button>
-          <el-button @click="onCancel">关闭</el-button>
-        </div>
-      </template>
-    </el-dialog>
+    <dialog-bpmn-js ref="refDialogBpmnJs"></dialog-bpmn-js>
+
+    <sub-instance ref="refSubInstance"></sub-instance>
   </div>
 </template>
 
 <script setup>
-import BpmnJs from "@/components/BpmnJs/index.vue";
-import { defineProps, getCurrentInstance, useContext, ref, reactive, onMounted } from 'vue'
-import useApi from "../definition/useApi";
+import DialogBpmnJs from "../../../components/BpmnJs/dialog_bpmnjs.vue";
+import SubInstance from "./components/sub_instance.vue";
+import enums from "../../../utils/enums";
+
+import activitiApi from "../../../api/acl/activiti";
+import {ref, onMounted, reactive, getCurrentInstance} from "vue";
 
 const globalProperties = getCurrentInstance().appContext.config.globalProperties;
 
-const { fetchData, resetData, handleSelectionChange, changeSize,
-  onStartSubInstance, onComplete, onViewBpmn, onOpened, onExportImg, onExportBpmn,
-  onForward, onRetreat, onDeploy, onCancel } = useApi(globalProperties);
-
 const listLoading = ref(true);
-const list = reactive([]);
+const list = ref([]);
 const total = ref(0);
 const page = ref(1);
 const limit = ref(10);
-const searchObj = reactive({});
-const multipleSelection = reactive([]);
+let searchObj = reactive({});
+const multipleSelection = ref([]);
 
-const refBpmnJs = ref(null);
-const bpmnVisible = ref(false);
-const ifBpmnAdd = ref(true);
-const bpmnData = ref(null);
+const refDialogBpmnJs = ref(null);
+const refSubInstance = ref(null);
+
+const onOpenSubInstance = (row) => {
+  refSubInstance.value.onOpen(row);
+}
+
+const onStartSubInstance = (row) => {
+  activitiApi.startSubInstance({
+    key: row.processDefinitionKey,
+    procinstId: row.processInstanceId,
+    name: row.name,
+    variable: '自定义变量'
+  }).then(res => {
+    if (res.success) {
+      globalProperties.$message.success(res.message);
+    }
+  })
+}
+
+const onComplete = (row) => {
+  activitiApi.completeTask(
+    row.id
+  ).then(res => {
+    if (res.success) {
+      fetchData();
+      globalProperties.$message.success(res.message);
+    }
+  })
+}
+
+const onViewBpmn = (row) => {
+  refDialogBpmnJs.value.onOpenBpmn(row, enums.bpmnjs.viewer, enums.bpmnjs.detailColor);
+}
+
+const fetchData = (pages = 1) => {
+  page.value = pages;
+  activitiApi
+    .getTasks(page.value, limit.value, searchObj)
+    .then((res) => {
+      list.value = res.data.items;
+      total.value = res.data.total;
+
+      listLoading.value = false;
+    });
+}
+
+const changeSize = (size) => {
+  limit.value = size;
+  fetchData(1);
+}
+
+const resetData = () => {
+  searchObj = {};
+  fetchData();
+}
+
+const handleSelectionChange = (selection) => {
+  multipleSelection.value = selection;
+}
 
 onMounted(() => {
-  console.log(getCurrentInstance().appContext);
-  globalProperties.$message.success("聪明");
-  console.log(useContext());
-  console.log(refBpmnJs.value);
-
   fetchData();
-});
-
-
+})
 
 </script>
 
-<!--<script>
-import userApi from "@/api/acl/user";
-import activitiApi from "@/api/acl/activiti";
-import BpmnJs from "@/components/BpmnJs/index.vue";
-
-export default {
-  components: {
-    BpmnJs,
-  },
-  data() {
-    return {
-      listLoading: true, // 数据是否正在加载
-      list: null, // 讲师列表
-      total: 0, // 数据库中的总记录数
-      page: 1, // 默认页码
-      limit: 10, // 每页记录数
-      searchObj: {}, // 查询表单对象
-      multipleSelection: [], // 批量选择中选择的记录列表
-
-      bpmnVisible: false,
-      ifBpmnAdd: true,
-      bpmnData: null,
-    };
-  },
-  created() {
-    this.fetchData();
-  },
-  mounted() {
-  },
-  methods: {
-    //启动子流程实例
-    onStartSubInstance(row) {
-      activitiApi.startSubInstance({
-        key: row.processDefinitionKey,
-        procinstId: row.processInstanceId,
-        name: row.name,
-        variable: '自定义变量'
-      }).then(res => {
-        if (res.success) {
-          this.$message({
-            type: 'success',
-            message: res.message
-          })
-        }
-      })
-    },
-    //完成任务
-    onComplete(row) {
-      activitiApi.completeTask(
-        row.id
-      ).then(res => {
-        if (res.success) {
-          this.fetchData();
-          this.$message({
-            type: 'success',
-            message: res.message
-          })
-        }
-      })
-    },
-    //导出svg
-    onExportImg() {
-      this.$refs.refBpmnJs.exportImg();
-    },
-    //导出bpmn
-    onExportBpmn() {
-      this.$refs.refBpmnJs.exportBpmn();
-    },
-    //前进
-    onForward() {
-      this.$refs.refBpmnJs.forward();
-    },
-    //后退
-    onRetreat() {
-      this.$refs.refBpmnJs.retreat();
-    },
-    //bpmn模态框打开事件
-    onOpened() {
-      this.$refs.refDialogDiv.style.height = parent.innerHeight * 0.7 + "px";
-      if (this.ifBpmnAdd) {
-        this.$refs.refBpmnJs.newDiagram();
-      } else {
-        this.$refs.refBpmnJs.viewColor(this.bpmnData);
-      }
-    },
-    //关闭bpmn
-    onCancel() {
-      this.bpmnVisible = false;
-    },
-    //创建bpmn
-    onOpenBpmn() {
-      this.ifBpmnAdd = true;
-      this.bpmnVisible = true;
-    },
-    //部署流程
-    onDeploy() {
-      this.$refs.refBpmnJs.deploy();
-    },
-    //查看流程
-    onViewBpmn(row) {
-      this.ifBpmnAdd = false;
-      this.bpmnData = row;
-      this.bpmnVisible = true;
-    },
-    onDeleteBpmn(row) {
-      this.$confirm("此操作将删除流程, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(() => {
-          // promise
-          // 点击确定，远程调用ajax
-          return userApi.removeById(id);
-        })
-        .then((response) => {
-          this.fetchData(this.page);
-          if (response.success) {
-            this.$message({
-              type: "success",
-              message: "删除成功!",
-            });
-          }
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除",
-          });
-        });
-    },
-    changeSize(size) {
-      this.limit = size;
-      this.fetchData(1);
-    },
-    // 加载讲师列表数据
-    fetchData(page = 1) {
-      // 异步获取远程数据（ajax）
-      this.page = page;
-
-      activitiApi
-        .getTasks(this.page, this.limit, this.searchObj)
-        .then((res) => {
-          this.list = res.data.items;
-          this.total = res.data.total;
-
-          // 数据加载并绑定成功
-          this.listLoading = false;
-        });
-    },
-    resetData() {
-      this.searchObj = {};
-      this.fetchData();
-    },
-    handleSelectionChange(selection) {
-      this.multipleSelection = selection;
-    }
-  },
-};
-</script>-->
-
 <style scoped>
-.dialog-layout {
-  overflow: auto;
-}
+
 </style>

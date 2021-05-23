@@ -1,6 +1,7 @@
 import activitiApi from "@/api/acl/activiti";
+import {xmlStr} from "./xmlStr";
 
-export default {
+const tools ={
   //查看流程实例详情带颜色
   viewColor(bpmnModeler, row) {
     let processInstanceId = row.processInstanceId || row.id;
@@ -91,25 +92,27 @@ export default {
       }
     })
   },
+  //初始化流程图
+  newDiagram(bpmnModeler) {
+    bpmnModeler.importXML(xmlStr)
+      .then((res) => {
+      })
+      .catch((err) => {
+      })
+  },
   //部署流程
-  deploy(bpmnModeler, vm) {
-    bpmnModeler
+  deploy(bpmnModeler) {
+    return bpmnModeler
       .saveXML({format: true})
       .then((res) => {
         let str = res.xml;
-        activitiApi.addDeploymentByString({bpmnStr: str}).then(res => {
-          if (res.success) {
-            vm.$message({
-              type: 'success',
-              message: res.message
-            })
-            vm.bpmnVisible = false;
-            vm.fetchData(1);
-          }
+        return activitiApi.addDeploymentByString({bpmnStr: str}).then(res => {
+          return res;
         })
       })
       .catch((err) => {
         console.error("部署失败", err);
+        return err;
       });
   },
   //导出图片
@@ -159,3 +162,5 @@ export default {
     bpmnModeler.get("commandStack").undo();
   }
 }
+
+export default tools;

@@ -23,73 +23,97 @@
 </template>
 
 <script setup>
-import BpmnJs from "@/components/BpmnJs/index.vue";
+import BpmnJs from "./index.vue";
 
-import tools from "./tools.js";
-import {ref, useContext, provide} from "vue";
+import {ref, useContext, provide, defineEmit} from "vue";
+import enums from "../../utils/enums";
 
 const {expose} = useContext();
 
-const refBpmnJs = ref(null);
-const refDialogDiv = ref(null);
-
 const bpmnVisible = ref(false);
-const openBpmnAdd = ref(true);
+const refDialogDiv = ref(null);
+const refBpmnJs = ref(null);
+
+const modelerOrViewer = ref(enums.bpmnjs.modeler);
 const bpmnData = ref(null);
 
-provide('openBpmnAdd', openBpmnAdd.value);
+let newOrDetail = enums.bpmnjs.new;
 
-//导出svg
+provide('modelerOrViewer', modelerOrViewer);
+
+let emit = defineEmit(['deployed']);
+
+// 导出svg
 const onExportImg = () => {
-  tools.exportImg(refBpmnJs.value.bpmnModeler);
+  refBpmnJs.value.exportImg();
 }
 
-//导出bpmn
+// 导出bpmn
 const onExportBpmn = () => {
-  tools.exportBpmn(refBpmnJs.value.bpmnModeler);
+  refBpmnJs.value.exportBpmn();
 }
 
-//前进
+// 前进
 const onForward = () => {
-  tools.forward(refBpmnJs.value.bpmnModeler);
+  refBpmnJs.value.forward();
 }
 
-//后退
+// 后退
 const onRetreat = () => {
-  tools.retreat(refBpmnJs.value.bpmnModeler);
+  refBpmnJs.value.retreat();
 }
 
-//部署流程
+// 部署流程
 const onDeploy = () => {
-  tools.deploy(refBpmnJs.value.bpmnModeler);
+  refBpmnJs.value.deploy().then(res => {
+    if (res && res.success) {
+      bpmnVisible.value = false;
+      emit('deployed');
+    }
+  })
 }
 
-//关闭bpmn
+// 关闭bpmn
 const onCancel = () => {
   bpmnVisible.value = false;
 }
 
-//创建bpmn
-const onOpenBpmn = (row, val) => {
-  openBpmnAdd.value = val;
+// 创建bpmn
+const onOpenBpmn = (row, val1, val2) => {
   bpmnData.value = row;
+  modelerOrViewer.value = val1;
+  newOrDetail = val2
   bpmnVisible.value = true;
 }
 
-//bpmn模态框打开事件
+// bpmn模态框打开事件
 const onOpened = () => {
-  refDialogDiv.value.style.height = parent.innerHeight * 0.7 + "px";
-  if (!openBpmnAdd.value) {
-    tools.view(refBpmnJs.value.bpmnModeler, bpmnData.value);
+  refDialogDiv.value.style.height = parent.innerHeight * 0.78 + "px";
+  if (enums.bpmnjs.detail === newOrDetail) {
+    refBpmnJs.value.view(bpmnData.value);
+  } else if (enums.bpmnjs.detailColor === newOrDetail) {
+    refBpmnJs.value.viewColor(bpmnData.value);
+  } else {
+    refBpmnJs.value.newDiagram();
   }
 }
 
 expose({
-  onOpenBpmn,
-  refBpmnJs
+  onOpenBpmn
 });
 </script>
 
-<style scoped>
+<style>
+.el-dialog__body {
+  padding: 5px 20px;
+  color: #606266;
+  font-size: 14px;
+  word-break: break-all;
+}
+</style>
 
+<style scoped>
+.dialog-layout {
+  overflow: auto;
+}
 </style>

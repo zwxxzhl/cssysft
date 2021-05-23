@@ -65,15 +65,15 @@
       @size-change="changeSize"
     />
 
-    <dialog-bpmn-js ref="refDialogBpmnJs"></dialog-bpmn-js>
-
+    <dialog-bpmn-js ref="refDialogBpmnJs" @deployed="onDeployed"></dialog-bpmn-js>
   </div>
 </template>
 
 <script setup>
-import DialogBpmnJs from "@/components/BpmnJs/dialog_bpmnjs.vue";
+import DialogBpmnJs from "../../../components/BpmnJs/dialog_bpmnjs.vue";
+import enums from "../../../utils/enums";
 
-import activitiApi from "@/api/acl/activiti";
+import activitiApi from "../../../api/acl/activiti";
 import {ref, onMounted, reactive, getCurrentInstance} from "vue";
 
 const globalProperties = getCurrentInstance().appContext.config.globalProperties;
@@ -89,15 +89,15 @@ const multipleSelection = ref([]);
 const refDialogBpmnJs = ref(null);
 
 const onOpenBpmn = () => {
-  refDialogBpmnJs.value.onOpenBpmn({}, true);
+  refDialogBpmnJs.value.onOpenBpmn({}, enums.bpmnjs.modeler, enums.bpmnjs.new);
 }
 
 const onViewBpmn = (row) => {
-  refDialogBpmnJs.value.onOpenBpmn(row, true);
+  refDialogBpmnJs.value.onOpenBpmn(row, enums.bpmnjs.modeler, enums.bpmnjs.detail);
 }
 
 const onDeleteBpmn = (row) => {
-  this.$confirm("此操作将删除流程, 是否继续?", "提示", {
+  globalProperties.$confirm("此操作将删除流程, 是否继续?", "提示", {
     confirmButtonText: "确定",
     cancelButtonText: "取消",
     type: "warning",
@@ -114,6 +114,22 @@ const onDeleteBpmn = (row) => {
   }).catch((err) => {
     globalProperties.$message.info("已取消删除");
   });
+}
+
+const onStartInstance = (row) => {
+  activitiApi.startInstance({
+    key: row.key,
+    name: row.name,
+    variable: '自定义变量'
+  }).then(res => {
+    if (res.success) {
+      globalProperties.$message.success(res.message);
+    }
+  })
+}
+
+const onDeployed = () => {
+  fetchData();
 }
 
 const fetchData = (pages = 1) => {
@@ -149,7 +165,5 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.dialog-layout {
-  overflow: auto;
-}
+
 </style>

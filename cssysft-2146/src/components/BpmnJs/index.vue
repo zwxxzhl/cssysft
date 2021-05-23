@@ -1,7 +1,7 @@
 <template>
   <div class="containers" style="height: 100%">
-    <div ref="canvas" class="canvas" style="height: 100%"></div>
-    <div ref="panel" v-if="useOpenBpmnAdd" id="js-properties-panel" class="panel"></div>
+    <div ref="refCanvas" class="canvas" style="height: 100%"></div>
+    <div ref="refPanel" v-if="modelerStr === useModelerOrViewer" id="js-properties-panel" class="panel"></div>
   </div>
 </template>
 
@@ -30,21 +30,55 @@ import camundaModdleDescriptor from "camunda-bpmn-moddle/resources/camunda";
 //汉化
 import customTranslate from "./customTranslate/customTranslate";
 
-import {xmlStr} from "./xmlStr.js";
 
 /** ----------------------------------------------------------------------------------- **/
 
 import {useContext, ref, onMounted, inject} from 'vue'
+import {xmlStr} from "./xmlStr";
+import enums from "../../utils/enums";
+import tools from "./tools";
 
 const {expose} = useContext();
 
-const canvas = ref(null);
-let bpmnModeler = ref(null);
+const refCanvas = ref(null);
 
-const useOpenBpmnAdd = inject('openBpmnAdd');
+let bpmnJs = {
+  modeler: null
+};
+const modelerStr = enums.bpmnjs.modeler;
+
+const useModelerOrViewer = inject('modelerOrViewer');
+
+const viewColor = (row) => {
+  tools.viewColor(bpmnJs.modeler, row);
+}
+
+const view = (row) => {
+  tools.view(bpmnJs.modeler, row);
+}
+
+const deploy = () => {
+  return tools.deploy(bpmnJs.modeler);
+}
+
+const exportImg = () => {
+  tools.exportImg(bpmnJs.modeler);
+}
+
+const exportBpmn = () => {
+  tools.exportBpmn(bpmnJs.modeler);
+}
+
+const  forward = () => {
+  tools.forward(bpmnJs.modeler);
+}
+
+const retreat = () => {
+  tools.retreat(bpmnJs.modeler);
+}
 
 const newDiagram = () => {
-  bpmnModeler.importXML(xmlStr)
+  bpmnJs.modeler.importXML(xmlStr)
     .then((res) => {
     })
     .catch((err) => {
@@ -56,8 +90,8 @@ const initModeler = () => {
     translate: ["value", customTranslate],
   };
 
-  bpmnModeler = new Modeler({
-    container: canvas.value,
+  bpmnJs.modeler = new Modeler({
+    container: refCanvas.value,
     // 右边面板挂载
     propertiesPanel: {
       parent: "#js-properties-panel",
@@ -73,9 +107,7 @@ const initModeler = () => {
       // 右边面板扩展，增加功能描述模块
       camunda: camundaModdleDescriptor,
     }
-  });
-
-  newDiagram();
+  })
 }
 
 const initViewer = () => {
@@ -83,8 +115,8 @@ const initViewer = () => {
     translate: ["value", customTranslate],
   };
 
-  bpmnModeler = new Viewer({
-    container: canvas.value,
+  bpmnJs.modeler = new Viewer({
+    container: refCanvas.value,
     additionalModules: [
       ModelingModule,
       customTranslateModule
@@ -93,7 +125,7 @@ const initViewer = () => {
 }
 
 onMounted(() => {
-  if (useOpenBpmnAdd) {
+  if (modelerStr === useModelerOrViewer.value) {
     initModeler();
   } else {
     initViewer();
@@ -101,8 +133,15 @@ onMounted(() => {
 })
 
 expose({
-  bpmnModeler
-})
+  viewColor,
+  view,
+  deploy,
+  exportImg,
+  exportBpmn,
+  forward,
+  retreat,
+  newDiagram
+});
 
 </script>
 
