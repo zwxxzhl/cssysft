@@ -58,7 +58,7 @@
 
     <dialog-bpmn-js ref="refDialogBpmnJs"></dialog-bpmn-js>
 
-    <sub-instance ref="refSubInstance"></sub-instance>
+    <sub-instance ref="refSubInstance" @close="onCloseSubInstance"></sub-instance>
   </div>
 </template>
 
@@ -87,18 +87,22 @@ const onOpenSubInstance = (row) => {
   refSubInstance.value.onOpen(row);
 }
 
-const onStartSubInstance = (row) => {
-  activitiApi.startSubInstance({
-    key: row.processDefinitionKey,
-    procinstId: row.processInstanceId,
-    name: row.name,
-    variable: '自定义变量'
-  }).then(res => {
-    if (res.success) {
-      globalProperties.$message.success(res.message);
-    }
-  })
+const onCloseSubInstance = () => {
+  fetchData();
 }
+
+// const onStartSubInstance = (row) => {
+//   activitiApi.startSubInstance({
+//     key: row.processDefinitionKey,
+//     procinstId: row.processInstanceId,
+//     name: row.name,
+//     variable: '自定义变量'
+//   }).then(res => {
+//     if (res.success) {
+//       globalProperties.$message.success(res.message);
+//     }
+//   })
+// }
 
 const onComplete = (row) => {
   activitiApi.completeTask(

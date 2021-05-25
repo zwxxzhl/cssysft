@@ -10,7 +10,8 @@
     </el-form>
 
     <div>
-      <el-button v-if="hasPerm('definition.add')" type="danger" size="mini" @click="onOpenBpmn">创建新流程派发任务</el-button>
+      <el-button v-if="hasPerm('definition.add')" type="danger" size="mini" @click="onOpenBpmn">创建派发流程</el-button>
+      <el-button v-if="hasPerm('definition.add')" type="danger" size="mini" @click="onComplete">直接完成任务</el-button>
     </div>
 
     <el-table
@@ -36,7 +37,7 @@
       <el-table-column label="操作" width="180" align="center">
         <template #default="scope">
           <el-tooltip v-if="hasPerm('definition.add')" effect="dark" content="派发任务" placement="bottom-start">
-            <i class="el-icon-caret-right icon-layout-mini color-purple" @click="onStartInstance(scope.row)"></i>
+            <i class="el-icon-caret-right icon-layout-mini color-purple" @click="onStartSubInstance(scope.row)"></i>
           </el-tooltip>
 
           <el-tooltip v-if="hasPerm('definition.list')" effect="dark" content="查看流程" placement="bottom-start">
@@ -70,9 +71,13 @@ import DialogBpmnJs from "../../../../components/BpmnJs/dialog_bpmnjs.vue";
 import enums from "../../../../utils/enums";
 
 import activitiApi from "../../../../api/acl/activiti";
-import {ref, onMounted, reactive, getCurrentInstance} from "vue";
+import {ref, onMounted, reactive, getCurrentInstance, inject, defineEmit} from "vue";
 
 const globalProperties = getCurrentInstance().appContext.config.globalProperties;
+
+let emit = defineEmit(['close']);
+
+const useRow =  inject('row');
 
 const listLoading = ref(true);
 const list = ref([]);
@@ -83,6 +88,17 @@ let searchObj = reactive({});
 const multipleSelection = ref([]);
 
 const refDialogBpmnJs = ref(null);
+
+const onComplete = () => {
+  activitiApi.completeTask(
+    useRow.value.id
+  ).then(res => {
+    if (res.success) {
+      globalProperties.$message.success(res.message);
+      emit('close');
+    }
+  })
+}
 
 const onOpenBpmn = () => {
   refDialogBpmnJs.value.onOpenBpmn({}, enums.bpmnjs.modeler, enums.bpmnjs.new);
@@ -112,14 +128,16 @@ const onDeleteBpmn = (row) => {
   });
 }
 
-const onStartInstance = (row) => {
-  activitiApi.startInstance({
+const onStartSubInstance = (row) => {
+  activitiApi.startSubInstance({
     key: row.key,
+    procinstId: useRow.value.processInstanceId,
     name: row.name,
-    variable: '自定义变量'
+    variable: '子实例'
   }).then(res => {
     if (res.success) {
       globalProperties.$message.success(res.message);
+      emit('close');
     }
   })
 }

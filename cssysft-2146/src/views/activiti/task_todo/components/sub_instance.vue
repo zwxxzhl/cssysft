@@ -7,7 +7,7 @@
     @opened="onOpened"
   >
     <div ref="refSubListDiv" class="dialog-layout">
-      <sub-list ref="refSubList"></sub-list>
+      <sub-list ref="refSubList" @close="onClose"></sub-list>
     </div>
     <template #footer>
       <div class="dialog-footer">
@@ -20,9 +20,11 @@
 <script setup>
 import SubList from "./sub_list.vue";
 
-import {ref, useContext, provide} from "vue";
+import {ref, useContext, provide, defineEmit} from "vue";
 
 const {expose} = useContext();
+
+let emit = defineEmit(['close']);
 
 const bpmnVisible = ref(false);
 const refSubListDiv = ref(null);
@@ -32,12 +34,17 @@ const row = ref(null);
 
 provide('row', row);
 
+const onClose = () => {
+  onCancel();
+  emit('close');
+}
+
 const onCancel = () => {
   bpmnVisible.value = false;
 }
 
-const onOpen = (row) => {
-  row.value = row;
+const onOpen = (data) => {
+  row.value = data;
   bpmnVisible.value = true;
 }
 
