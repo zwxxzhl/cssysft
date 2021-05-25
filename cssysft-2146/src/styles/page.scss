@@ -34,3 +34,16 @@
     padding: 0 5px;
     cursor: pointer;
 }
+
+.flex-row-center {
+    display: flex;
+    justify-content: center;
+}
+
+.fixed-bottom {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    background-color: white;
+}

@@ -32,10 +32,10 @@
 
       <el-table-column label="操作" width="100" align="center">
         <template #default="scope">
-          <el-tooltip v-if="hasPerm('task_todo.handle')" effect="dark" content="派发任务" placement="bottom-start">
+          <el-tooltip v-if="hasPerm('task_todo.handle')" effect="dark" content="转派任务" placement="bottom-start">
             <i class="el-icon-caret-right icon-layout-mini color-purple" @click="onOpenSubInstance(scope.row)"></i>
           </el-tooltip>
-          <el-tooltip v-if="hasPerm('task_todo.handle')" effect="dark" content="办理" placement="left-start">
+          <el-tooltip v-if="hasPerm('task_todo.handle')" effect="dark" content="直接办理" placement="left-start">
             <i class="el-icon-plus icon-layout-mini color-green" @click="onComplete(scope.row)"></i>
           </el-tooltip>
           <el-tooltip v-if="hasPerm('task_history.list')" effect="dark" content="查看" placement="left-start">

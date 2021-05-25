@@ -10,7 +10,7 @@
     </el-form>
 
     <div>
-      <el-button v-if="hasPerm('definition.add')" type="danger" size="mini" @click="onOpenBpmn">创建派发流程</el-button>
+      <el-button v-if="hasPerm('definition.add')" type="danger" size="mini" @click="onOpenBpmn">创建转派流程</el-button>
       <el-button v-if="hasPerm('definition.add')" type="danger" size="mini" @click="onComplete">直接完成任务</el-button>
     </div>
 
@@ -36,7 +36,7 @@
 
       <el-table-column label="操作" width="180" align="center">
         <template #default="scope">
-          <el-tooltip v-if="hasPerm('definition.add')" effect="dark" content="派发任务" placement="bottom-start">
+          <el-tooltip v-if="hasPerm('definition.add')" effect="dark" content="转派任务" placement="bottom-start">
             <i class="el-icon-caret-right icon-layout-mini color-purple" @click="onStartSubInstance(scope.row)"></i>
           </el-tooltip>
 

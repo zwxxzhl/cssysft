@@ -56,8 +56,11 @@ public class ProcessInstanceController {
             @ApiParam(name = "searchObj", value = "查询对象") ProcessDefinition searchObj) {
 
         try {
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userService.selectByUsername(username);
 
             HistoricProcessInstanceQuery query = historyService.createHistoricProcessInstanceQuery();
+            query.tenantIdIn(user.getId());
             List<HistoricProcessInstance> list = query.listPage((page - 1) * limit, limit);
 
             List<HashMap<String, Object>> listMap = new ArrayList<>();

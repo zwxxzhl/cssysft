@@ -66,11 +66,21 @@
     />
 
     <dialog-bpmn-js ref="refDialogBpmnJs" @deployed="onDeployed"></dialog-bpmn-js>
+
+    <dialog-com ref="refDialogCom" title="任务内容" width="50%" top="10vh" :heightPercent="0.6" :footer="false">
+      <template #content="sp">
+        <inst-form ref="refInstForm"></inst-form>
+      </template>
+    </dialog-com>
+
   </div>
 </template>
 
 <script setup>
 import DialogBpmnJs from "../../../components/BpmnJs/dialog_bpmnjs.vue";
+import DialogCom from "../../../components/DialogCom/dialog_com.vue";
+import InstForm from "./component/inst_form.vue";
+
 import enums from "../../../utils/enums";
 
 import activitiApi from "../../../api/acl/activiti";
@@ -87,6 +97,7 @@ let searchObj = reactive({});
 const multipleSelection = ref([]);
 
 const refDialogBpmnJs = ref(null);
+const refDialogCom = ref(null);
 
 const onOpenBpmn = () => {
   refDialogBpmnJs.value.onOpenBpmn({}, enums.bpmnjs.modeler, enums.bpmnjs.new);
@@ -117,15 +128,17 @@ const onDeleteBpmn = (row) => {
 }
 
 const onStartInstance = (row) => {
-  activitiApi.startInstance({
-    key: row.key,
-    name: row.name,
-    variable: '自定义变量'
-  }).then(res => {
-    if (res.success) {
-      globalProperties.$message.success(res.message);
-    }
-  })
+  refDialogCom.value.open(row);
+
+  // activitiApi.startInstance({
+  //   key: row.key,
+  //   name: row.name,
+  //   variable: '自定义变量'
+  // }).then(res => {
+  //   if (res.success) {
+  //     globalProperties.$message.success(res.message);
+  //   }
+  // })
 }
 
 const onDeployed = () => {

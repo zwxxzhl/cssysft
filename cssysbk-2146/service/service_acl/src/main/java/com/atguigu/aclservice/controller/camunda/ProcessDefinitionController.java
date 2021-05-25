@@ -162,7 +162,11 @@ public class ProcessDefinitionController {
         try {
             List<HashMap<String, Object>> listMap = new ArrayList<>();
 
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userService.selectByUsername(username);
+
             ProcessDefinitionQuery query = repositoryService.createProcessDefinitionQuery();
+            query.tenantIdIn(user.getId());
             if (!StringUtils.isEmpty(searchObj.getName())) {
                 query.processDefinitionNameLike(searchObj.getName());
             }

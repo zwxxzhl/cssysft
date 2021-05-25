@@ -6,7 +6,7 @@
     top="1vh"
     @opened="onOpened"
   >
-    <div ref="refDialogDiv" class="dialog-layout">
+    <div ref="refDialogContent" class="dialog-layout">
       <bpmn-js ref="refBpmnJs"></bpmn-js>
     </div>
     <template #footer>
@@ -31,7 +31,7 @@ import enums from "../../utils/enums";
 const {expose} = useContext();
 
 const bpmnVisible = ref(false);
-const refDialogDiv = ref(null);
+const refDialogContent = ref(null);
 const refBpmnJs = ref(null);
 
 const modelerOrViewer = ref(enums.bpmnjs.modeler);
@@ -88,7 +88,7 @@ const onOpenBpmn = (row, val1, val2) => {
 
 // bpmn模态框打开事件
 const onOpened = () => {
-  refDialogDiv.value.style.height = parent.innerHeight * 0.78 + "px";
+  refDialogContent.value.style.height = parent.innerHeight * 0.78 + "px";
   if (enums.bpmnjs.detail === newOrDetail) {
     refBpmnJs.value.view(bpmnData.value);
   } else if (enums.bpmnjs.detailColor === newOrDetail) {
