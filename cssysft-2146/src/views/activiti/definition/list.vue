@@ -67,7 +67,7 @@
 
     <dialog-bpmn-js ref="refDialogBpmnJs" @deployed="onDeployed"></dialog-bpmn-js>
 
-    <dialog-com ref="refDialogCom" title="任务内容" width="50%" top="10vh" :heightPercent="0.6" :footer="false">
+    <dialog-com ref="refDialogCom" title="内容" width="50%" top="10vh" :heightPercent="0.6" :footer="false">
       <template #content="sp">
         <inst-form ref="refInstForm"></inst-form>
       </template>
@@ -98,6 +98,7 @@ const multipleSelection = ref([]);
 
 const refDialogBpmnJs = ref(null);
 const refDialogCom = ref(null);
+const refInstForm = ref(null);
 
 const onOpenBpmn = () => {
   refDialogBpmnJs.value.onOpenBpmn({}, enums.bpmnjs.modeler, enums.bpmnjs.new);
@@ -128,7 +129,7 @@ const onDeleteBpmn = (row) => {
 }
 
 const onStartInstance = (row) => {
-  refDialogCom.value.open(row);
+  refDialogCom.value.open(row, refInstForm.value, enums.formType.add);
 
   // activitiApi.startInstance({
   //   key: row.key,

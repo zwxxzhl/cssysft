@@ -5,5 +5,9 @@ export default {
     new: 'new',
     detail: 'detail',
     detailColor: 'detailColor'
+  },
+  formType: {
+    add: 'add',
+    edit: 'edit'
   }
 }

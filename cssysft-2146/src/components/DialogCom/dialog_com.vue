@@ -53,13 +53,18 @@ const close = () => {
   visible.value = false;
 }
 
-const open = (row) => {
+const open = (row, com, type) => {
+  dialogheight.value = parent.innerHeight * props.heightPercent;
+
   dialogdata.value = row;
   visible.value = true;
+
+  if (com) {
+    com.initData(type);
+  }
 }
 
 const opened = () => {
-  dialogheight.value = parent.innerHeight * props.heightPercent;
   refDialogContent.value.style.height = dialogheight.value + "px";
   emit('opened');
 }
