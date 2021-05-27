@@ -15,14 +15,14 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row type="flex" justify="center" class="dialog-bottom-btn" :style="{ top: dialogheight+'px' }">
+<!--      <el-row type="flex" justify="center" class="dialog-bottom-btn" :style="{ top: dialogheight+'px' }">
         <el-col :span="6">
           <el-button size="medium" type="info" icon="el-icon-close" @click="onPageClose">关闭</el-button>
         </el-col>
         <el-col :span="6">
           <el-button size="medium" type="primary" icon="el-icon-check" :loading="loading" @click="onSaveOrUpdate">保存</el-button>
         </el-col>
-      </el-row>
+      </el-row>-->
     </el-form>
   </div>
 </template>

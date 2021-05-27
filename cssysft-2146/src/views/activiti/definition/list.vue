@@ -67,7 +67,7 @@
 
     <dialog-bpmn-js ref="refDialogBpmnJs" @deployed="onDeployed"></dialog-bpmn-js>
 
-    <dialog-com ref="refDialogCom" title="内容" width="50%" top="10vh" :heightPercent="0.6" :footer="false">
+    <dialog-com ref="refDialogCom" title="内容" width="50%" top="10vh" :heightPercent="0.6" :footer="true">
       <template #content="sp">
         <inst-form ref="refInstForm"></inst-form>
       </template>
