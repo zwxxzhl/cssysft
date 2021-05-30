@@ -6,7 +6,7 @@
     :top="top"
     @opened="opened"
   >
-    <div ref="refDialogContent" class="dialog-layout">
+    <div class="dialog-layout" ref="refDialogContent">
       <slot name="content" v-bind="this"></slot>
     </div>
     <template #footer v-if="footer">
@@ -33,13 +33,17 @@ const {expose} = useContext();
 
 const visible = ref(false);
 const refDialogContent = ref(null);
-const dialogdata = ref(null);
+const dialogData = ref(null);
 const dialogheight = ref(0);
 
-provide('dialogdata', dialogdata);
-provide('dialogheight', dialogheight);
+provide('dialogData', dialogData);
 
 let emit = defineEmit(['opened', 'confirm', 'cancel']);
+
+const close = () => {
+  visible.value = false;
+}
+provide('dialogClose', close);
 
 const confirm = () => {
   emit('confirm');
@@ -49,14 +53,10 @@ const cancel = () => {
   emit('cancel');
 }
 
-const close = () => {
-  visible.value = false;
-}
-
 const open = (row, com, type) => {
   dialogheight.value = parent.innerHeight * props.heightPercent;
 
-  dialogdata.value = row;
+  dialogData.value = row;
   visible.value = true;
 
   if (com) {
@@ -86,6 +86,6 @@ expose({
 
 <style scoped>
 .dialog-layout {
-  overflow: auto;
+  position: relative;
 }
 </style>

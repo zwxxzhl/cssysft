@@ -67,7 +67,7 @@
 
     <dialog-bpmn-js ref="refDialogBpmnJs" @deployed="onDeployed"></dialog-bpmn-js>
 
-    <dialog-com ref="refDialogCom" title="内容" width="50%" top="10vh" :heightPercent="0.6" :footer="true">
+    <dialog-com ref="refDialogCom" title="派发任务" width="50%" top="10vh" :heightPercent="0.6" :footer="false">
       <template #content="sp">
         <inst-form ref="refInstForm"></inst-form>
       </template>
@@ -130,16 +130,6 @@ const onDeleteBpmn = (row) => {
 
 const onStartInstance = (row) => {
   refDialogCom.value.open(row, refInstForm.value, enums.formType.add);
-
-  // activitiApi.startInstance({
-  //   key: row.key,
-  //   name: row.name,
-  //   variable: '自定义变量'
-  // }).then(res => {
-  //   if (res.success) {
-  //     globalProperties.$message.success(res.message);
-  //   }
-  // })
 }
 
 const onDeployed = () => {

@@ -30,10 +30,21 @@
     color: $colorPurple !important;
 }
 
-.dialog-bottom-btn {
+.dialog-content {
+    position: absolute;
+    top: 0;
+    bottom: 61px;
+    left: 0;
+    right: 0;
+    overflow: auto;
+}
+
+.dialog-bottom {
     position: absolute;
     width: 100%;
-    padding-right: 40px; // 跟随 dialog: padding
+    bottom: 0;
+    padding: 10px 0 15px 0;
+    background-color: white;
 }
 
 .icon-layout-mini {
@@ -48,8 +59,7 @@
 
 .fixed-bottom {
     position: fixed;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
-    background-color: white;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
