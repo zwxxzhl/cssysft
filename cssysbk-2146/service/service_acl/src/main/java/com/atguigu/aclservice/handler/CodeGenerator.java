@@ -25,6 +25,7 @@ public class CodeGenerator {
     public static String scanner(String tip) {
         Scanner scanner = new Scanner(System.in);
         StringBuilder help = new StringBuilder();
+        // 输入模块名：aclservice
         help.append("请输入" + tip + "：");
         System.out.println(help.toString());
         if (scanner.hasNext()) {
@@ -42,7 +43,11 @@ public class CodeGenerator {
 
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
-        String projectPath = System.getProperty("user.dir");
+        String projectPathTemp = System.getProperty("user.dir");
+        // F:\vscodeproject\cssys\cssysft\cssysbk-2146
+        // F:\vscodeproject\cssys\cssysft\cssysbk-2146\service\service_acl\src
+        String projectPath = projectPathTemp + "/service/service_acl";
+
         gc.setOutputDir(projectPath + "/src/main/java");
         gc.setAuthor("jobob");
         gc.setOpen(false);
@@ -61,7 +66,8 @@ public class CodeGenerator {
         // 包配置
         PackageConfig pc = new PackageConfig();
         pc.setModuleName(scanner("模块名"));
-        pc.setParent("com.atguigu.aclservice");
+        // 输入模块名：aclservice
+        pc.setParent("com.atguigu");
         mpg.setPackageInfo(pc);
 
         // 自定义配置
@@ -84,7 +90,11 @@ public class CodeGenerator {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输出文件名 ， 如果你 Entity 设置了前后缀、此处注意 xml 的名称会跟着发生变化！！
-                return projectPath + "/src/main/resources/mapper/" + pc.getModuleName()
+                // return projectPath + "/src/main/resources/mapper/" + pc.getModuleName()
+                //         + "/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
+
+                // F:\vscodeproject\cssys\cssysft\cssysbk-2146\service\service_acl\src\main\java\com\atguigu\aclservice\mapper\xml
+                return projectPath + "/src/main/java/com/atguigu/aclservice/mapper/xml/"
                         + "/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
             }
         });

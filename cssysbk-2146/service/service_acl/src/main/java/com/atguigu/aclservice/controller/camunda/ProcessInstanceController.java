@@ -1,8 +1,10 @@
 package com.atguigu.aclservice.controller.camunda;
 
 import com.alibaba.fastjson.JSONObject;
+import com.atguigu.aclservice.entity.BusTaskForm;
 import com.atguigu.aclservice.entity.ProcinstSub;
 import com.atguigu.aclservice.entity.User;
+import com.atguigu.aclservice.service.IBusTaskFormService;
 import com.atguigu.aclservice.service.IProcinstSubService;
 import com.atguigu.aclservice.service.UserService;
 import com.atguigu.utils.utils.R;
@@ -21,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/admin/acl//processInstance")
@@ -38,6 +39,9 @@ public class ProcessInstanceController {
 
     @Autowired
     private IProcinstSubService procinstSubService;
+
+    @Autowired
+    private IBusTaskFormService busTaskFormService;
 
     @Autowired
     private UserService userService;
@@ -99,14 +103,29 @@ public class ProcessInstanceController {
             //Map<String, Object> variables = new HashMap<>();
             //variables.put("userId", "test");
 
-            ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(
-                    params.getString("key"),
-                    "BusinessKey");
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userService.selectByUsername(username);
+
+            // 保存业务表单
+            BusTaskForm busTaskForm = new BusTaskForm();
+            busTaskForm.setTitle(params.getString("title"));
+            busTaskForm.setTitle(params.getString("content"));
+            busTaskForm.setGmtCreateUser(user.getId());
+            busTaskForm.setGmtUpdateUser(user.getId());
+
+            boolean save = busTaskFormService.save(busTaskForm);
+
+            ProcessInstance processInstance;
+            if (save) {
+                processInstance = runtimeService.startProcessInstanceByKey(
+                        params.getString("key"),
+                        busTaskForm.getId());
+            } else {
+                return R.error().message("创建流程实例业务表单失败");
+            }
 
             return R.ok().data("name", processInstance.getBusinessKey()).data("id", processInstance.getId());
         } catch (Exception e) {
-            System.out.println("=======打印=======");
-            System.out.println(e);
             return R.error().message("创建流程实例失败").data(R.DESC, e.toString() + "local:" + e.getLocalizedMessage());
         }
     }
@@ -149,8 +168,6 @@ public class ProcessInstanceController {
 
             return R.ok().data("name", subProcinst.getBusinessKey()).data("id", subProcinst.getId());
         } catch (Exception e) {
-            System.out.println("=======打印=======");
-            System.out.println(e);
             return R.error().message("创建流程子实例失败").data(R.DESC, e.toString() + "local:" + e.getLocalizedMessage());
         }
     }
