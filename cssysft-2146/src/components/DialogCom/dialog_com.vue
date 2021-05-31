@@ -53,14 +53,14 @@ const cancel = () => {
   emit('cancel');
 }
 
-const open = (row, com, type) => {
+const open = (row, pageVm, type) => {
   dialogheight.value = parent.innerHeight * props.heightPercent;
 
   dialogData.value = row;
   visible.value = true;
 
-  if (com) {
-    com.initData(type);
+  if (pageVm) {
+    pageVm.initData(type);
   }
 }
 

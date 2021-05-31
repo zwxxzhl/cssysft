@@ -45,7 +45,7 @@ export default {
     return request({
       url: `${api_instance_name}/startInstance`,
       method: 'put',
-      data: {key: params.key, name: params.name, variable: params.variable}
+      data: {key: params.key, title: params.title, content: params.content}
     })
   },
   //启动子实例

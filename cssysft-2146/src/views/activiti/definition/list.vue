@@ -72,7 +72,6 @@
         <inst-form ref="refInstForm"></inst-form>
       </template>
     </dialog-com>
-
   </div>
 </template>
 

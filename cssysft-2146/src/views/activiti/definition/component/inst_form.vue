@@ -32,6 +32,7 @@
 import {ref, useContext, defineEmit, inject, getCurrentInstance} from "vue";
 
 import activitiApi from "../../../../api/acl/activiti";
+import enums from "../../../../utils/enums";
 
 const globalProperties = getCurrentInstance().appContext.config.globalProperties;
 
@@ -49,8 +50,25 @@ const rules = ref({
   content: [{required: true, trigger: 'blur', message: '任务内容必须输入'}]
 });
 
-const initData = () => {
-  console.log('initData');
+const initData = (type) => {
+  if (enums.formType.edit === type) {
+    // 获取表单数据
+    form.value = dialogData.value;
+  }
+}
+
+const getFormData = () => {
+  activitiApi.startInstance({
+    key: dialogData.value.key,
+    title: form.value.title,
+    content: form.value.content
+  }).then(res => {
+    if (res.success) {
+      globalProperties.$message.success(res.message);
+    }
+    loading.value = false;
+    dialogClose();
+  })
 }
 
 const onSaveOrUpdate = () => {
@@ -58,13 +76,15 @@ const onSaveOrUpdate = () => {
     if (valid) {
       loading.value = true;
       activitiApi.startInstance({
-        key: row.key,
-        form: form.value
+        key: dialogData.value.key,
+        title: form.value.title,
+        content: form.value.content
       }).then(res => {
         if (res.success) {
           globalProperties.$message.success(res.message);
         }
         loading.value = false;
+        dialogClose();
       })
     }
   })

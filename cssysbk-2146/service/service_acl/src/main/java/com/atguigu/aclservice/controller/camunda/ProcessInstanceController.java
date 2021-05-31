@@ -73,6 +73,7 @@ public class ProcessInstanceController {
                 hashMap.put("id", pi.getId());
                 hashMap.put("name", pi.getProcessDefinitionName());
                 hashMap.put("status", pi.getState());
+                hashMap.put("businessKey", pi.getBusinessKey());
                 hashMap.put("processDefinitionId", pi.getProcessDefinitionId());
                 hashMap.put("processDefinitionKey", pi.getProcessDefinitionKey());
                 hashMap.put("startDate", pi.getStartTime());
@@ -108,8 +109,9 @@ public class ProcessInstanceController {
 
             // 保存业务表单
             BusTaskForm busTaskForm = new BusTaskForm();
+            busTaskForm.setUserId(user.getId());
             busTaskForm.setTitle(params.getString("title"));
-            busTaskForm.setTitle(params.getString("content"));
+            busTaskForm.setContent(params.getString("content"));
             busTaskForm.setGmtCreateUser(user.getId());
             busTaskForm.setGmtUpdateUser(user.getId());
 

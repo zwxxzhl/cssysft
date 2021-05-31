@@ -32,6 +32,10 @@
 
       <el-table-column label="操作" width="180" align="center">
         <template #default="scope">
+          <el-tooltip v-if="hasPerm('instance.update')" effect="dark" content="编辑任务表单" placement="left-start">
+            <i class="el-icon-edit icon-layout-mini color-orange" @click="onEditForm(scope.row)"></i>
+          </el-tooltip>
+
           <el-tooltip v-if="hasPerm('instance.update')" effect="dark" content="挂起" placement="left-start">
             <i class="el-icon-warning-outline icon-layout-mini color-orange" @click="onSuspend(scope.row)"></i>
           </el-tooltip>
@@ -63,11 +67,20 @@
     />
 
     <dialog-bpmn-js ref="refDialogBpmnJs"></dialog-bpmn-js>
+
+    <dialog-com ref="refDialogCom" title="派发任务" width="50%" top="10vh" :heightPercent="0.6" :footer="false">
+      <template #content="sp">
+        <inst-form ref="refInstForm"></inst-form>
+      </template>
+    </dialog-com>
   </div>
 </template>
 
 <script setup>
 import DialogBpmnJs from "../../../components/BpmnJs/dialog_bpmnjs.vue";
+import DialogCom from "../../../components/DialogCom/dialog_com.vue";
+import InstForm from "../definition/component/inst_form.vue";
+
 import enums from "../../../utils/enums";
 
 import activitiApi from "../../../api/acl/activiti";
@@ -84,6 +97,12 @@ let searchObj = reactive({});
 const multipleSelection = ref([]);
 
 const refDialogBpmnJs = ref(null);
+const refDialogCom = ref(null);
+const refInstForm = ref(null);
+
+const onEditForm = (row) => {
+  refDialogCom.value.open(row, refInstForm.value, enums.formType.edit);
+}
 
 const onSuspend = (row) => {
   activitiApi.suspendInstance(
