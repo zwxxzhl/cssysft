@@ -44,6 +44,7 @@ public class TaskController {
 
             TaskQuery query = taskRuntime.createTaskQuery();
             query.taskAssignee(username);
+            query.initializeFormKeys();
             List<Task> list = query.listPage((page - 1) * limit, limit);
 
             List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
@@ -54,6 +55,7 @@ public class TaskController {
                 map.put("id", tk.getId());
                 map.put("name", tk.getName());
                 map.put("createTime", tk.getCreateTime());
+                map.put("businessKey", tk.getFormKey());
 
                 //执行人，null时前台显示未拾取
                 if (tk.getAssignee() == null) {

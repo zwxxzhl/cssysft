@@ -3,11 +3,13 @@ export default {
     modeler: 'modeler',
     viewer: 'viewer',
     new: 'new',
+    edit: 'edit',
     detail: 'detail',
     detailColor: 'detailColor'
   },
   formType: {
     add: 'add',
-    edit: 'edit'
+    edit: 'edit',
+    detail: 'detail'
   }
 }

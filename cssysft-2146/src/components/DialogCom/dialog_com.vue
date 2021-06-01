@@ -20,6 +20,7 @@
 
 <script setup>
 import {ref, useContext, provide, defineEmit, defineProps} from "vue";
+import enums from "../../utils/enums";
 
 const props = defineProps({
   title: String,
@@ -35,8 +36,10 @@ const visible = ref(false);
 const refDialogContent = ref(null);
 const dialogData = ref(null);
 const dialogheight = ref(0);
+let openType = ref(enums.formType.add);
 
 provide('dialogData', dialogData);
+provide('openType', openType);
 
 let emit = defineEmit(['opened', 'confirm', 'cancel']);
 
@@ -55,12 +58,13 @@ const cancel = () => {
 
 const open = (row, pageVm, type) => {
   dialogheight.value = parent.innerHeight * props.heightPercent;
+  openType.value = type;
 
   dialogData.value = row;
   visible.value = true;
 
   if (pageVm) {
-    pageVm.initData(type);
+    pageVm.initData();
   }
 }
 

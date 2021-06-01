@@ -1,5 +1,5 @@
 <template>
-  <el-form class="dialog-content" ref="refForm" :model="form" :rules="rules" label-width="60px">
+  <el-form class="dialog-content" ref="refForm" :model="form" :rules="rules" label-width="60px" :disabled="openType === enums.formType.detail">
     <el-row>
       <el-col :span="24">
         <el-form-item label="标 题" prop="title">
@@ -19,19 +19,22 @@
   <el-row class="dialog-bottom" type="flex" justify="center">
     <el-col :span="4">
       <el-button size="medium" type="info" icon="el-icon-close"
-                 @click="onPageClose">取消</el-button>
+                 @click="onPageClose">取消
+      </el-button>
     </el-col>
-    <el-col :span="4">
+    <el-col :span="4" v-if="openType !== enums.formType.detail">
       <el-button size="medium" type="primary" icon="el-icon-check"
-                 :loading="loading" @click="onSaveOrUpdate">保存</el-button>
+                 :loading="loading" @click="onSaveOrUpdate">保存
+      </el-button>
     </el-col>
   </el-row>
 </template>
 
 <script setup>
-import {ref, useContext, defineEmit, inject, getCurrentInstance} from "vue";
+import {ref, useContext, defineEmit, inject, getCurrentInstance, onMounted} from "vue";
 
 import activitiApi from "../../../../api/acl/activiti";
+import busTaskFormApi from "../../../../api/acl/busTaskForm";
 import enums from "../../../../utils/enums";
 
 const globalProperties = getCurrentInstance().appContext.config.globalProperties;
@@ -40,6 +43,7 @@ const {expose} = useContext();
 const emit = defineEmit(['page-close']);
 
 const dialogData = inject('dialogData');
+const openType = inject('openType');
 const dialogClose = inject('dialogClose');
 
 const form = ref({});
@@ -50,19 +54,22 @@ const rules = ref({
   content: [{required: true, trigger: 'blur', message: '任务内容必须输入'}]
 });
 
-const initData = (type) => {
-  if (enums.formType.edit === type) {
+const initData = () => {
+  if (enums.formType.add !== openType.value) {
     // 获取表单数据
-    form.value = dialogData.value;
+    busTaskFormApi.find(dialogData.value.businessKey).then(res => {
+      form.value = res.data;
+    })
   }
 }
 
-const getFormData = () => {
-  activitiApi.startInstance({
-    key: dialogData.value.key,
-    title: form.value.title,
-    content: form.value.content
-  }).then(res => {
+onMounted(() => {
+  initData();
+});
+
+const updateForm = () => {
+  loading.value = true;
+  busTaskFormApi.update(form.value).then(res => {
     if (res.success) {
       globalProperties.$message.success(res.message);
     }
@@ -71,7 +78,7 @@ const getFormData = () => {
   })
 }
 
-const onSaveOrUpdate = () => {
+const saveFormAndStartInstance = () => {
   refForm.value.validate(valid => {
     if (valid) {
       loading.value = true;
@@ -88,6 +95,14 @@ const onSaveOrUpdate = () => {
       })
     }
   })
+}
+
+const onSaveOrUpdate = () => {
+  if (enums.formType.add === openType.value) {
+    saveFormAndStartInstance();
+  } else if (enums.formType.edit === openType.value) {
+    updateForm();
+  }
 }
 
 const onPageClose = () => {

@@ -32,13 +32,17 @@
 
       <el-table-column label="操作" width="100" align="center">
         <template #default="scope">
+          <el-tooltip v-if="hasPerm('task_todo.list')" effect="dark" content="查看任务内容" placement="left-start">
+            <i class="el-icon-view icon-layout-mini color-orange" @click="onViewForm(scope.row)"></i>
+          </el-tooltip>
+
           <el-tooltip v-if="hasPerm('task_todo.handle')" effect="dark" content="转派任务" placement="bottom-start">
             <i class="el-icon-caret-right icon-layout-mini color-purple" @click="onOpenSubInstance(scope.row)"></i>
           </el-tooltip>
           <el-tooltip v-if="hasPerm('task_todo.handle')" effect="dark" content="直接办理" placement="left-start">
             <i class="el-icon-plus icon-layout-mini color-green" @click="onComplete(scope.row)"></i>
           </el-tooltip>
-          <el-tooltip v-if="hasPerm('task_history.list')" effect="dark" content="查看" placement="left-start">
+          <el-tooltip v-if="hasPerm('task_todo.list')" effect="dark" content="查看" placement="left-start">
             <i class="el-icon-view icon-layout-mini color-blue" @click="onViewBpmn(scope.row)"></i>
           </el-tooltip>
         </template>
@@ -59,12 +63,21 @@
     <dialog-bpmn-js ref="refDialogBpmnJs"></dialog-bpmn-js>
 
     <sub-instance ref="refSubInstance" @close="onCloseSubInstance"></sub-instance>
+
+    <dialog-com ref="refDialogCom" title="任务内容" width="50%" top="10vh" :heightPercent="0.6" :footer="false">
+      <template #content="sp">
+        <inst-form ref="refInstForm"></inst-form>
+      </template>
+    </dialog-com>
   </div>
 </template>
 
 <script setup>
 import DialogBpmnJs from "../../../components/BpmnJs/dialog_bpmnjs.vue";
 import SubInstance from "./components/sub_instance.vue";
+import DialogCom from "../../../components/DialogCom/dialog_com.vue";
+import InstForm from "../definition/component/inst_form.vue";
+
 import enums from "../../../utils/enums";
 
 import activitiApi from "../../../api/acl/activiti";
@@ -83,6 +96,13 @@ const multipleSelection = ref([]);
 const refDialogBpmnJs = ref(null);
 const refSubInstance = ref(null);
 
+const refDialogCom = ref(null);
+const refInstForm = ref(null);
+
+const onViewForm = (row) => {
+  refDialogCom.value.open(row, refInstForm.value, enums.formType.detail);
+}
+
 const onOpenSubInstance = (row) => {
   refSubInstance.value.onOpen(row);
 }
@@ -90,19 +110,6 @@ const onOpenSubInstance = (row) => {
 const onCloseSubInstance = () => {
   fetchData();
 }
-
-// const onStartSubInstance = (row) => {
-//   activitiApi.startSubInstance({
-//     key: row.processDefinitionKey,
-//     procinstId: row.processInstanceId,
-//     name: row.name,
-//     variable: '自定义变量'
-//   }).then(res => {
-//     if (res.success) {
-//       globalProperties.$message.success(res.message);
-//     }
-//   })
-// }
 
 const onComplete = (row) => {
   activitiApi.completeTask(

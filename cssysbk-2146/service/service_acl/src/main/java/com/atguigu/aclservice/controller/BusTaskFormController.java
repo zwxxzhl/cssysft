@@ -6,10 +6,7 @@ import com.atguigu.aclservice.service.IBusTaskFormService;
 import com.atguigu.utils.utils.R;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -31,6 +28,13 @@ public class BusTaskFormController {
     public R update(@RequestBody BusTaskForm busTaskForm) {
         busTaskFormService.updateById(busTaskForm);
         return R.ok();
+    }
+
+    @ApiOperation(value = "查询任务表单")
+    @GetMapping("find")
+    public R find(@RequestParam("id") String id) {
+        BusTaskForm byId = busTaskFormService.getById(id);
+        return R.ok().data(byId);
     }
 
 }
