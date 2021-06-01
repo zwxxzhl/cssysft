@@ -2,6 +2,7 @@ import axios from 'axios'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import store from '../store'
 import {getToken} from '@/utils/auth'
+import de from "element-plus/packages/locale/lang/de";
 
 
 // 创建axios实例
@@ -20,7 +21,7 @@ service.interceptors.request.use(
   },
   error => {
     // Do something with request error
-    console.log(error) // for debug
+    console.error(error) // for debug
     Promise.reject(error)
   }
 )
@@ -32,7 +33,6 @@ service.interceptors.response.use(
      * code为非20000是抛错 可结合自己业务进行修改
      */
     const res = response.data
-    // debugger
     if (res.code !== 20000) {
       ElMessage({
         message: res.message,
@@ -45,7 +45,7 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log('err' + error) // for debug
+    console.error('err' + error) // for debug
     ElMessage({
       message: error.message,
       type: 'error',

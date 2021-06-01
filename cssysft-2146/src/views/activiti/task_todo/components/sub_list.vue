@@ -36,7 +36,7 @@
 
       <el-table-column label="操作" width="180" align="center">
         <template #default="scope">
-          <el-tooltip v-if="hasPerm('definition.add')" effect="dark" content="转派任务" placement="bottom-start">
+          <el-tooltip v-if="hasPerm('definition.add')" effect="dark" content="以此流程转派任务" placement="bottom-start">
             <i class="el-icon-caret-right icon-layout-mini color-purple" @click="onStartSubInstance(scope.row)"></i>
           </el-tooltip>
 
@@ -63,14 +63,23 @@
     />
 
     <dialog-bpmn-js ref="refDialogBpmnJs" @deployed="onDeployed"></dialog-bpmn-js>
+
+    <dialog-com ref="refDialogCom" title="任务内容" width="50%" top="10vh" :heightPercent="0.6" :footer="false">
+      <template #content="sp">
+        <inst-form ref="refInstForm"></inst-form>
+      </template>
+    </dialog-com>
   </div>
 </template>
 
 <script setup>
 import DialogBpmnJs from "../../../../components/BpmnJs/dialog_bpmnjs.vue";
-import enums from "../../../../utils/enums";
+import DialogCom from "../../../../components/DialogCom/dialog_com.vue";
+import InstForm from "../../definition/component/inst_form.vue";
 
+import enums from "../../../../utils/enums";
 import activitiApi from "../../../../api/acl/activiti";
+
 import {ref, onMounted, reactive, getCurrentInstance, inject, defineEmit} from "vue";
 
 const globalProperties = getCurrentInstance().appContext.config.globalProperties;
@@ -88,6 +97,13 @@ let searchObj = reactive({});
 const multipleSelection = ref([]);
 
 const refDialogBpmnJs = ref(null);
+const refDialogCom = ref(null);
+const refInstForm = ref(null);
+
+const onStartSubInstance = (row) => {
+  row.SUBINSTANCE = true;
+  refDialogCom.value.open(row, refInstForm.value, enums.formType.add);
+}
 
 const onComplete = () => {
   activitiApi.completeTask(
@@ -126,20 +142,6 @@ const onDeleteBpmn = (row) => {
   }).catch((err) => {
     globalProperties.$message.info("已取消删除");
   });
-}
-
-const onStartSubInstance = (row) => {
-  activitiApi.startSubInstance({
-    key: row.key,
-    procinstId: useRow.value.processInstanceId,
-    name: row.name,
-    variable: '子实例'
-  }).then(res => {
-    if (res.success) {
-      globalProperties.$message.success(res.message);
-      emit('close');
-    }
-  })
 }
 
 const onDeployed = () => {

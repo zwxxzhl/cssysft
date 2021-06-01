@@ -1,5 +1,6 @@
 <template>
-  <el-form class="dialog-content" ref="refForm" :model="form" :rules="rules" label-width="60px" :disabled="openType === enums.formType.detail">
+  <el-form class="dialog-content" ref="refForm" :model="form" :rules="rules" label-width="60px"
+           :disabled="openType === enums.formType.detail">
     <el-row>
       <el-col :span="24">
         <el-form-item label="标 题" prop="title">
@@ -19,7 +20,7 @@
   <el-row class="dialog-bottom" type="flex" justify="center">
     <el-col :span="4">
       <el-button size="medium" type="info" icon="el-icon-close"
-                 @click="onPageClose">取消
+                 @click="onPageClose">关闭
       </el-button>
     </el-col>
     <el-col :span="4" v-if="openType !== enums.formType.detail">
@@ -78,21 +79,47 @@ const updateForm = () => {
   })
 }
 
+const startInstance = () => {
+  activitiApi.startInstance({
+    key: dialogData.value.key,
+    title: form.value.title,
+    content: form.value.content
+  }).then(res => {
+    if (res.success) {
+      globalProperties.$message.success(res.message);
+    }
+    loading.value = false;
+    dialogClose();
+  })
+}
+
+const startSubInstance = () => {
+  activitiApi.startSubInstance({
+    key: dialogData.value.key,
+    procinstId: useRow.value.processInstanceId, // todo 异常捕获
+    title: form.value.title,
+    content: form.value.content
+  }).then(res => {
+    if (res.success) {
+      globalProperties.$message.success(res.message);
+      emit('close');
+    }
+  }).catch(err => {
+    console.error('打印报错');
+    console.error(err);
+  })
+}
+
 const saveFormAndStartInstance = () => {
   refForm.value.validate(valid => {
-    if (valid) {
+    if (valid) {debugger
       loading.value = true;
-      activitiApi.startInstance({
-        key: dialogData.value.key,
-        title: form.value.title,
-        content: form.value.content
-      }).then(res => {
-        if (res.success) {
-          globalProperties.$message.success(res.message);
-        }
-        loading.value = false;
-        dialogClose();
-      })
+
+      if (dialogData.value.SUBINSTANCE) {
+        startSubInstance();
+      } else {
+        startInstance();
+      }
     }
   })
 }

@@ -3,8 +3,10 @@ package com.atguigu.aclservice.controller.camunda;
 import com.alibaba.fastjson.JSONObject;
 import com.atguigu.utils.utils.R;
 import io.swagger.annotations.ApiParam;
-import org.camunda.bpm.engine.RepositoryService;
+import org.camunda.bpm.engine.HistoryService;
 import org.camunda.bpm.engine.TaskService;
+import org.camunda.bpm.engine.history.HistoricProcessInstance;
+import org.camunda.bpm.engine.history.HistoricProcessInstanceQuery;
 import org.camunda.bpm.engine.repository.ProcessDefinition;
 import org.camunda.bpm.engine.task.Task;
 import org.camunda.bpm.engine.task.TaskQuery;
@@ -25,7 +27,7 @@ public class TaskController {
     private TaskService taskRuntime;
 
     @Autowired
-    private RepositoryService repositoryService;
+    private HistoryService historyService;
 
     /**
      * 查询我的代办任务
@@ -50,12 +52,14 @@ public class TaskController {
             List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
             for (Task tk : list) {
                 Map<String, Object> map = new HashMap<>();
-                ProcessDefinition def = repositoryService.getProcessDefinition(tk.getProcessDefinitionId());
+
+                HistoricProcessInstanceQuery instanceQuery = historyService.createHistoricProcessInstanceQuery();
+                instanceQuery.processInstanceId(tk.getProcessInstanceId());
+                HistoricProcessInstance instance = instanceQuery.list().get(0);
 
                 map.put("id", tk.getId());
                 map.put("name", tk.getName());
                 map.put("createTime", tk.getCreateTime());
-                map.put("businessKey", tk.getFormKey());
 
                 //执行人，null时前台显示未拾取
                 if (tk.getAssignee() == null) {
@@ -67,9 +71,10 @@ public class TaskController {
                 map.put("processDefinitionId", tk.getProcessDefinitionId());
                 map.put("processInstanceId", tk.getProcessInstanceId());
 
-                map.put("processName", def.getName());
-                map.put("processDefinitionKey", def.getKey());
-                map.put("version", def.getVersion());
+                map.put("businessKey", instance.getBusinessKey());
+                map.put("processName", instance.getProcessDefinitionName());
+                map.put("processDefinitionKey", instance.getProcessDefinitionKey());
+                map.put("version", instance.getProcessDefinitionVersion());
 
                 listMap.add(map);
             }

@@ -30,7 +30,7 @@
       <el-table-column prop="createTime" label="创建时间" width="160"/>
       <el-table-column prop="version" label="版本号" width="80"/>
 
-      <el-table-column label="操作" width="100" align="center">
+      <el-table-column label="操作" width="140" align="center">
         <template #default="scope">
           <el-tooltip v-if="hasPerm('task_todo.list')" effect="dark" content="查看任务内容" placement="left-start">
             <i class="el-icon-view icon-layout-mini color-orange" @click="onViewForm(scope.row)"></i>

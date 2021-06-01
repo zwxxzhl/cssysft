@@ -100,7 +100,7 @@ public class ProcessInstanceController {
     @PutMapping(value = "/startInstance")
     public R startInstance(@RequestBody JSONObject params) {
         try {
-
+            //携带变量
             //Map<String, Object> variables = new HashMap<>();
             //variables.put("userId", "test");
 
@@ -138,34 +138,49 @@ public class ProcessInstanceController {
     @PutMapping(value = "/startSubInstance")
     public R startSubInstance(@RequestBody JSONObject params) {
         try {
-
-            String key = params.getString("key");
-            String procinstId = params.getString("procinstId");
-
             //携带变量
             //Map<String, Object> variables = new HashMap<>();
             //variables.put("userId", "test");
 
-            //启动子实例
-            ProcessInstance subProcinst = runtimeService.startProcessInstanceByKey(
-                    key,
-                    "BusinessKey");
+            String key = params.getString("key");
+            String procinstId = params.getString("procinstId");
 
-            //保存关系
-            try {
-                String username = SecurityContextHolder.getContext().getAuthentication().getName();
-                User user = userService.selectByUsername(username);
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userService.selectByUsername(username);
 
-                ProcinstSub procinstSub = new ProcinstSub();
-                procinstSub.setUserId(user.getId());
-                procinstSub.setProcinstId(procinstId);
-                procinstSub.setSubProcinstId(subProcinst.getId());
-                procinstSub.setGmtCreateUser(user.getId());
-                procinstSub.setGmtUpdateUser(user.getId());
-                procinstSubService.save(procinstSub);
-            } catch (Exception e) {
-                runtimeService.deleteProcessInstance(subProcinst.getId(), "创建流程子实例关系失败，删除");
-                throw new RuntimeException("创建流程子实例失败");
+            // 保存业务表单
+            BusTaskForm busTaskForm = new BusTaskForm();
+            busTaskForm.setUserId(user.getId());
+            busTaskForm.setTitle(params.getString("title"));
+            busTaskForm.setContent(params.getString("content"));
+            busTaskForm.setGmtCreateUser(user.getId());
+            busTaskForm.setGmtUpdateUser(user.getId());
+
+            boolean save = busTaskFormService.save(busTaskForm);
+
+            ProcessInstance subProcinst;
+            if (save) {
+                //启动子实例
+                subProcinst = runtimeService.startProcessInstanceByKey(
+                        key,
+                        busTaskForm.getId());
+
+                //保存关系
+                try {
+                    ProcinstSub procinstSub = new ProcinstSub();
+                    procinstSub.setUserId(user.getId());
+                    procinstSub.setProcinstId(procinstId);
+                    procinstSub.setSubProcinstId(subProcinst.getId());
+                    procinstSub.setGmtCreateUser(user.getId());
+                    procinstSub.setGmtUpdateUser(user.getId());
+                    procinstSubService.save(procinstSub);
+                } catch (Exception e) {
+                    runtimeService.deleteProcessInstance(subProcinst.getId(), "创建流程子实例关系失败，删除");
+                    busTaskFormService.removeById(busTaskForm.getId());
+                    throw new RuntimeException("创建流程子实例失败");
+                }
+            } else {
+                return R.error().message("创建流程实例业务表单失败");
             }
 
             return R.ok().data("name", subProcinst.getBusinessKey()).data("id", subProcinst.getId());
