@@ -2,6 +2,9 @@ create table bus_task_form
 (
     id              char(19)                      not null comment '主键id'
         primary key,
+	pid             char(19)                      null comment '父id',
+    procinst_id     varchar(64)                   null comment '流程实例id',
+    procdef_id      varchar(64)                   null comment '流程定义id',
     user_id         char(19)                      not null comment '所属用户',
     title           varchar(255)                  null comment '派发任务标题',
     content         varchar(1000)                 null comment '派发任务内容',
