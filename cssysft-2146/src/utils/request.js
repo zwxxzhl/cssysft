@@ -8,7 +8,7 @@ import de from "element-plus/packages/locale/lang/de";
 // 创建axios实例
 const service = axios.create({
   baseURL: import.meta.env.VITE_BASE_API, // api 的 base_url
-  timeout: 20000 // 请求超时时间
+  timeout: 30000 // 请求超时时间 毫秒
 })
 
 // request拦截器
@@ -21,7 +21,7 @@ service.interceptors.request.use(
   },
   error => {
     // Do something with request error
-    console.error(error) // for debug
+    console.log(error) // for debug
     Promise.reject(error)
   }
 )
@@ -37,7 +37,7 @@ service.interceptors.response.use(
       ElMessage({
         message: res.message,
         type: 'error',
-        duration: 5 * 1000
+        duration: 3 * 1000
       })
       return Promise.reject('error')
     } else {
@@ -45,11 +45,11 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.error('err' + error) // for debug
+    console.log('err' + error) // for debug
     ElMessage({
       message: error.message,
       type: 'error',
-      duration: 5 * 1000
+      duration: 3 * 1000
     })
     return Promise.reject(error)
   }

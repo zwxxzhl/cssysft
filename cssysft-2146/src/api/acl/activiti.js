@@ -53,7 +53,7 @@ export default {
     return request({
       url: `${api_instance_name}/startSubInstance`,
       method: 'put',
-      data: {key: params.key, procinstId: params.procinstId, name: params.name, variable: params.variable}
+      data: {key: params.key, procinstId: params.procinstId, title: params.title, content: params.content}
     })
   },
   //查询实例列表

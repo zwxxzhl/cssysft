@@ -56,6 +56,8 @@ const rules = ref({
 });
 
 const initData = () => {
+  loading.value = false;
+  form.value = {};
   if (enums.formType.add !== openType.value) {
     // 获取表单数据
     busTaskFormApi.find(dialogData.value.businessKey).then(res => {
@@ -93,26 +95,24 @@ const startInstance = () => {
   })
 }
 
-const startSubInstance = () => {
+const startSubInstance = () => {debugger
   activitiApi.startSubInstance({
     key: dialogData.value.key,
-    procinstId: useRow.value.processInstanceId, // todo 异常捕获
+    procinstId: dialogData.value.processInstanceId,
     title: form.value.title,
     content: form.value.content
   }).then(res => {
     if (res.success) {
       globalProperties.$message.success(res.message);
-      emit('close');
+      loading.value = false;
+      dialogClose();
     }
-  }).catch(err => {
-    console.error('打印报错');
-    console.error(err);
   })
 }
 
 const saveFormAndStartInstance = () => {
   refForm.value.validate(valid => {
-    if (valid) {debugger
+    if (valid) {
       loading.value = true;
 
       if (dialogData.value.SUBINSTANCE) {

@@ -109,6 +109,7 @@ public class ProcessInstanceController {
 
             // 保存业务表单
             BusTaskForm busTaskForm = new BusTaskForm();
+            busTaskForm.setPid("0");
             busTaskForm.setUserId(user.getId());
             busTaskForm.setTitle(params.getString("title"));
             busTaskForm.setContent(params.getString("content"));

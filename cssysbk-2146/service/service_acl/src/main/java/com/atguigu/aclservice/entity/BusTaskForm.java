@@ -1,9 +1,7 @@
 package com.atguigu.aclservice.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.*;
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -22,6 +20,8 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
+@TableName("bus_task_form")
+@ApiModel(value="BusTaskForm对象", description="派发任务表单表")
 public class BusTaskForm implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -31,6 +31,21 @@ public class BusTaskForm implements Serializable {
      */
     @TableId(value = "id", type = IdType.ID_WORKER_STR)
     private String id;
+
+    /**
+     * 父id
+     */
+    private String pid;
+
+    /**
+     * 流程实例id
+     */
+    private String procinstId;
+
+    /**
+     * 流程定义id
+     */
+    private String procdefId;
 
     /**
      * 所属用户

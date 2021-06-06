@@ -62,9 +62,13 @@
 
     <dialog-bpmn-js ref="refDialogBpmnJs"></dialog-bpmn-js>
 
-    <sub-instance ref="refSubInstance" @close="onCloseSubInstance"></sub-instance>
+    <dialog-com ref="refDialogComSubList" title="转派子任务" width="90%" top="1vh" :heightPercent="0.88" :footer="false">
+      <template #content="sp">
+        <sub-list ref="refSubList" @close="onCloseSubList"></sub-list>
+      </template>
+    </dialog-com>
 
-    <dialog-com ref="refDialogCom" title="任务内容" width="50%" top="10vh" :heightPercent="0.6" :footer="false">
+    <dialog-com ref="refDialogCom" title="查看任务" width="50%" top="10vh" :heightPercent="0.6" :footer="false">
       <template #content="sp">
         <inst-form ref="refInstForm"></inst-form>
       </template>
@@ -74,7 +78,7 @@
 
 <script setup>
 import DialogBpmnJs from "../../../components/BpmnJs/dialog_bpmnjs.vue";
-import SubInstance from "./components/sub_instance.vue";
+import SubList from "./components/sub_list.vue";
 import DialogCom from "../../../components/DialogCom/dialog_com.vue";
 import InstForm from "../definition/component/inst_form.vue";
 
@@ -94,7 +98,9 @@ let searchObj = reactive({});
 const multipleSelection = ref([]);
 
 const refDialogBpmnJs = ref(null);
-const refSubInstance = ref(null);
+
+const refDialogComSubList = ref(null);
+const refSubList = ref(null);
 
 const refDialogCom = ref(null);
 const refInstForm = ref(null);
@@ -104,10 +110,10 @@ const onViewForm = (row) => {
 }
 
 const onOpenSubInstance = (row) => {
-  refSubInstance.value.onOpen(row);
+  refDialogComSubList.value.open(row, refSubList.value, enums.formType.detail);
 }
 
-const onCloseSubInstance = () => {
+const onCloseSubList = () => {
   fetchData();
 }
 

@@ -80,13 +80,16 @@ import InstForm from "../../definition/component/inst_form.vue";
 import enums from "../../../../utils/enums";
 import activitiApi from "../../../../api/acl/activiti";
 
-import {ref, onMounted, reactive, getCurrentInstance, inject, defineEmit} from "vue";
+import {ref, onMounted, reactive, getCurrentInstance, inject, defineEmit, useContext} from "vue";
 
+const {expose} = useContext();
 const globalProperties = getCurrentInstance().appContext.config.globalProperties;
 
 let emit = defineEmit(['close']);
 
-const useRow =  inject('row');
+const dialogData = inject('dialogData');
+const openType = inject('openType');
+const dialogClose = inject('dialogClose');
 
 const listLoading = ref(true);
 const list = ref([]);
@@ -101,16 +104,19 @@ const refDialogCom = ref(null);
 const refInstForm = ref(null);
 
 const onStartSubInstance = (row) => {
-  row.SUBINSTANCE = true;
-  refDialogCom.value.open(row, refInstForm.value, enums.formType.add);
+  let data = JSON.parse(JSON.stringify(row))
+  data.SUBINSTANCE = true;
+  data.processInstanceId = dialogData.value.processInstanceId;
+  refDialogCom.value.open(data, refInstForm.value, enums.formType.add);
 }
 
 const onComplete = () => {
   activitiApi.completeTask(
-    useRow.value.id
+    dialogData.value.id
   ).then(res => {
     if (res.success) {
       globalProperties.$message.success(res.message);
+      dialogClose();
       emit('close');
     }
   })
@@ -174,9 +180,19 @@ const handleSelectionChange = (selection) => {
   multipleSelection.value = selection;
 }
 
+const initData = () => {
+  if (enums.formType.detail === openType.value) {
+    fetchData();
+  }
+}
+
 onMounted(() => {
-  fetchData();
+  initData();
 })
+
+expose({
+  initData
+});
 
 </script>
 
