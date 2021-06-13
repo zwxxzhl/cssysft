@@ -123,6 +123,11 @@ public class ProcessInstanceController {
                 processInstance = runtimeService.startProcessInstanceByKey(
                         params.getString("key"),
                         busTaskForm.getId());
+
+                // 更新赋值流程实例id/流程定义id
+                busTaskForm.setProcinstId(processInstance.getProcessInstanceId());
+                busTaskForm.setProcdefId(processInstance.getProcessDefinitionId());
+                busTaskFormService.updateById(busTaskForm);
             } else {
                 return R.error().message("创建流程实例业务表单失败");
             }
@@ -144,6 +149,7 @@ public class ProcessInstanceController {
             //variables.put("userId", "test");
 
             String key = params.getString("key");
+            String formPid = params.getString("formPid");
             String procinstId = params.getString("procinstId");
 
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -151,6 +157,7 @@ public class ProcessInstanceController {
 
             // 保存业务表单
             BusTaskForm busTaskForm = new BusTaskForm();
+            busTaskForm.setPid(formPid);
             busTaskForm.setUserId(user.getId());
             busTaskForm.setTitle(params.getString("title"));
             busTaskForm.setContent(params.getString("content"));
@@ -161,13 +168,13 @@ public class ProcessInstanceController {
 
             ProcessInstance subProcinst;
             if (save) {
-                //启动子实例
+                // 启动子实例
                 subProcinst = runtimeService.startProcessInstanceByKey(
                         key,
                         busTaskForm.getId());
 
-                //保存关系
                 try {
+                    // 保存关系
                     ProcinstSub procinstSub = new ProcinstSub();
                     procinstSub.setUserId(user.getId());
                     procinstSub.setProcinstId(procinstId);
@@ -175,6 +182,11 @@ public class ProcessInstanceController {
                     procinstSub.setGmtCreateUser(user.getId());
                     procinstSub.setGmtUpdateUser(user.getId());
                     procinstSubService.save(procinstSub);
+
+                    // 更新任务表单，赋值实例id、定义id
+                    busTaskForm.setProcinstId(subProcinst.getProcessInstanceId());
+                    busTaskForm.setProcdefId(subProcinst.getProcessDefinitionId());
+                    busTaskFormService.updateById(busTaskForm);
                 } catch (Exception e) {
                     runtimeService.deleteProcessInstance(subProcinst.getId(), "创建流程子实例关系失败，删除");
                     busTaskFormService.removeById(busTaskForm.getId());

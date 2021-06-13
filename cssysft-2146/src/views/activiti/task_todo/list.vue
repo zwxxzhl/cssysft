@@ -73,6 +73,12 @@
         <inst-form ref="refInstForm"></inst-form>
       </template>
     </dialog-com>
+
+    <dialog-com ref="refDialogComTask" title="完成任务" width="50%" top="10vh" :heightPercent="0.6" :footer="false">
+      <template #content="sp">
+        <task-form ref="refTaskForm" @complete="onTaskComplete"></task-form>
+      </template>
+    </dialog-com>
   </div>
 </template>
 
@@ -81,6 +87,7 @@ import DialogBpmnJs from "../../../components/BpmnJs/dialog_bpmnjs.vue";
 import SubList from "./components/sub_list.vue";
 import DialogCom from "../../../components/DialogCom/dialog_com.vue";
 import InstForm from "../definition/component/inst_form.vue";
+import TaskForm from "./components/task_form.vue";
 
 import enums from "../../../utils/enums";
 
@@ -105,6 +112,9 @@ const refSubList = ref(null);
 const refDialogCom = ref(null);
 const refInstForm = ref(null);
 
+const refDialogComTask = ref(null);
+const refTaskForm = ref(null);
+
 const onViewForm = (row) => {
   refDialogCom.value.open(row, refInstForm.value, enums.formType.detail);
 }
@@ -118,14 +128,11 @@ const onCloseSubList = () => {
 }
 
 const onComplete = (row) => {
-  activitiApi.completeTask(
-    row.id
-  ).then(res => {
-    if (res.success) {
-      fetchData();
-      globalProperties.$message.success(res.message);
-    }
-  })
+  refDialogComTask.value.open(row, refTaskForm.value, enums.formType.add);
+}
+
+const onTaskComplete = () => {
+  fetchData();
 }
 
 const onViewBpmn = (row) => {

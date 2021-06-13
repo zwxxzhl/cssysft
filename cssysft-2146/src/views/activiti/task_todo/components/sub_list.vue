@@ -11,7 +11,6 @@
 
     <div>
       <el-button v-if="hasPerm('definition.add')" type="danger" size="mini" @click="onOpenBpmn">创建转派流程</el-button>
-      <el-button v-if="hasPerm('definition.add')" type="danger" size="mini" @click="onComplete">直接完成任务</el-button>
     </div>
 
     <el-table
@@ -66,7 +65,7 @@
 
     <dialog-com ref="refDialogCom" title="任务内容" width="50%" top="10vh" :heightPercent="0.6" :footer="false">
       <template #content="sp">
-        <inst-form ref="refInstForm"></inst-form>
+        <inst-form ref="refInstForm" @complete="onInstComplete"></inst-form>
       </template>
     </dialog-com>
   </div>
@@ -106,20 +105,13 @@ const refInstForm = ref(null);
 const onStartSubInstance = (row) => {
   let data = JSON.parse(JSON.stringify(row))
   data.SUBINSTANCE = true;
+  data.formPid = dialogData.value.businessKey;
   data.processInstanceId = dialogData.value.processInstanceId;
   refDialogCom.value.open(data, refInstForm.value, enums.formType.add);
 }
 
-const onComplete = () => {
-  activitiApi.completeTask(
-    dialogData.value.id
-  ).then(res => {
-    if (res.success) {
-      globalProperties.$message.success(res.message);
-      dialogClose();
-      emit('close');
-    }
-  })
+const onInstComplete = () => {
+  dialogClose();
 }
 
 const onOpenBpmn = () => {

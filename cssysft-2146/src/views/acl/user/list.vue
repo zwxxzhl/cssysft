@@ -63,13 +63,6 @@
               v-if="hasPerm('user.assgin')"
             ></el-button>
           </router-link>
-          <el-button
-            type="success"
-            size="mini"
-            icon="el-icon-timer"
-            @click="onAddTask()"
-            v-if="hasPerm('user.add')"
-          ></el-button>
           <router-link :to="'/acl/user/update/' + scope.row.id">
             <el-button
               type="primary"
@@ -100,37 +93,10 @@
       @current-change="fetchData"
       @size-change="changeSize"
     />
-
-    <!-- 添加功能的窗口 -->
-    <el-dialog
-      v-model="taskVisible"
-      title="添加任务"
-      width="80%"
-      top="1vh"
-      @opened="onOpenedTask"
-    >
-      <div ref="refDialogDiv" class="dialog-layout">
-        <bpmn-js ref="refBpmnJs"></bpmn-js>
-      </div>
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button @click="onExportImg">导出图片</el-button>
-          <el-button @click="onExportBpmn">导出Bpmn</el-button>
-          <el-button @click="onForward">前进</el-button>
-          <el-button @click="onRetreat">撤销</el-button>
-          <el-button @click="onCancel">取消</el-button>
-          <el-button type="primary" @click="onDeploy">
-            部署
-          </el-button>
-        </div>
-      </template>
-    </el-dialog>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-
 import userApi from "@/api/acl/user";
 import BpmnJs from "@/components/BpmnJs/index.vue";
 
@@ -146,45 +112,14 @@ export default {
       page: 1, // 默认页码
       limit: 10, // 每页记录数
       searchObj: {}, // 查询表单对象
-      multipleSelection: [], // 批量选择中选择的记录列表
-
-      taskVisible: false,
+      multipleSelection: [] // 批量选择中选择的记录列表
     };
-  },
-  computed: {
-    ...mapGetters({
-      bpmnModeler: "app/bpmnModeler",
-    }),
   },
   created() {
     this.fetchData();
   },
   mounted() {},
   methods: {
-    onExportImg() {
-      this.$refs.refBpmnJs.exportImg();
-    },
-    onExportBpmn() {
-      this.$refs.refBpmnJs.exportBpmn();
-    },
-    onForward() {
-      this.$refs.refBpmnJs.forward();
-    },
-    onRetreat() {
-      this.$refs.refBpmnJs.retreat();
-    },
-    onOpenedTask() {
-      this.$refs.refDialogDiv.style.height = parent.innerHeight * 0.7 + "px";
-    },
-    onCancel(){
-      this.taskVisible = false;
-    },
-    onAddTask() {
-      this.taskVisible = true;
-    },
-    onDeploy(){
-      this.$refs.refBpmnJs.deploy();
-    },
     changeSize(size) {
       this.limit = size;
       this.fetchData(1);

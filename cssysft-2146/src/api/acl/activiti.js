@@ -53,7 +53,8 @@ export default {
     return request({
       url: `${api_instance_name}/startSubInstance`,
       method: 'put',
-      data: {key: params.key, procinstId: params.procinstId, title: params.title, content: params.content}
+      data: {key: params.key, formPid: params.formPid, procinstId: params.procinstId,
+        title: params.title, content: params.content}
     })
   },
   //查询实例列表
@@ -98,11 +99,12 @@ export default {
     })
   },
   //完成任务
-  completeTask(taskId) {
+  completeTask(params) {
     return request({
       url: `${api_task_name}/completeTask`,
       method: 'put',
-      data: {taskId}
+      data: {taskId: params.taskId, formPid: params.formPid, procinstId: params.procinstId,
+        procdefId: params.procdefId, title: params.title, content: params.content}
     })
   },
   //--------------------------------------------------------------------//

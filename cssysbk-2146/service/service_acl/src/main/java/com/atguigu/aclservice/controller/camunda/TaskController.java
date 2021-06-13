@@ -1,6 +1,10 @@
 package com.atguigu.aclservice.controller.camunda;
 
 import com.alibaba.fastjson.JSONObject;
+import com.atguigu.aclservice.entity.BusTaskForm;
+import com.atguigu.aclservice.entity.User;
+import com.atguigu.aclservice.service.IBusTaskFormService;
+import com.atguigu.aclservice.service.UserService;
 import com.atguigu.utils.utils.R;
 import io.swagger.annotations.ApiParam;
 import org.camunda.bpm.engine.HistoryService;
@@ -28,6 +32,12 @@ public class TaskController {
 
     @Autowired
     private HistoryService historyService;
+
+    @Autowired
+    private IBusTaskFormService busTaskFormService;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * 查询我的代办任务
@@ -94,15 +104,38 @@ public class TaskController {
     public R completeTask(@RequestBody JSONObject params) {
         try {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userService.selectByUsername(username);
 
-            TaskQuery query = taskRuntime.createTaskQuery();
-            query.taskId(params.getString("taskId"));
-            Task task = query.singleResult();
+            String formPid = params.getString("formPid");
+            String procinstId = params.getString("procinstId");
+            String procdefId = params.getString("procdefId");
 
-            if (task.getAssignee() == null) {
-                taskRuntime.claim(params.getString("taskId"), username);
+            // 保存业务表单
+            BusTaskForm busTaskForm = new BusTaskForm();
+            busTaskForm.setPid(formPid);
+            busTaskForm.setProcinstId(procinstId);
+            busTaskForm.setProcdefId(procdefId);
+            busTaskForm.setUserId(user.getId());
+            busTaskForm.setTitle(params.getString("title"));
+            busTaskForm.setContent(params.getString("content"));
+            busTaskForm.setGmtCreateUser(user.getId());
+            busTaskForm.setGmtUpdateUser(user.getId());
+
+            boolean save = busTaskFormService.save(busTaskForm);
+
+            // 完成任务
+            if (save) {
+                TaskQuery query = taskRuntime.createTaskQuery();
+                query.taskId(params.getString("taskId"));
+                Task task = query.singleResult();
+
+                if (task.getAssignee() == null) {
+                    taskRuntime.claim(params.getString("taskId"), username);
+                }
+                taskRuntime.complete(params.getString("taskId"));
+            } else {
+                return R.error().message("完成任务失败");
             }
-            taskRuntime.complete(params.getString("taskId"));
 
             return R.ok();
         } catch (Exception e) {

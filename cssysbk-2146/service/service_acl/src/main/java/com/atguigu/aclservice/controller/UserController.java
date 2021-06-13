@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -73,6 +74,13 @@ public class UserController {
         User user = userService.getById(userId);
         return R.ok().data(JSON.parseObject(JSON.toJSONString(user),
                 new TypeReference<Map<String,Object>>(){}));
+    }
+
+    @ApiOperation(value = "获取所有用户")
+    @GetMapping("/select")
+    public R select() {
+        List<User> list = userService.list(new QueryWrapper<>());
+        return R.ok().data(R.ITEMS, list);
     }
 
     @ApiOperation(value = "根据用户获取角色数据")

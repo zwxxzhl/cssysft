@@ -4,14 +4,14 @@
     <el-row>
       <el-col :span="24">
         <el-form-item label="标 题" prop="title">
-          <el-input v-model="form.title" placeholder="请输入任务标题"></el-input>
+          <el-input v-model="form.title" placeholder="请输入标题"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="24">
         <el-form-item label="内 容" prop="content">
-          <el-input type="textarea" :rows="2" placeholder="请输入任务内容" v-model="form.content"></el-input>
+          <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="form.content"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
@@ -51,8 +51,8 @@ const form = ref({});
 const loading = ref(false);
 const refForm = ref(null);
 const rules = ref({
-  title: [{required: true, trigger: 'blur', message: '任务标题必须输入'}],
-  content: [{required: true, trigger: 'blur', message: '任务内容必须输入'}]
+  title: [{required: true, trigger: 'blur', message: '标题必须输入'}],
+  content: [{required: true, trigger: 'blur', message: '内容必须输入'}]
 });
 
 const initData = () => {
@@ -81,53 +81,36 @@ const updateForm = () => {
   })
 }
 
-const startInstance = () => {
-  activitiApi.startInstance({
-    key: dialogData.value.key,
+const complete = () => {
+  activitiApi.completeTask({
+    taskId: dialogData.value.id,
+    formPid: dialogData.value.businessKey,
+    procinstId: dialogData.value.processInstanceId,
+    procdefId: dialogData.value.processDefinitionId,
     title: form.value.title,
     content: form.value.content
   }).then(res => {
     if (res.success) {
       globalProperties.$message.success(res.message);
     }
+    emit('complete');
     loading.value = false;
     dialogClose();
   })
 }
 
-const startSubInstance = () => {
-  activitiApi.startSubInstance({
-    key: dialogData.value.key,
-    formPid: dialogData.value.formPid,
-    procinstId: dialogData.value.processInstanceId,
-    title: form.value.title,
-    content: form.value.content
-  }).then(res => {
-    if (res.success) {
-      globalProperties.$message.success(res.message);
-      loading.value = false;
-      dialogClose();
-    }
-  })
-}
-
-const saveFormAndStartInstance = () => {
+const saveFormAndComplete = () => {
   refForm.value.validate(valid => {
     if (valid) {
       loading.value = true;
-
-      if (dialogData.value.SUBINSTANCE) {
-        startSubInstance();
-      } else {
-        startInstance();
-      }
+      complete();
     }
   })
 }
 
 const onSaveOrUpdate = () => {
   if (enums.formType.add === openType.value) {
-    saveFormAndStartInstance();
+    saveFormAndComplete();
   } else if (enums.formType.edit === openType.value) {
     updateForm();
   }

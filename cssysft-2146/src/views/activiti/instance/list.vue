@@ -33,7 +33,11 @@
       <el-table-column label="操作" width="180" align="center">
         <template #default="scope">
           <el-tooltip v-if="hasPerm('instance.update')" effect="dark" content="编辑任务表单" placement="left-start">
-            <i class="el-icon-edit icon-layout-mini color-orange" @click="onEditForm(scope.row)"></i>
+            <i class="el-icon-edit icon-layout-mini color-purple" @click="onEditForm(scope.row)"></i>
+          </el-tooltip>
+
+          <el-tooltip v-if="hasPerm('instance.update')" effect="dark" content="任务汇报情况" placement="left-start">
+            <i class="el-icon-view icon-layout-mini color-dark-green" @click="onOpenFormList(scope.row)"></i>
           </el-tooltip>
 
           <el-tooltip v-if="hasPerm('instance.update')" effect="dark" content="挂起" placement="left-start">
@@ -73,6 +77,12 @@
         <inst-form ref="refInstForm"></inst-form>
       </template>
     </dialog-com>
+
+    <dialog-com ref="refDialogComFormList" title="任务汇报情况" width="90%" top="1vh" :heightPercent="0.88" :footer="false">
+      <template #content="sp">
+        <form-list ref="refFormList"></form-list>
+      </template>
+    </dialog-com>
   </div>
 </template>
 
@@ -80,6 +90,7 @@
 import DialogBpmnJs from "../../../components/BpmnJs/dialog_bpmnjs.vue";
 import DialogCom from "../../../components/DialogCom/dialog_com.vue";
 import InstForm from "../definition/component/inst_form.vue";
+import FormList from "./components/form_list.vue";
 
 import enums from "../../../utils/enums";
 
@@ -97,11 +108,19 @@ let searchObj = reactive({});
 const multipleSelection = ref([]);
 
 const refDialogBpmnJs = ref(null);
+
 const refDialogCom = ref(null);
 const refInstForm = ref(null);
 
+const refDialogComFormList = ref(null);
+const refFormList = ref(null);
+
 const onEditForm = (row) => {
   refDialogCom.value.open(row, refInstForm.value, enums.formType.edit);
+}
+
+const onOpenFormList = (row) => {
+  refDialogComFormList.value.open(row, refFormList.value, enums.formType.detail);
 }
 
 const onSuspend = (row) => {
