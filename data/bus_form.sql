@@ -2,7 +2,7 @@ create table bus_task_form
 (
     id              char(19)                      not null comment '主键id'
         primary key,
-	pid             char(19)                      null comment '父id',
+    pid             char(19)                      null comment '父id',
     procinst_id     varchar(64)                   null comment '流程实例id',
     procdef_id      varchar(64)                   null comment '流程定义id',
     user_id         char(19)                      not null comment '所属用户',
@@ -15,5 +15,3 @@ create table bus_task_form
     gmt_modified    datetime                      not null comment '更新时间'
 )
     comment '派发任务表单';
-
-
