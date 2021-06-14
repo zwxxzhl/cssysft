@@ -30,15 +30,19 @@ import camundaModdleDescriptor from "camunda-bpmn-moddle/resources/camunda";
 //汉化
 import customTranslate from "./customTranslate/customTranslate";
 
+import customPaletteProvider from "./customPaletteProvider/index";
+import customContextPadProvider from "./customContestPadProvider/index";
 
 /** ----------------------------------------------------------------------------------- **/
 
-import {useContext, ref, onMounted, inject} from 'vue'
+import {useContext, ref, onMounted, inject, getCurrentInstance} from 'vue'
+
 import {xmlStr} from "./xmlStr";
 import enums from "../../utils/enums";
 import tools from "./tools";
 
 const {expose} = useContext();
+const currentInstance = getCurrentInstance();
 
 const refCanvas = ref(null);
 
@@ -69,7 +73,7 @@ const exportBpmn = () => {
   tools.exportBpmn(bpmnJs.modeler);
 }
 
-const  forward = () => {
+const forward = () => {
   tools.forward(bpmnJs.modeler);
 }
 
@@ -97,6 +101,8 @@ const initModeler = () => {
       parent: "#js-properties-panel",
     },
     additionalModules: [
+      customPaletteProvider,
+      customContextPadProvider,
       // 右边面板内容
       propertiesProviderModule,
       propertiesPanelModule,
@@ -144,6 +150,13 @@ expose({
 });
 
 </script>
+
+<style>
+/* palette 一列展示 */
+.djs-palette.two-column.open {
+  width: 49px;
+}
+</style>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 .containers {

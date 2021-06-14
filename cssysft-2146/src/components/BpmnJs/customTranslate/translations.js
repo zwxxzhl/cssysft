@@ -232,9 +232,11 @@ export default {
   'Create DataStoreReference': '创建数据存储引用',
 
   // 节点添加Pad 补充汉化 热水2020.1.12
-  'Append EndEvent': '追加结束事件节点',
-  'Append Gateway': '追加网关节点',
-  'Append UserTask': '追加用户任务节点',
+  'Append EndEvent': '追加结束事件',
+  'Append Gateway': '追加网关',
+  'Append ExclusiveGateway': '追加互斥网关',
+  'Append ParallelGateway': '追加并行网关',
+  'Append UserTask': '追加用户任务',
   'Append Intermediate/Boundary Event': '追加中间或边界事件',
   'Append TextAnnotation': '追加文本批注' // 此句要有效，必须在CustomContexPadProvide给此节点增加一个translate('Append TextAnnotation')
 }
