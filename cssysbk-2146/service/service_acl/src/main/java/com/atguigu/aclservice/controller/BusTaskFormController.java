@@ -30,6 +30,7 @@ public class BusTaskFormController {
     @ApiOperation(value = "更新任务表单")
     @PutMapping("update")
     public R update(@RequestBody BusTaskForm busTaskForm) {
+
         busTaskFormService.updateById(busTaskForm);
         return R.ok();
     }
