@@ -1,34 +1,33 @@
 import entryFactory from 'bpmn-js-properties-panel/lib/factory/EntryFactory';
 
 import {
-  getBusinessObject, getExtensionElements, is
+  getBusinessObject, is
 } from 'bpmn-js/lib/util/ModelUtil';
 
 import cmdHelper from 'bpmn-js-properties-panel/lib/helper/CmdHelper';
 
 
 function getSpellVal(element) {
-  debugger
-  var bo = getBusinessObject(element);
+  let bo = getBusinessObject(element);
+  let boSpellElement = bo.get('magic:spell');
 
-  var boSpellElement = bo.get('magic:spell');
-
-  var spellVal = '';
+  let spellVal = '';
   if (typeof boSpellElement !== 'undefined') {
-    spellVal = 'bpmn';
+    spellVal = boSpellElement;
   } else {
-    spellVal = 'cmmn';
+    spellVal = '';
   }
 
   return spellVal;
 }
 
-export default function (group, element, bpmnFactory, translate) {
+export default function (group, element, translate) {
 
   // Only return an entry, if the currently selected
   // element is a start event.
 
-  /*if (is(element, 'bpmn:StartEvent')) {debugger
+  /*// 输入框自定义方法
+  if (is(element, 'bpmn:StartEvent')) {debugger
     group.entries.push(entryFactory.textField(translate, {
       id : 'spell',
       description : 'Apply a black magic spell',
@@ -55,10 +54,9 @@ export default function (group, element, bpmnFactory, translate) {
         };
       },
 
-      set: function (element, values) {debugger
+      set: function (element, values) {
         var spellVal = values.spell;
-        bpmnFactory.create('magic:spell')
-        return cmdHelper.updateBusinessObject(element, {
+        return cmdHelper.updateProperties(element, {
           spell: spellVal
         });
       }

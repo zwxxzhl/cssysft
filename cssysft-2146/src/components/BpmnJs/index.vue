@@ -25,11 +25,13 @@ import ModelingModule from 'bpmn-js/lib/features/modeling';
 import propertiesPanelModule from "bpmn-js-properties-panel";
 // 原生面板
 // import propertiesProviderModule from "bpmn-js-properties-panel/lib/provider/camunda";
-// import camundaModdleDescriptor from "camunda-bpmn-moddle/resources/camunda";
-// 自定义面板
-import bpmnPropertiesProviderModule from 'bpmn-js-properties-panel/lib/provider/bpmn';
-import propertiesProviderModule from './customPropertiesPanel/magic';
-import camundaModdleDescriptor from './customPropertiesPanel/magic/descriptors/magic';
+import camundaModdleDescriptor from "camunda-bpmn-moddle/resources/camunda";
+// 自定义面板1
+import propertiesProviderModule from "./customPropertiesProvider/index";
+// 自定义面板2
+// import bpmnPropertiesProviderModule from 'bpmn-js-properties-panel/lib/provider/bpmn';
+// import propertiesProviderModule from './customPropertiesPanel/magic';
+// import camundaModdleDescriptor from './customPropertiesPanel/magic/descriptors/magic';
 
 //汉化
 import customTranslate from "./customTranslate/customTranslate";
@@ -108,8 +110,8 @@ const initModeler = () => {
       customPaletteProvider,
       customContextPadProvider,
       // 右边面板内容
+      // bpmnPropertiesProviderModule,
       propertiesPanelModule,
-      bpmnPropertiesProviderModule,
       propertiesProviderModule,
       // 汉化
       customTranslateModule,
