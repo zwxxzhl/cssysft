@@ -4,6 +4,9 @@ const path = require('path');
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  optimizeDeps: {
+    include: ['bpmn-js-properties-panel']
+  },
   plugins: [vue()],
   resolve: {
     alias: {
