@@ -1,96 +1,85 @@
 'use strict';
 
-import inherits from 'inherits';
+var inherits = require('inherits');
 
-import PropertiesActivator from 'bpmn-js-properties-panel/lib/PropertiesActivator';
+var PropertiesActivator = require('../../PropertiesActivator');
 
-import asyncCapableHelper from 'bpmn-js-properties-panel/lib/helper/AsyncCapableHelper';
-import ImplementationTypeHelper from 'bpmn-js-properties-panel/lib/helper/ImplementationTypeHelper';
+var asyncCapableHelper = require('../../helper/AsyncCapableHelper'),
+  ImplementationTypeHelper = require('../../helper/ImplementationTypeHelper');
 
-import {
-  is
-} from 'bpmn-js/lib/util/ModelUtil';
+var is = require('bpmn-js/lib/util/ModelUtil').is;
 
 // bpmn properties
-import processProps from 'bpmn-js-properties-panel/lib/provider/bpmn/parts/ProcessProps';
-import eventProps from 'bpmn-js-properties-panel/lib/provider/bpmn/parts/EventProps';
-import linkProps from 'bpmn-js-properties-panel/lib/provider/bpmn/parts/LinkProps';
-import documentationProps from 'bpmn-js-properties-panel/lib/provider/bpmn/parts/DocumentationProps';
-import idProps from 'bpmn-js-properties-panel/lib/provider/bpmn/parts/IdProps';
-import nameProps from 'bpmn-js-properties-panel/lib/provider/bpmn/parts/NameProps';
-import executableProps from 'bpmn-js-properties-panel/lib/provider/bpmn/parts/ExecutableProps';
-
+var processProps = require('../bpmn/parts/ProcessProps'),
+  eventProps = require('../bpmn/parts/EventProps'),
+  linkProps = require('../bpmn/parts/LinkProps'),
+  documentationProps = require('../bpmn/parts/DocumentationProps'),
+  idProps = require('../bpmn/parts/IdProps'),
+  nameProps = require('../bpmn/parts/NameProps'),
+  executableProps = require('../bpmn/parts/ExecutableProps');
 
 // camunda properties
-import serviceTaskDelegateProps from 'bpmn-js-properties-panel/lib/provider/camunda/parts/ServiceTaskDelegateProps';
-import userTaskProps from 'bpmn-js-properties-panel/lib/provider/camunda/parts/UserTaskProps';
-import asynchronousContinuationProps from 'bpmn-js-properties-panel/lib/provider/camunda/parts/AsynchronousContinuationProps';
-import callActivityProps from 'bpmn-js-properties-panel/lib/provider/camunda/parts/CallActivityProps';
-import multiInstanceProps from 'bpmn-js-properties-panel/lib/provider/camunda/parts/MultiInstanceLoopProps';
-import conditionalProps from 'bpmn-js-properties-panel/lib/provider/camunda/parts/ConditionalProps';
-import scriptProps from 'bpmn-js-properties-panel/lib/provider/camunda/parts/ScriptTaskProps';
-import errorProps from 'bpmn-js-properties-panel/lib/provider/camunda/parts/ErrorEventProps';
-import formProps from 'bpmn-js-properties-panel/lib/provider/camunda/parts/FormProps';
-import startEventInitiator from 'bpmn-js-properties-panel/lib/provider/camunda/parts/StartEventInitiator';
-import variableMapping from 'bpmn-js-properties-panel/lib/provider/camunda/parts/VariableMappingProps';
-import versionTag from 'bpmn-js-properties-panel/lib/provider/camunda/parts/VersionTagProps';
-import processVariablesProps from 'bpmn-js-properties-panel/lib/provider/camunda/parts/ProcessVariablesProps';
+var serviceTaskDelegateProps = require('./parts/ServiceTaskDelegateProps'),
+  userTaskProps = require('./parts/UserTaskProps'),
+  asynchronousContinuationProps = require('./parts/AsynchronousContinuationProps'),
+  callActivityProps = require('./parts/CallActivityProps'),
+  multiInstanceProps = require('./parts/MultiInstanceLoopProps'),
+  conditionalProps = require('./parts/ConditionalProps'),
+  scriptProps = require('./parts/ScriptTaskProps'),
+  errorProps = require('./parts/ErrorEventProps'),
+  formProps = require('./parts/FormProps'),
+  startEventInitiator = require('./parts/StartEventInitiator'),
+  variableMapping = require('./parts/VariableMappingProps'),
+  versionTag = require('./parts/VersionTagProps'),
+  processVariablesProps = require('./parts/ProcessVariablesProps');
 
-import listenerProps from 'bpmn-js-properties-panel/lib/provider/camunda/parts/ListenerProps';
-import listenerDetails from 'bpmn-js-properties-panel/lib/provider/camunda/parts/ListenerDetailProps';
-import listenerFields from 'bpmn-js-properties-panel/lib/provider/camunda/parts/ListenerFieldInjectionProps';
-
+var listenerProps = require('./parts/ListenerProps'),
+  listenerDetails = require('./parts/ListenerDetailProps'),
+  listenerFields = require('./parts/ListenerFieldInjectionProps');
 
 // element template properties
-import elementTemplateDescriptionProps from 'bpmn-js-properties-panel/lib/provider/camunda/element-templates/parts/DescriptionProps';
-import elementTemplateChooserProps from 'bpmn-js-properties-panel/lib/provider/camunda/element-templates/parts/ChooserProps';
-import elementTemplateCustomProps from 'bpmn-js-properties-panel/lib/provider/camunda/element-templates/parts/CustomProps';
-import elementTemplateInputParametersProps from 'bpmn-js-properties-panel/lib/provider/camunda/element-templates/parts/InputParametersProps';
-import elementTemplateOutputParametersProps from 'bpmn-js-properties-panel/lib/provider/camunda/element-templates/parts/OutputParametersProps';
-import elementTemplateErrorsProps from 'bpmn-js-properties-panel/lib/provider/camunda/element-templates/parts/ErrorsProps';
-
-import {
-  getTemplateId
-} from 'bpmn-js-properties-panel/lib/provider/camunda/element-templates/Helper';
-
+var elementTemplateDescriptionProps = require('./element-templates/parts/DescriptionProps'),
+  elementTemplateChooserProps = require('./element-templates/parts/ChooserProps'),
+  elementTemplateCustomProps = require('./element-templates/parts/CustomProps'),
+  elementTemplateInputParametersProps = require('./element-templates/parts/InputParametersProps'),
+  elementTemplateOutputParametersProps = require('./element-templates/parts/OutputParametersProps'),
+  elementTemplateErrorsProps = require('./element-templates/parts/ErrorsProps'),
+  getTemplateId = require('./element-templates/Helper').getTemplateId;
 
 // Input/Output
-import inputParameters from 'bpmn-js-properties-panel/lib/provider/camunda/parts/InputParametersProps';
-import outputParameters from 'bpmn-js-properties-panel/lib/provider/camunda/parts/OutputParametersProps';
-import errorsProps from 'bpmn-js-properties-panel/lib/provider/camunda/parts/ErrorsProps';
+var inputParameters = require('./parts/InputParametersProps'),
+  outputParameters = require('./parts/OutputParametersProps'),
+  errorsProps = require('./parts/ErrorsProps');
 
 // Connector
-import connectorDetails from 'bpmn-js-properties-panel/lib/provider/camunda/parts/ConnectorDetailProps';
-import connectorInputParameters from 'bpmn-js-properties-panel/lib/provider/camunda/parts/ConnectorInputParametersProps';
-import connectorOutputParameters from 'bpmn-js-properties-panel/lib/provider/camunda/parts/ConnectorOutputParametersProps';
+var connectorDetails = require('./parts/ConnectorDetailProps'),
+  connectorInputParameters = require('./parts/ConnectorInputParametersProps'),
+  connectorOutputParameters = require('./parts/ConnectorOutputParametersProps');
 
 // properties
-import properties from 'bpmn-js-properties-panel/lib/provider/camunda/parts/PropertiesProps';
+var properties = require('./parts/PropertiesProps');
 
 // job configuration
-import jobConfiguration from 'bpmn-js-properties-panel/lib/provider/camunda/parts/JobConfigurationProps';
+var jobConfiguration = require('./parts/JobConfigurationProps');
 
 // history time to live
-import historyTimeToLive from 'bpmn-js-properties-panel/lib/provider/camunda/parts/HistoryTimeToLiveProps';
+var historyTimeToLive = require('./parts/HistoryTimeToLiveProps');
 
 // candidate starter groups/users
-import candidateStarter from 'bpmn-js-properties-panel/lib/provider/camunda/parts/CandidateStarterProps';
+var candidateStarter = require('./parts/CandidateStarterProps');
 
 // tasklist
-import tasklist from 'bpmn-js-properties-panel/lib/provider/camunda/parts/TasklistProps';
+var tasklist = require('./parts/TasklistProps');
 
 // external task configuration
-import externalTaskConfiguration from 'bpmn-js-properties-panel/lib/provider/camunda/parts/ExternalTaskConfigurationProps';
+var externalTaskConfiguration = require('./parts/ExternalTaskConfigurationProps');
 
 // field injection
-import fieldInjections from 'bpmn-js-properties-panel/lib/provider/camunda/parts/FieldInjectionProps';
+var fieldInjections = require('./parts/FieldInjectionProps');
 
-import {
-  getBusinessObject
-} from 'bpmn-js/lib/util/ModelUtil';
-
-import eventDefinitionHelper from 'bpmn-js-properties-panel/lib/helper/EventDefinitionHelper';
-import implementationTypeHelper from 'bpmn-js-properties-panel/lib/helper/ImplementationTypeHelper';
+var getBusinessObject = require('bpmn-js/lib/util/ModelUtil').getBusinessObject,
+  eventDefinitionHelper = require('../../helper/EventDefinitionHelper'),
+  implementationTypeHelper = require('../../helper/ImplementationTypeHelper');
 
 // helpers ////////////////////////////////////////
 
@@ -670,4 +659,4 @@ CamundaPropertiesProvider.$inject = [
 
 inherits(CamundaPropertiesProvider, PropertiesActivator);
 
-export default CamundaPropertiesProvider;
+module.exports = CamundaPropertiesProvider;
