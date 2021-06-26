@@ -316,7 +316,7 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
       !isEventSubProcess(businessObject)) {
 
       assign(actions, {
-        /** custom 默认用户事件 */
+        /** custom 默认用户任务 */
         'append.append-task': appendAction(
           'bpmn:UserTask',
           'bpmn-icon-task',

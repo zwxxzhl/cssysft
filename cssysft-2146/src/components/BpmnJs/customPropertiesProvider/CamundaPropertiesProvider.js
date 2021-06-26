@@ -23,7 +23,11 @@ import executableProps from 'bpmn-js-properties-panel/lib/provider/bpmn/parts/Ex
 
 // camunda properties
 import serviceTaskDelegateProps from 'bpmn-js-properties-panel/lib/provider/camunda/parts/ServiceTaskDelegateProps';
-import userTaskProps from 'bpmn-js-properties-panel/lib/provider/camunda/parts/UserTaskProps';
+
+/** custom 使用自定义 userTaskProps */
+// import userTaskProps from 'bpmn-js-properties-panel/lib/provider/camunda/parts/UserTaskProps';
+import userTaskProps from './parts/UserTaskProps';
+
 import asynchronousContinuationProps from 'bpmn-js-properties-panel/lib/provider/camunda/parts/AsynchronousContinuationProps';
 import callActivityProps from 'bpmn-js-properties-panel/lib/provider/camunda/parts/CallActivityProps';
 import multiInstanceProps from 'bpmn-js-properties-panel/lib/provider/camunda/parts/MultiInstanceLoopProps';
@@ -251,7 +255,8 @@ function createGeneralTabGroups(
   nameProps(generalGroup, element, bpmnFactory, canvas, translate, getNameOptions(element));
   processProps(generalGroup, element, translate, getProcessOptions(element));
   versionTag(generalGroup, element, translate);
-  executableProps(generalGroup, element, translate);
+  /** custom 流程主面板 可执行文件 隐藏默 因为认会勾选，不需要给到用户使用 */
+  // executableProps(generalGroup, element, translate);
   elementTemplateChooserProps(generalGroup, element, elementTemplates, translate);
 
   var detailsGroup = {
@@ -269,76 +274,91 @@ function createGeneralTabGroups(
   conditionalProps(detailsGroup, element, bpmnFactory, translate);
   startEventInitiator(detailsGroup, element, translate); // this must be the last element of the details group!
 
-  var multiInstanceGroup = {
+  /** 主流程面板以及各流程节点 多重事件 隐藏 【右侧面板未看到有相关的输入框或文字】 */
+  /*var multiInstanceGroup = {
     id: 'multiInstance',
     label: translate('Multi Instance'),
     entries: []
   };
-  multiInstanceProps(multiInstanceGroup, element, bpmnFactory, translate);
+  multiInstanceProps(multiInstanceGroup, element, bpmnFactory, translate);*/
 
-  var asyncGroup = {
+  /** 主流程面板以及各流程节点 持续异步 隐藏 */
+  /*var asyncGroup = {
     id : 'async',
     label: translate('Asynchronous Continuations'),
     entries : []
   };
-  asynchronousContinuationProps(asyncGroup, element, bpmnFactory, translate);
+  asynchronousContinuationProps(asyncGroup, element, bpmnFactory, translate);*/
 
-  var jobConfigurationGroup = {
+  /** 主流程面板 工作配置 隐藏 */
+  /*var jobConfigurationGroup = {
     id : 'jobConfiguration',
     label : translate('Job Configuration'),
     entries : [],
     enabled: isJobConfigEnabled
   };
-  jobConfiguration(jobConfigurationGroup, element, bpmnFactory, translate);
+  jobConfiguration(jobConfigurationGroup, element, bpmnFactory, translate);*/
 
-  var externalTaskGroup = {
+  /** 主流程面板 扩展任务配置 隐藏 */
+  /*var externalTaskGroup = {
     id : 'externalTaskConfiguration',
     label : translate('External Task Configuration'),
     entries : [],
     enabled: isExternalTaskPriorityEnabled
   };
-  externalTaskConfiguration(externalTaskGroup, element, bpmnFactory, translate);
+  externalTaskConfiguration(externalTaskGroup, element, bpmnFactory, translate);*/
 
-
-  var candidateStarterGroup = {
+  /** 主流程面板 候选人启动器配置 隐藏 */
+  /*var candidateStarterGroup = {
     id: 'candidateStarterConfiguration',
     label: translate('Candidate Starter Configuration'),
     entries: []
   };
-  candidateStarter(candidateStarterGroup, element, bpmnFactory, translate);
+  candidateStarter(candidateStarterGroup, element, bpmnFactory, translate);*/
 
-  var historyTimeToLiveGroup = {
+  /** 主流程面板 历史配置 隐藏 */
+  /*var historyTimeToLiveGroup = {
     id: 'historyConfiguration',
     label: translate('History Configuration'),
     entries: []
   };
-  historyTimeToLive(historyTimeToLiveGroup, element, bpmnFactory, translate);
+  historyTimeToLive(historyTimeToLiveGroup, element, bpmnFactory, translate);*/
 
-  var tasklistGroup = {
+  /** 主流程面板 Tasklist Configuration 隐藏 */
+  /*var tasklistGroup = {
     id: 'tasklist',
     label: translate('Tasklist Configuration'),
     entries: []
   };
-  tasklist(tasklistGroup, element, bpmnFactory, translate);
+  tasklist(tasklistGroup, element, bpmnFactory, translate);*/
 
-  var documentationGroup = {
+  /** 主流程面板以及各流程节点 文档 隐藏 */
+  /*var documentationGroup = {
     id: 'documentation',
     label: translate('Documentation'),
     entries: []
   };
-  documentationProps(documentationGroup, element, bpmnFactory, translate);
+  documentationProps(documentationGroup, element, bpmnFactory, translate);*/
 
   var groups = [];
   groups.push(generalGroup);
   groups.push(detailsGroup);
-  groups.push(externalTaskGroup);
-  groups.push(multiInstanceGroup);
-  groups.push(asyncGroup);
-  groups.push(jobConfigurationGroup);
-  groups.push(candidateStarterGroup);
-  groups.push(historyTimeToLiveGroup);
-  groups.push(tasklistGroup);
-  groups.push(documentationGroup);
+  /** 主流程面板 扩展任务配置 隐藏 */
+  // groups.push(externalTaskGroup);
+  /** 主流程面板以及各流程节点 多重事件 隐藏 【右侧面板未看到有相关的输入框或文字】 */
+  // groups.push(multiInstanceGroup);
+  /** 主流程面板 持续异步 隐藏 */
+  // groups.push(asyncGroup);
+  /** 主流程面板 工作配置 隐藏 */
+  // groups.push(jobConfigurationGroup);
+  /** 主流程面板 候选人启动器配置 隐藏 */
+  // groups.push(candidateStarterGroup);
+  /** 主流程面板 历史配置 隐藏 */
+  // groups.push(historyTimeToLiveGroup);
+  /** 主流程面板 Tasklist Configuration 隐藏 */
+  // groups.push(tasklistGroup);
+  /** 主流程面板以及各流程节点 文档 隐藏 */
+  // groups.push(documentationGroup);
 
   return groups;
 }
