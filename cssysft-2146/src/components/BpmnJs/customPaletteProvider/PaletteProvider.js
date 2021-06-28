@@ -148,18 +148,20 @@ PaletteProvider.prototype.getPaletteEntries = function(element) {
       'bpmn:StartEvent', 'event', 'bpmn-icon-start-event-none',
       translate('Create StartEvent')
     ),
-    'create.intermediate-event': createAction(
+    /** custom 中间或边界事件 隐藏 */
+    /*'create.intermediate-event': createAction(
       'bpmn:IntermediateThrowEvent', 'event', 'bpmn-icon-intermediate-event-none',
       translate('Create Intermediate/Boundary Event')
-    ),
+    ),*/
     'create.end-event': createAction(
       'bpmn:EndEvent', 'event', 'bpmn-icon-end-event-none',
       translate('Create EndEvent')
     ),
-    'create.exclusive-gateway': createAction(
-      'bpmn:ExclusiveGateway', 'gateway', 'bpmn-icon-gateway-none',
-      translate('Create Gateway')
-    ),
+    /** custom 排它网关 隐藏 */
+    // 'create.exclusive-gateway': createAction(
+    //   'bpmn:ExclusiveGateway', 'gateway', 'bpmn-icon-gateway-none',
+    //   translate('Create Gateway')
+    // ),
     /** custom 默认创建用户任务 */
     'create.task': createAction(
       'bpmn:UserTask', 'activity', 'bpmn-icon-task',

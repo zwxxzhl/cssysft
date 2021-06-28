@@ -327,28 +327,30 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
           'bpmn-icon-end-event-none',
           translate('Append EndEvent')
         ),
-        /** custom 修改key, className */
-        'append.exclusive-gateway': appendAction(
+
+        /** custom 排他网关 修改key, className  隐藏 */
+        /*'append.exclusive-gateway': appendAction(
           'bpmn:ExclusiveGateway',
           'bpmn-icon-gateway-xor',
           translate('Append ExclusiveGateway')
-        ),
-        /** custom 增加并行网关 */
-        'append.parallel-gateway': appendAction(
+        ),*/
+        /** custom 增加并行网关 隐藏 */
+        /*'append.parallel-gateway': appendAction(
           'bpmn:ParallelGateway',
           'bpmn-icon-gateway-parallel',
           translate('Append ParallelGateway')
-        ),
-        'append.intermediate-event': appendAction(
+        ),*/
+        /** custom 中间或边界事件 隐藏 */
+        /*'append.intermediate-event': appendAction(
           'bpmn:IntermediateThrowEvent',
           'bpmn-icon-intermediate-event-none',
           translate('Append Intermediate/Boundary Event')
-        )
+        )*/
       });
     }
   }
 
-  /** custom 注释掉配置选项 */
+  /** custom 注释掉配置选项，比如任务，可以配置多种任务 */
   /*if (!popupMenu.isEmpty(element, 'bpmn-replace')) {
 
     // Replace menu entry

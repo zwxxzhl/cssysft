@@ -271,94 +271,87 @@ function createGeneralTabGroups(
   callActivityProps(detailsGroup, element, bpmnFactory, translate);
   eventProps(detailsGroup, element, bpmnFactory, elementRegistry, translate);
   errorProps(detailsGroup, element, bpmnFactory, translate);
-  conditionalProps(detailsGroup, element, bpmnFactory, translate);
+  /** custom 流程主面板以及各流程节点 条件类型 隐藏默 因为暂时不开发变量，以及网关使用 */
+  // conditionalProps(detailsGroup, element, bpmnFactory, translate);
   startEventInitiator(detailsGroup, element, translate); // this must be the last element of the details group!
 
-  /** 主流程面板以及各流程节点 多重事件 隐藏 【右侧面板未看到有相关的输入框或文字】 */
-  /*var multiInstanceGroup = {
+  var multiInstanceGroup = {
     id: 'multiInstance',
     label: translate('Multi Instance'),
     entries: []
   };
-  multiInstanceProps(multiInstanceGroup, element, bpmnFactory, translate);*/
+  multiInstanceProps(multiInstanceGroup, element, bpmnFactory, translate);
 
-  /** 主流程面板以及各流程节点 持续异步 隐藏 */
-  /*var asyncGroup = {
+  var asyncGroup = {
     id : 'async',
     label: translate('Asynchronous Continuations'),
     entries : []
   };
-  asynchronousContinuationProps(asyncGroup, element, bpmnFactory, translate);*/
+  asynchronousContinuationProps(asyncGroup, element, bpmnFactory, translate);
 
-  /** 主流程面板 工作配置 隐藏 */
-  /*var jobConfigurationGroup = {
+  var jobConfigurationGroup = {
     id : 'jobConfiguration',
     label : translate('Job Configuration'),
     entries : [],
     enabled: isJobConfigEnabled
   };
-  jobConfiguration(jobConfigurationGroup, element, bpmnFactory, translate);*/
+  jobConfiguration(jobConfigurationGroup, element, bpmnFactory, translate);
 
-  /** 主流程面板 扩展任务配置 隐藏 */
-  /*var externalTaskGroup = {
+  var externalTaskGroup = {
     id : 'externalTaskConfiguration',
     label : translate('External Task Configuration'),
     entries : [],
     enabled: isExternalTaskPriorityEnabled
   };
-  externalTaskConfiguration(externalTaskGroup, element, bpmnFactory, translate);*/
+  externalTaskConfiguration(externalTaskGroup, element, bpmnFactory, translate);
 
-  /** 主流程面板 候选人启动器配置 隐藏 */
-  /*var candidateStarterGroup = {
+  var candidateStarterGroup = {
     id: 'candidateStarterConfiguration',
     label: translate('Candidate Starter Configuration'),
     entries: []
   };
-  candidateStarter(candidateStarterGroup, element, bpmnFactory, translate);*/
+  candidateStarter(candidateStarterGroup, element, bpmnFactory, translate);
 
-  /** 主流程面板 历史配置 隐藏 */
-  /*var historyTimeToLiveGroup = {
+  var historyTimeToLiveGroup = {
     id: 'historyConfiguration',
     label: translate('History Configuration'),
     entries: []
   };
-  historyTimeToLive(historyTimeToLiveGroup, element, bpmnFactory, translate);*/
+  historyTimeToLive(historyTimeToLiveGroup, element, bpmnFactory, translate);
 
-  /** 主流程面板 Tasklist Configuration 隐藏 */
-  /*var tasklistGroup = {
+  var tasklistGroup = {
     id: 'tasklist',
     label: translate('Tasklist Configuration'),
     entries: []
   };
-  tasklist(tasklistGroup, element, bpmnFactory, translate);*/
+  tasklist(tasklistGroup, element, bpmnFactory, translate);
 
-  /** 主流程面板以及各流程节点 文档 隐藏 */
-  /*var documentationGroup = {
+  var documentationGroup = {
     id: 'documentation',
     label: translate('Documentation'),
     entries: []
   };
-  documentationProps(documentationGroup, element, bpmnFactory, translate);*/
+  documentationProps(documentationGroup, element, bpmnFactory, translate);
 
   var groups = [];
   groups.push(generalGroup);
   groups.push(detailsGroup);
-  /** 主流程面板 扩展任务配置 隐藏 */
+  /** custom 主流程面板 扩展任务配置 隐藏 */
   // groups.push(externalTaskGroup);
-  /** 主流程面板以及各流程节点 多重事件 隐藏 【右侧面板未看到有相关的输入框或文字】 */
+  /** custom 主流程面板以及各流程节点 多重事件 隐藏 【右侧面板未看到有相关的输入框或文字】 */
   // groups.push(multiInstanceGroup);
-  /** 主流程面板 持续异步 隐藏 */
+  /** custom 主流程面板 持续异步 隐藏 */
   // groups.push(asyncGroup);
-  /** 主流程面板 工作配置 隐藏 */
+  /** custom 主流程面板 工作配置 隐藏 */
   // groups.push(jobConfigurationGroup);
-  /** 主流程面板 候选人启动器配置 隐藏 */
+  /** custom 主流程面板 候选人启动器配置 隐藏 */
   // groups.push(candidateStarterGroup);
-  /** 主流程面板 历史配置 隐藏 */
+  /** custom 主流程面板 历史配置 隐藏 */
   // groups.push(historyTimeToLiveGroup);
-  /** 主流程面板 Tasklist Configuration 隐藏 */
+  /** custom 主流程面板 Tasklist Configuration 隐藏 */
   // groups.push(tasklistGroup);
-  /** 主流程面板以及各流程节点 文档 隐藏 */
-  // groups.push(documentationGroup);
+  /** custom 主流程面板以及各流程节点 文档 隐藏 */
+  groups.push(documentationGroup);
 
   return groups;
 }
@@ -661,15 +654,21 @@ function CamundaPropertiesProvider(
 
     return [
       generalTab,
-      elementTemplateTab,
-      variablesTab,
-      processVariablesTab,
-      connectorTab,
-      formsTab,
-      listenersTab,
-      inputOutputTab,
-      fieldInjectionsTab,
-      extensionsTab
+      // elementTemplateTab,
+      /** custom 隐藏节点变量 */
+      // variablesTab,
+      /** custom 隐藏主流程变量 */
+      // processVariablesTab,
+      // connectorTab,
+      /** custom 隐藏表单 */
+      // formsTab,
+      /** custom 隐藏监听器 */
+      // listenersTab,
+      /** custom 隐藏输入输出 */
+      // inputOutputTab,
+      // fieldInjectionsTab,
+      /** custom 隐藏扩展 */
+      // extensionsTab
     ];
   };
 

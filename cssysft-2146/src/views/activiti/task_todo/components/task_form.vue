@@ -41,7 +41,7 @@ import enums from "../../../../utils/enums";
 const globalProperties = getCurrentInstance().appContext.config.globalProperties;
 
 const {expose} = useContext();
-const emit = defineEmit(['page-close']);
+const emit = defineEmit(['complete']);
 
 const dialogData = inject('dialogData');
 const openType = inject('openType');
