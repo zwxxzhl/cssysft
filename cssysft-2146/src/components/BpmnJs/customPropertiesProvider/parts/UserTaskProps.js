@@ -3,6 +3,7 @@
 import entryFactory from 'bpmn-js-properties-panel/lib/factory/EntryFactory';
 import {getBusinessObject, is} from 'bpmn-js/lib/util/ModelUtil';
 import cmdHelper from "bpmn-js-properties-panel/lib/helper/CmdHelper";
+import userApi from "../../../../api/acl/user";
 
 function getAssigneeVal(element) {
     let bo = getBusinessObject(element);
@@ -18,19 +19,37 @@ function getAssigneeVal(element) {
     return val;
 }
 
-export default function(group, element, translate) {
+const getUserList = () => {
+    return userApi
+      .select()
+      .then((res) => {
+          return res.data.items;
+      })
+}
+
+export default async function(group, element, translate) {
     if (is(element, 'camunda:Assignable')) {
+
+        let userList;
+        let temp = sessionStorage.getItem("userlist");
+        if (temp) {
+            userList = JSON.parse(temp);
+        } else {
+            userList = await getUserList();
+            sessionStorage.setItem("userlist", JSON.stringify(userList));
+        }
+
+        let selectOptions = [];
+        for (const item of userList) {
+            selectOptions.push({ name: item.nickName, value: item.username })
+        }
 
         /** custom Assignee修改为下拉框 */
         // Assignee
         group.entries.push(entryFactory.selectBox(translate, {
             id: 'assignee',
             label: translate('Assignee'),
-            selectOptions: [
-                {name: 'admin', value: 'admin'},
-                {name: 'test', value: 'test'},
-                {name: 'abcd', value: 'abcd'}
-            ],
+            selectOptions: selectOptions,
             modelProperty: 'assignee',
             emptyParameter: false,
 
