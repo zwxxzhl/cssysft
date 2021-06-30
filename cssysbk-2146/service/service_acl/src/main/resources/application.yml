@@ -10,9 +10,9 @@ spring:
   # mysql数据库连接
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/acldb?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+    url: jdbc:mysql://121.8.142.154:3306/dispaths?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
     username: root
-    password: Mysql_123456
+    password: vscbqnHWMI8Z032t
 
   # redis连接
   redis:
