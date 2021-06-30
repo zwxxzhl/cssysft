@@ -10,7 +10,7 @@ spring:
   # mysql数据库连接
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://121.8.142.154:3306/dispaths?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+    url: jdbc:mysql://121.8.142.154:3306/dispatchs?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
     username: root
     password: vscbqnHWMI8Z032t
 
