@@ -11,17 +11,18 @@
   }
 **/
 import Layout from '../views/layout/Layout.vue'
+const PRE_URL = import.meta.env.VITE_PRE_URL
 
 export const constantRoutes = [
   {
-    path: '/',
+    path: `${PRE_URL}/`,
     name: 'Layout',
     component: Layout,
-    redirect: '/dashboard',
+    redirect: `${PRE_URL}/dashboard`,
     meta: { title: '项目管理', icon: '' },
     children: [
       {
-        path: '/dashboard',
+        path: `${PRE_URL}/dashboard`,
         name: 'Dashboard',
         component: () => import('../views/dashboard/index.vue'),
         meta: { title: '管理页', icon: '' }
@@ -29,12 +30,12 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/login',
+    path: `${PRE_URL}/login`,
     component: () => import('../views/login/index.vue'),
     hidden: true
   },
   {
-    path: '/404',
+    path: `${PRE_URL}/404`,
     component: () => import('../views/404.vue'),
     hidden: true
   },

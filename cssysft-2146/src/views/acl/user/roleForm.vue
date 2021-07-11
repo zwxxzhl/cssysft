@@ -80,7 +80,7 @@ export default {
                 type:'success',
                 message:'保存成功'
               })
-              this.$router.push({ path: '/acl/user/list' })
+              this.$router.push({ path: '/dispatchweb/acl/user/list' })
             }
         })
       }

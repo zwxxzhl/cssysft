@@ -18,14 +18,19 @@
   </el-form>
 
   <el-row class="dialog-bottom" type="flex" justify="center">
-    <el-col :span="4">
+    <el-col :span="6">
       <el-button size="medium" type="info" icon="el-icon-close"
                  @click="onPageClose">关闭
       </el-button>
     </el-col>
-    <el-col :span="4" v-if="openType !== enums.formType.detail">
+    <el-col :span="6" v-if="openType !== enums.formType.detail">
+      <el-button size="medium" type="danger" icon="el-icon-check"
+                 :loading="loading" @click="onSaveOrUpdate(true)">直接完成
+      </el-button>
+    </el-col>
+    <el-col :span="6" v-if="openType !== enums.formType.detail">
       <el-button size="medium" type="primary" icon="el-icon-check"
-                 :loading="loading" @click="onSaveOrUpdate">保存
+                 :loading="loading" @click="onSaveOrUpdate(false)">阶段汇报
       </el-button>
     </el-col>
   </el-row>
@@ -81,6 +86,24 @@ const updateForm = () => {
   })
 }
 
+const saveForm = () => {
+  loading.value = true;
+  busTaskFormApi.save({
+    taskId: dialogData.value.id,
+    formPid: dialogData.value.businessKey,
+    procinstId: dialogData.value.processInstanceId,
+    procdefId: dialogData.value.processDefinitionId,
+    title: form.value.title,
+    content: form.value.content
+  }).then(res => {
+    if (res.success) {
+      globalProperties.$message.success(res.message);
+    }
+    loading.value = false;
+    dialogClose();
+  })
+}
+
 const complete = () => {
   activitiApi.completeTask({
     taskId: dialogData.value.id,
@@ -108,9 +131,11 @@ const saveFormAndComplete = () => {
   })
 }
 
-const onSaveOrUpdate = () => {
-  if (enums.formType.add === openType.value) {
+const onSaveOrUpdate = (flag) => {
+  if (enums.formType.add === openType.value && flag) {
     saveFormAndComplete();
+  } else if (enums.formType.add === openType.value && !flag) {
+    saveForm();
   } else if (enums.formType.edit === openType.value) {
     updateForm();
   }

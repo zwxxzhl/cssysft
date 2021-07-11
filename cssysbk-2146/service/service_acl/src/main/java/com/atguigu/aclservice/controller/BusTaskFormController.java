@@ -1,12 +1,16 @@
 package com.atguigu.aclservice.controller;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.atguigu.aclservice.entity.BusTaskForm;
+import com.atguigu.aclservice.entity.User;
 import com.atguigu.aclservice.service.IBusTaskFormService;
+import com.atguigu.aclservice.service.UserService;
 import com.atguigu.utils.utils.R;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -27,11 +31,39 @@ public class BusTaskFormController {
     @Autowired
     IBusTaskFormService busTaskFormService;
 
+    @Autowired
+    private UserService userService;
+
     @ApiOperation(value = "更新任务表单")
     @PutMapping("update")
     public R update(@RequestBody BusTaskForm busTaskForm) {
 
         busTaskFormService.updateById(busTaskForm);
+        return R.ok();
+    }
+
+    @ApiOperation(value = "保存任务表单")
+    @PutMapping("save")
+    public R save(@RequestBody JSONObject params) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.selectByUsername(username);
+
+        String formPid = params.getString("formPid");
+        String procinstId = params.getString("procinstId");
+        String procdefId = params.getString("procdefId");
+
+        // 保存业务表单
+        BusTaskForm busTaskForm = new BusTaskForm();
+        busTaskForm.setPid(formPid);
+        busTaskForm.setProcinstId(procinstId);
+        busTaskForm.setProcdefId(procdefId);
+        busTaskForm.setUserId(user.getId());
+        busTaskForm.setTitle(params.getString("title"));
+        busTaskForm.setContent(params.getString("content"));
+        busTaskForm.setGmtCreateUser(user.getId());
+        busTaskForm.setGmtUpdateUser(user.getId());
+
+        busTaskFormService.save(busTaskForm);
         return R.ok();
     }
 

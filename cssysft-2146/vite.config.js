@@ -12,5 +12,7 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
     }
-  }
+  },
+  // 与全局变量相同 VITE_PRE_URL
+  base: '/dispatchweb'
 })

@@ -55,7 +55,7 @@
 
       <el-table-column label="操作" width="230" align="center">
         <template #default="scope">
-          <router-link :to="'/acl/user/role/' + scope.row.id">
+          <router-link :to="'/dispatchweb/acl/user/role/' + scope.row.id">
             <el-button
               type="info"
               size="mini"
@@ -63,7 +63,7 @@
               v-if="hasPerm('user.assgin')"
             ></el-button>
           </router-link>
-          <router-link :to="'/acl/user/update/' + scope.row.id">
+          <router-link :to="'/dispatchweb/acl/user/update/' + scope.row.id">
             <el-button
               type="primary"
               size="mini"
@@ -125,7 +125,7 @@ export default {
       this.fetchData(1);
     },
     addUser() {
-      this.$router.push({ path: "/acl/user/add" });
+      this.$router.push({ path: "/dispatchweb/acl/user/add" });
     },
     // 加载讲师列表数据
     fetchData(page = 1) {

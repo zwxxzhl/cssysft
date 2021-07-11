@@ -6,6 +6,8 @@ import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
 
+const PRE_URL = import.meta.env.VITE_PRE_URL
+
 const router = createRouter({
   history: createWebHistory("/"), //history模式使用HTML5模式
   scrollBehavior: () => ({ y: 0 }),
@@ -25,9 +27,9 @@ router.beforeEach(async(to, from, next) => {
   const hasToken = getToken()
 
   if (hasToken) {
-    if (to.path === '/login') {
+    if (to.path === `${PRE_URL}/login`) {
       // if is logged in, redirect to the home page
-      next({ path: '/' })
+      next({ path: `${PRE_URL}/` })
       NProgress.done()
     } else {
       // determine whether the user has obtained his permission roles through getInfo
@@ -48,7 +50,7 @@ router.beforeEach(async(to, from, next) => {
           // remove token and go to login page to re-login
           await store.dispatch('user/FedLogOut')
           ElMessage.error(error || 'Has Error')
-          next(`/login?redirect=${to.path}`)
+          next(`${PRE_URL}/login?redirect=${to.path}`)
           NProgress.done()
         }
       }
@@ -56,12 +58,13 @@ router.beforeEach(async(to, from, next) => {
   } else {
     /* has no token*/
 
-    if (whiteList.indexOf(to.path) !== -1) {
+    let arr = whiteList.filter(f => to.path.indexOf(f) !== -1)
+    if (arr.length > 0) {
       // in the free login whitelist, go directly
       next()
     } else {
       // other pages that do not have permission to access are redirected to the login page.
-      next(`/login?redirect=${to.path}`)
+      next(`${PRE_URL}/login?redirect=${to.path}`)
       NProgress.done()
     }
   }

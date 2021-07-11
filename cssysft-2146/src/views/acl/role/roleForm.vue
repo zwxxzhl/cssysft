@@ -82,7 +82,7 @@ export default {
             type: 'success',
             message: '保存成功'
           })
-          this.$router.push({path: '/acl/role/list'})
+          this.$router.push({path: '/dispatchweb/acl/role/list'})
         }
       })
     }

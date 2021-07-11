@@ -77,7 +77,7 @@ export default {
             type: 'success',
             message: response.message
           })
-          this.$router.push({ path: '/acl/role/list' })
+          this.$router.push({ path: '/dispatchweb/acl/role/list' })
         }
       })
     },
@@ -91,7 +91,7 @@ export default {
             type: 'success',
             message: response.message
           })
-          this.$router.push({ path: '/acl/role/list' })
+          this.$router.push({ path: '/dispatchweb/acl/role/list' })
         }
       })
     },

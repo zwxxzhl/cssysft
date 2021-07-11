@@ -62,7 +62,7 @@ export default {
             type: "success",
             message: response.message,
           });
-          this.$router.push({ path: "/acl/user/list" });
+          this.$router.push({ path: "/dispatchweb/acl/user/list" });
         }
       });
     },
@@ -76,7 +76,7 @@ export default {
             type: "success",
             message: response.message,
           });
-          this.$router.push({ path: "/acl/user/list" });
+          this.$router.push({ path: "/dispatchweb/acl/user/list" });
         }
       });
     },

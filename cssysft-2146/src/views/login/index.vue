@@ -29,8 +29,8 @@
         </el-button>
       </el-form-item>
       <div class="tips">
-        <span style="margin-right:20px;">username: admin</span>
-        <span> password: 111111</span>
+<!--        <span style="margin-right:20px;">username: admin</span>
+        <span> password: 111111</span>-->
       </div>
     </el-form>
   </div>
@@ -94,7 +94,7 @@ export default {
           this.loading = true
           this.$store.dispatch('user/Login', this.loginForm).then(() => {
             this.loading = false
-            this.$router.push({ path: this.redirect || '/' })
+            this.$router.push({ path: this.redirect || '/dispatchweb/' })
           }).catch(() => {
             this.loading = false
           })

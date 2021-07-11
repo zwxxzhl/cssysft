@@ -43,10 +43,10 @@
 
       <el-table-column label="操作" width="200" align="center">
         <template #default="scope">
-          <router-link :to="'/acl/role/distribution/'+scope.row.id">
+          <router-link :to="'/dispatchweb/acl/role/distribution/'+scope.row.id">
             <el-button type="info" size="mini" icon="el-icon-info" v-if="hasPerm('role.acl')"></el-button>
           </router-link>
-          <router-link :to="'/acl/role/update/'+scope.row.id">
+          <router-link :to="'/dispatchweb/acl/role/update/'+scope.row.id">
             <el-button type="primary" size="mini" icon="el-icon-edit"  v-if="hasPerm('role.update')"></el-button>
           </router-link>
           <el-button type="danger" size="mini" icon="el-icon-delete" @click="removeDataById(scope.row.id)" v-if="hasPerm('role.remove')"></el-button>
@@ -104,7 +104,7 @@ export default {
     },
 
     addUser(){
-      this.$router.push({ path: '/acl/role/add' })
+      this.$router.push({ path: '/dispatchweb/acl/role/add' })
     },
 
     // 加载讲师列表数据

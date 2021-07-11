@@ -57,6 +57,13 @@ public class RoleController {
         return R.ok();
     }
 
+    @ApiOperation(value = "更新菜单或权限")
+    @PutMapping("update")
+    public R update(@RequestBody Role role) {
+        roleService.updateById(role);
+        return R.ok();
+    }
+
     @ApiOperation(value = "根据Id获取用户数据")
     @GetMapping("/get/{roleId}")
     public R get(@PathVariable String roleId) {

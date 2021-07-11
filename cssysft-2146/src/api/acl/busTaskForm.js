@@ -23,5 +23,12 @@ export default {
             method: "put",
             data: form
         })
+    },
+    save(form) {
+        return request({
+            url: `${api_name}/save`,
+            method: "put",
+            data: form
+        })
     }
 }
