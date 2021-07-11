@@ -2,6 +2,8 @@ import { constantRoutes } from '@/router/routes'
 import { getMenu } from '@/api/login'
 import Layout from '@/views/layout/Layout.vue'
 
+const coms = import.meta.globEager('../../views/**/**.vue')
+
 const PRE_URL = import.meta.env.VITE_PRE_URL
 
 function filterAsyncRouter(asyncRouterMap, router, routeParent) { // 遍历后台传来的路由字符串，转换为组件对象
@@ -12,7 +14,9 @@ function filterAsyncRouter(asyncRouterMap, router, routeParent) { // 遍历后�
           route.component = Layout
         } else {
           const component = route.component
-          route.component = () => import(`../../views${component}.vue`)
+
+          // route.component = () => import(`../../views${component}.vue`)
+          route.component = coms[`../../views${component}.vue`].default
         }
 
         routeParent && (route.path =  routeParent.path + '/' + route.path) || (route.path = `${PRE_URL}` + route.path)

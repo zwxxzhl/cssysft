@@ -51,6 +51,7 @@ const {expose} = useContext();
 const currentInstance = getCurrentInstance();
 
 const refCanvas = ref(null);
+const refPanel = ref(null);
 
 let bpmnJs = {
   modeler: null
