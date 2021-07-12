@@ -19,25 +19,27 @@ function getAssigneeVal(element) {
     return val;
 }
 
+let userList = [];
 const getUserList = () => {
-    return userApi
-      .select()
+    userApi.select()
       .then((res) => {
-          return res.data.items;
+          userList = res.data.items;
       })
 }
+getUserList();
 
-export default async function(group, element, translate) {
+
+export default function(group, element, translate) {
     if (is(element, 'camunda:Assignable')) {
 
-        let userList;
+        /*let userList;
         let temp = sessionStorage.getItem("userlist");
         if (temp) {
             userList = JSON.parse(temp);
         } else {
             userList = await getUserList();
             sessionStorage.setItem("userlist", JSON.stringify(userList));
-        }
+        }*/
 
         let selectOptions = [];
         for (const item of userList) {
