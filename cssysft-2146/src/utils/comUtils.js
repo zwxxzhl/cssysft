@@ -1,4 +1,21 @@
 export default {
+  /*
+      生成table格式化方法 genColumnFormat('unitIdFormat','mixProp','unitList','unitId','name') 普通数据
+                    genColumnFormat('clearingFormFormat','dictObj','clearingFormList','dictCode','dictName') 字典数据
+  */
+  genColumnFormat(funName,objKey,listKey,idKey,nameKey){
+    let fun = {};
+    fun[funName] = function (row, column) {
+      let data = row[column.property];
+      let ret = data;
+      if (this[objKey][listKey]) {
+        let obj = this[objKey][listKey].filter(f => f[idKey] == ((data != 0 && !data) ? row[idKey] : data));
+        obj.length > 0 && (ret = obj[0][nameKey]);
+      }
+      return ret;
+    }
+    return fun;
+  },
   //获取uuid
   getUuid() {
     var s = [];
