@@ -68,12 +68,13 @@ provide('comMethod', {
 });
 
 const listLoading = ref(true);
-const list = ref([
+
+const list = reactive([
   {depName: '区庄服务部', name: '张三', no: '0132107190002', date: '1626861102742'},
   {depName: '区庄服务部', name: '张会员', no: '0132107190001', date: '1626861102742'}
 ]);
 
-const tableColumn = ref([
+const tableColumn = reactive([
   {prop: 'depId', label: '销售单号'},
   {prop: 'name', label: '姓名', width: '90'},
   {prop: 'no', label: '应收金额(元)'},

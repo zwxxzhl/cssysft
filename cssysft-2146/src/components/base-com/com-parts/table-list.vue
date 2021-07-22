@@ -1,40 +1,38 @@
 <template>
-  <div>
+  <el-form class="form-css" :model="form" :rules="rules" ref="refElForm" size="mini">
+    <span>{{ form.formList }}</span>
+    <el-table
+      ref="refElTable"
+      :size="size"
+      :stripe="stripe"
+      :border="border"
+      :style="style"
+      :height="height"
+      :max-height="maxHeight"
+      :header-row-class-name="headerRowClassName"
+      :header-cell-class-name="headerCellClassName"
+      :row-class-name="rowClassName"
+      :cell-class-name="cellClassName"
+      :highlight-current-row="highlightCurrentRow"
+      :data="form.formList"
+      :row-key="rowKey"
+      @select="$emit('select')"
+      @select-all="$emit('select-all')"
+      @selection-change="$emit('selection-change')"
+      @row-click="$emit('row-click')"
+      @row-dblclick="$emit('row-dblclick')"
+    >
+      <!--        <template v-if="selectionShow">
+                <el-table-column type="selection" header-align="center" align="center" fixed="left"></el-table-column>
+              </template>
 
-    <el-form class="form-css" :model="form" :rules="rules" ref="refElForm" size="mini">
-      <el-table
-        ref="refElTable"
-        :size="size"
-        :stripe="stripe"
-        :border="border"
-        :style="style"
-        :height="height"
-        :max-height="maxHeight"
-        :header-row-class-name="headerRowClassName"
-        :header-cell-class-name="headerCellClassName"
-        :row-class-name="rowClassName"
-        :cell-class-name="cellClassName"
-        :highlight-current-row="highlightCurrentRow"
-        :data="form.formList"
-        :row-key="rowKey"
-        @select="$emit('select')"
-        @select-all="$emit('select-all')"
-        @selection-change="$emit('selection-change')"
-        @row-click="$emit('row-click')"
-        @row-dblclick="$emit('row-dblclick')"
-      >
-        <template v-if="selectionShow">
-          <el-table-column type="selection" header-align="center" align="center" fixed="left"></el-table-column>
-        </template>
+              <template v-if="indexShow">
+                <el-table-column type="index" label="序号" width="55" header-align="center" align="center"></el-table-column>
+              </template>-->
 
-        <template v-if="indexShow">
-          <el-table-column type="index" label="序号" width="55" header-align="center" align="center"></el-table-column>
-        </template>
-
+      <template v-for="(col, index) in tableColumn" :key="index">
         <el-table-column
-          v-for="(col, index) in tableColumn"
           v-if="col.formatter"
-          :key="index"
           show-overflow-tooltip
           :header-align="col.headerAlign || 'center'"
           :align="col.align || 'center'"
@@ -50,11 +48,13 @@
             <template v-if="!col.headerSlot">
               <span v-if="col.validate" class="red-xin" @click="$emit('header-click', $event, 'redXin')">*</span>
 
-              <span v-if="col.iconLeft" :class="col.iconLeftClass" @click="$emit('header-click', $event, 'iconLeft')" style="padding-top: 5px;"></span>
+              <span v-if="col.iconLeft" :class="col.iconLeftClass" @click="$emit('header-click', $event, 'iconLeft')"
+                    style="padding-top: 5px;"></span>
 
               <span @click="$emit('header-click', $event, scope.column.label)">{{ scope.column.label }}</span>
 
-              <span v-if="col.iconRight" :class="col.iconRightClass" @click="$emit('header-click', $event, 'iconRight')" style="padding-top: 5px;"></span>
+              <span v-if="col.iconRight" :class="col.iconRightClass" @click="$emit('header-click', $event, 'iconRight')"
+                    style="padding-top: 5px;"></span>
             </template>
 
             <template v-else>
@@ -66,7 +66,6 @@
 
         <el-table-column
           v-else
-          :key="'s' + index"
           show-overflow-tooltip
           :header-align="col.headerAlign || 'center'"
           :align="col.align || 'center'"
@@ -81,11 +80,13 @@
             <template v-if="!col.headerSlot">
               <span v-if="col.validate" class="red-xin" @click="$emit('header-click', $event, 'redXin')">*</span>
 
-              <span v-if="col.iconLeft" :class="col.iconLeftClass" @click="$emit('header-click', $event, 'iconLeft')" style="padding-top: 5px;"></span>
+              <span v-if="col.iconLeft" :class="col.iconLeftClass" @click="$emit('header-click', $event, 'iconLeft')"
+                    style="padding-top: 5px;"></span>
 
               <span @click="$emit('header-click', $event, scope.column.label)">{{ scope.column.label }}</span>
 
-              <span v-if="col.iconRight" :class="col.iconRightClass" @click="$emit('header-click', $event, 'iconRight')" style="padding-top: 5px;"></span>
+              <span v-if="col.iconRight" :class="col.iconRightClass" @click="$emit('header-click', $event, 'iconRight')"
+                    style="padding-top: 5px;"></span>
             </template>
 
             <template v-else>
@@ -109,15 +110,26 @@
 
           </template>
         </el-table-column>
+      </template>
 
-      </el-table>
-    </el-form>
-
-  </div>
+    </el-table>
+  </el-form>
 </template>
 
 <script setup>
-import {ref, useContext, defineEmit, inject, getCurrentInstance, onMounted, watch, computed, defineProps} from "vue";
+import {
+  ref,
+  toRefs,
+  reactive,
+  useContext,
+  defineEmit,
+  inject,
+  getCurrentInstance,
+  onMounted,
+  watch,
+  computed,
+  defineProps
+} from "vue";
 
 const props = defineProps({
   size: {
@@ -186,12 +198,12 @@ const props = defineProps({
   tableData: {
     type: Array,
     required: false,
-    default: () => ([])
+    default: () => (ref([]))
   },
   tableColumn: {
     type: Array,
-    required: false,
-    default: () => ([])
+    required: true,
+    default: () => (ref([]))
   },
   rules: {
     type: Object,
@@ -201,8 +213,13 @@ const props = defineProps({
 })
 
 const comMethod = inject('comMethod');
+
+const refElTable = ref(null);
+const refElForm = ref(null);
 const form = ref({formList: []});
-debugger
+console.log("props");
+console.log(props);
+
 const formatter = (row, column, cellValue, index) => {
   let obj = props.tableColumn.find(f => f.formatter && f.prop === column.property);
   if (obj) {
@@ -215,9 +232,17 @@ const formatter = (row, column, cellValue, index) => {
   }
 }
 
-watch(props.tableData, (nv, ov) => {
+
+watch(() => props.tableData, (nv, ov) => {
+  debugger
   form.value.formList = nv;
-})
+}, {deep: true})
+
+/*const { tableData } = toRefs(props);
+watch(tableData, (nv, ov) => {
+  debugger
+  form.value.formList = nv;
+}, {deep: true})*/
 
 computed(() => {
 

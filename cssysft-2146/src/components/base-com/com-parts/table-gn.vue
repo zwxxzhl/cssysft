@@ -1,23 +1,21 @@
-<template id="tem-el-list-table">
-  <div id="tem-el-list-table-div">
+<template id="table-com">
 
-    <el-form class="form-css" :model="form" :rules="rules" ref="ruleForm" size="mini">
+    <el-form :model="form" :rules="rules" ref="ruleForm" size="mini">
       <div>
         <el-table
           ref="refTable"
-          :key="tableKey"
-          :data="form.formList"
           style="width: 100%"
-          :height="tableHeight"
-          :max-height="tableMaxHeight"
-          stripe
-          :size="tableSize"
+          :height="height"
+          :max-height="maxHeight"
+          :stripe="stripe"
+          :size="size"
           :border="tableBorder"
           :header-row-class-name="headerRowClassName"
           :header-cell-class-name="headerCellClassName"
           :row-class-name="rowClassName"
           :cell-class-name="cellClassName"
           :highlight-current-row="highlightCurrentRow"
+          :data="form.formList"
           :row-key="rowKey"
           @select="handleSelect"
           @select-all="handleSelectAll"
@@ -107,7 +105,6 @@
       </div>
     </el-form>
 
-  </div>
 </template>
 
 <script setup>
@@ -125,7 +122,7 @@ const props = defineProps({
     required: false,
     default: () => ([])
   },
-  tableSize: {
+  size: {
     type: String,
     required: false,
     default: ''
@@ -210,12 +207,12 @@ const props = defineProps({
     default: () => {
     }
   },
-  tableHeight: {
+  height: {
     type: Number,
     required: false,
     default: null
   },
-  tableMaxHeight: {
+  maxHeight: {
     type: Number,
     required: false,
     default: null
@@ -232,7 +229,7 @@ computed(
 )
 </script>
 <script>
-Vue.component('tem-el-list-table', {
+Vue.component('table-com', {
 
   computed: {
     formatterFun: function () {
@@ -302,24 +299,24 @@ Vue.component('tem-el-list-table', {
 
 <style scoped>
 
-#tem-el-list-table-div input::-webkit-outer-spin-button,
-#tem-el-list-table-div input::-webkit-inner-spin-button {
+#table-com-div input::-webkit-outer-spin-button,
+#table-com-div input::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
 
-#tem-el-list-table-div input[type="number"] {
+#table-com-div input[type="number"] {
   -moz-appearance: textfield;
 }
 
-#tem-el-list-table-div .el-form-item--mini.el-form-item {
+#table-com-div .el-form-item--mini.el-form-item {
   margin-bottom: 0;
 }
 
-#tem-el-list-table-div .el-form-item {
+#table-com-div .el-form-item {
   margin-bottom: 0;
 }
 
-#tem-el-list-table-div .span-xin {
+#table-com-div .span-xin {
   color: #F56C6C;
   font-size: 12px;
   margin-right: 4px;
