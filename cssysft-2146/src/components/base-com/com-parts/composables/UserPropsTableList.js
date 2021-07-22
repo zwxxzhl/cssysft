@@ -1,6 +1,6 @@
 import {defineProps} from "vue";
 
-export default function userPropsTableList(user) {
+export default function userPropsTableList() {
     const props = defineProps({
         size: {
             type: String,
@@ -65,21 +65,20 @@ export default function userPropsTableList(user) {
             type: String,
             required: true
         },
-        tableList: {
+        tableData: {
             type: Array,
             required: false,
             default: () => ([])
         },
-        tableHead: {
+        tableColumn: {
             type: Array,
             required: false,
             default: () => ([])
         },
-        propFormatter: {
-            type: Function,
+        rules: {
+            type: Object,
             required: false,
-            default: () => {
-            }
+            default: () => ({})
         }
     })
 

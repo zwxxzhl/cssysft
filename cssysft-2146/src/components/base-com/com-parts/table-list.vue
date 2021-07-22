@@ -1,22 +1,22 @@
-<template id="table-list">
-  <div id="table-list-div">
+<template>
+  <div>
 
     <el-form class="form-css" :model="form" :rules="rules" ref="refElForm" size="mini">
       <el-table
         ref="refElTable"
-        :size="props.size"
-        :stripe="props.stripe"
-        :border="props.border"
-        :style="props.style"
-        :height="props.height"
-        :max-height="props.maxHeight"
-        :header-row-class-name="props.headerRowClassName"
-        :header-cell-class-name="props.headerCellClassName"
-        :row-class-name="props.rowClassName"
-        :cell-class-name="props.cellClassName"
-        :highlight-current-row="props.highlightCurrentRow"
+        :size="size"
+        :stripe="stripe"
+        :border="border"
+        :style="style"
+        :height="height"
+        :max-height="maxHeight"
+        :header-row-class-name="headerRowClassName"
+        :header-cell-class-name="headerCellClassName"
+        :row-class-name="rowClassName"
+        :cell-class-name="cellClassName"
+        :highlight-current-row="highlightCurrentRow"
         :data="form.formList"
-        :row-key="props.rowKey"
+        :row-key="rowKey"
         @select="$emit('select')"
         @select-all="$emit('select-all')"
         @selection-change="$emit('selection-change')"
@@ -32,7 +32,7 @@
         </template>
 
         <el-table-column
-          v-for="(col, index) in props.tableHead"
+          v-for="(col, index) in tableColumn"
           v-if="col.formatter"
           :key="index"
           show-overflow-tooltip
@@ -66,7 +66,7 @@
 
         <el-table-column
           v-else
-          :key="index"
+          :key="'s' + index"
           show-overflow-tooltip
           :header-align="col.headerAlign || 'center'"
           :align="col.align || 'center'"
@@ -117,18 +117,94 @@
 </template>
 
 <script setup>
-import {
-  ref, useContext, defineEmit, inject, getCurrentInstance, onMounted,
-  defineProps, computed
-} from "vue";
+import {ref, useContext, defineEmit, inject, getCurrentInstance, onMounted, watch, computed, defineProps} from "vue";
 
-import userPropsTableList from './composables/UserPropsTableList';
+const props = defineProps({
+  size: {
+    type: String,
+    required: false,
+    default: ''
+  },
+  stripe: {
+    type: Boolean,
+    required: false,
+    default: false
+  },
+  border: {
+    type: Boolean,
+    required: false,
+    default: false
+  },
+  style: {
+    type: String,
+    required: false,
+    default: 'width: 100%'
+  },
+  height: {
+    type: Number,
+    required: false,
+    default: null
+  },
+  maxHeight: {
+    type: Number,
+    required: false,
+    default: null
+  },
+  headerRowClassName: {
+    type: Function,
+    required: false,
+    default: () => {
+    }
+  },
+  headerCellClassName: {
+    type: Function,
+    required: false,
+    default: () => {
+    }
+  },
+  rowClassName: {
+    type: Function,
+    required: false,
+    default: () => {
+    }
+  },
+  cellClassName: {
+    type: Function,
+    required: false,
+    default: () => {
+    }
+  },
+  highlightCurrentRow: {
+    type: Boolean,
+    required: false,
+    default: false
+  },
+  rowKey: {
+    type: String,
+    required: false
+  },
+  tableData: {
+    type: Array,
+    required: false,
+    default: () => ([])
+  },
+  tableColumn: {
+    type: Array,
+    required: false,
+    default: () => ([])
+  },
+  rules: {
+    type: Object,
+    required: false,
+    default: () => ({})
+  }
+})
 
-const { props } = userPropsTableList();
 const comMethod = inject('comMethod');
-
+const form = ref({formList: []});
+debugger
 const formatter = (row, column, cellValue, index) => {
-  let obj = props.tableHead.find(f => f.formatter && f.prop === column.property);
+  let obj = props.tableColumn.find(f => f.formatter && f.prop === column.property);
   if (obj) {
     if (comMethod[obj.formatter]) {
       return comMethod[obj.formatter](row, column, cellValue, index);
@@ -139,107 +215,39 @@ const formatter = (row, column, cellValue, index) => {
   }
 }
 
+watch(props.tableData, (nv, ov) => {
+  form.value.formList = nv;
+})
+
 computed(() => {
 
-});
-
-expose({
-
-});
-
-</script>
-
-
-<script>
-Vue.component('table-list', {
-
-  computed: {
-    formatterFun: function () {
-      if (this.propFormatter && !ComUtil.isEmptyFunction(this.propFormatter)) {
-        return this.propFormatter;
-      } else {
-        return this.formatter;
-      }
-    }
-  },
-  data() {
-    return {
-      form: {
-        formList: []
-      },
-      rules: null,
-
-      mixProp: {},
-      dictObj: {}
-    }
-  },
-  created() {
-    this.rules = this.getRules();
-    this.$emit('created', this);
-  },
-  mounted() {
-    this.$emit('mounted');
-  },
-  watch: {
-    tableList: {
-      handler: function (newVal, oldVal) {
-        this.form.formList = newVal;
-      },
-      deep: true
-    }
-  },
-  methods: {
-    getRules() {
-      let rules = {};
-      for (const it of this.tableHead) {
-        if (it.validate) {
-          let obj = {};
-          this.$set(obj, 'required', true);
-          this.$set(obj, 'message', it.validMsg);
-          this.$set(obj, 'trigger', it.validTrigger);
-          rules[it.prop] = [obj];
-        }
-      }
-      return rules;
-    },
-    formatter(row, column, cellValue, index) {
-      let obj = this.tableHead.find(f => f.formatter && f.prop === column.property);
-      if (obj) {
-        if (this[obj.formatter]) {
-          return this[obj.formatter](row, column, cellValue, index);
-        } else {
-          console.error("没有格式化函数: " + obj.formatter);
-          return row[column.property];
-        }
-      }
-    }
-  }
 });
 
 </script>
 
 <style scoped>
 
-#table-list-div input::-webkit-outer-spin-button,
-#table-list-div input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none
 }
 
-#table-list-div input[type="number"] {
+input[type="number"] {
   -moz-appearance: textfield;
 }
 
-#table-list-div .el-form-item--mini.el-form-item {
+.el-form-item--mini.el-form-item {
   margin-bottom: 0;
 }
 
-#table-list-div .el-form-item {
+.el-form-item {
   margin-bottom: 0;
 }
 
-#table-list-div .red-xin {
+.red-xin {
   color: #F56C6C;
   font-size: 12px;
   margin-right: 4px;
 }
+
 </style>

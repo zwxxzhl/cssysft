@@ -1,20 +1,38 @@
 export default {
   /*
-      生成table格式化方法 genColumnFormat('unitIdFormat','mixProp','unitList','unitId','name') 普通数据
-                    genColumnFormat('clearingFormFormat','dictObj','clearingFormList','dictCode','dictName') 字典数据
+      生成table格式化方法 genColumnFormat(listData,'unitIdFormat','mixProp','unitList','unitId','name') 普通数据
+                    genColumnFormat(listData,'clearingFormFormat','dictObj','clearingFormList','dictCode','dictName') 字典数据
   */
-  genColumnFormat(funName,objKey,listKey,idKey,nameKey){
+  genColumnFormat(listData, funName,objKey,listKey,idKey,nameKey){
     let fun = {};
     fun[funName] = function (row, column) {
       let data = row[column.property];
       let ret = data;
-      if (this[objKey][listKey]) {
-        let obj = this[objKey][listKey].filter(f => f[idKey] == ((data != 0 && !data) ? row[idKey] : data));
+      if (listData[objKey][listKey]) {
+        let obj = listData[objKey][listKey].filter(f => f[idKey] == ((data != 0 && !data) ? row[idKey] : data));
         obj.length > 0 && (ret = obj[0][nameKey]);
       }
       return ret;
     }
     return fun;
+  },
+  //日期格式化方法 YYYY-MM-DD
+  dateYMDFormat(row,column){
+    let data = row[column.property];
+    if (data) {
+      return moment(data).format('YYYY-MM-DD');
+    } else {
+      return '';
+    }
+  },
+  //日期格式化方法 YYYY-MM-DD HH:mm:ss
+  dateYMDHmsFormat(row,column){
+    let data = row[column.property];
+    if (data) {
+      return moment(data).format('YYYY-MM-DD HH:mm:ss');
+    } else {
+      return '';
+    }
   },
   //获取uuid
   getUuid() {
