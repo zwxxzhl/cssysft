@@ -1,6 +1,5 @@
 <template>
   <el-form class="form-css" :model="form" :rules="rules" ref="refElForm" size="mini">
-    <span>{{ form.formList }}</span>
     <el-table
       ref="refElTable"
       :size="size"
@@ -22,13 +21,17 @@
       @row-click="$emit('row-click')"
       @row-dblclick="$emit('row-dblclick')"
     >
-      <!--        <template v-if="selectionShow">
-                <el-table-column type="selection" header-align="center" align="center" fixed="left"></el-table-column>
-              </template>
+      <template v-if="selectionShow">
+        <el-table-column type="selection" header-align="center" align="center" fixed="left"></el-table-column>
+      </template>
 
-              <template v-if="indexShow">
-                <el-table-column type="index" label="序号" width="55" header-align="center" align="center"></el-table-column>
-              </template>-->
+      <template v-if="indexShow">
+        <el-table-column type="index" label="序号" width="55" header-align="center" align="center">
+          <template #default="scope">
+            {{ (page - 1) * limit + scope.$index + 1 }}
+          </template>
+        </el-table-column>
+      </template>
 
       <template v-for="(col, index) in tableColumn" :key="index">
         <el-table-column
@@ -38,8 +41,8 @@
           :align="col.align || 'center'"
           :width="col.width || ''"
           :min-width="col.minWidth || ''"
-          :prop="col.prop"
-          :label="col.label"
+          :prop="col.prop || ''"
+          :label="col.label || ''"
           :column-key="index.toString()"
           :formatter="formatter"
         >
@@ -71,8 +74,8 @@
           :align="col.align || 'center'"
           :width="col.width || ''"
           :min-width="col.minWidth || ''"
-          :prop="col.prop"
-          :label="col.label"
+          :prop="col.prop || ''"
+          :label="col.label || ''"
           :column-key="index.toString()"
         >
           <template #header="scope">
@@ -119,6 +122,7 @@
 <script setup>
 import {
   ref,
+  toRef,
   toRefs,
   reactive,
   useContext,
@@ -128,7 +132,7 @@ import {
   onMounted,
   watch,
   computed,
-  defineProps
+  defineProps, watchEffect
 } from "vue";
 
 const props = defineProps({
@@ -198,12 +202,22 @@ const props = defineProps({
   tableData: {
     type: Array,
     required: false,
-    default: () => (ref([]))
+    default: () => ([])
   },
   tableColumn: {
     type: Array,
     required: true,
-    default: () => (ref([]))
+    default: () => ([])
+  },
+  indexShow: {
+    type: Boolean,
+    required: false,
+    default: true
+  },
+  selectionShow: {
+    type: Boolean,
+    required: false,
+    default: false
   },
   rules: {
     type: Object,
@@ -217,8 +231,9 @@ const comMethod = inject('comMethod');
 const refElTable = ref(null);
 const refElForm = ref(null);
 const form = ref({formList: []});
-console.log("props");
-console.log(props);
+
+console.log("comMethod");
+console.log(comMethod);
 
 const formatter = (row, column, cellValue, index) => {
   let obj = props.tableColumn.find(f => f.formatter && f.prop === column.property);
@@ -232,17 +247,24 @@ const formatter = (row, column, cellValue, index) => {
   }
 }
 
+watchEffect(() => {
+  form.value.formList = props.tableData;
+})
 
-watch(() => props.tableData, (nv, ov) => {
-  debugger
+/*watch(props.tableData, (nv, ov) => {
   form.value.formList = nv;
-}, {deep: true})
+}, {deep: true, immediate: true});*/
+
+/*const tableDataRef = toRef(props, 'tableData');
+
+watch(tableDataRef, (nv, ov) => {
+  form.value.formList = nv;
+}, {deep: true, immediate: true});*/
 
 /*const { tableData } = toRefs(props);
 watch(tableData, (nv, ov) => {
-  debugger
   form.value.formList = nv;
-}, {deep: true})*/
+}, {deep: true, immediate: true})*/
 
 computed(() => {
 

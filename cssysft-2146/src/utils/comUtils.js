@@ -1,3 +1,9 @@
+import dayjs from "dayjs";
+import 'dayjs/locale/zh-cn'
+import relativeTime from 'dayjs/plugin/relativeTime'
+dayjs.locale('zh-cn')
+dayjs.extend(relativeTime)
+
 export default {
   /*
       生成table格式化方法 genColumnFormat(listData,'unitIdFormat','mixProp','unitList','unitId','name') 普通数据
@@ -20,7 +26,7 @@ export default {
   dateYMDFormat(row,column){
     let data = row[column.property];
     if (data) {
-      return moment(data).format('YYYY-MM-DD');
+      return dayjs(parseInt(data)).format('YYYY-MM-DD');
     } else {
       return '';
     }
@@ -29,7 +35,7 @@ export default {
   dateYMDHmsFormat(row,column){
     let data = row[column.property];
     if (data) {
-      return moment(data).format('YYYY-MM-DD HH:mm:ss');
+      return dayjs(parseInt(data)).format('YYYY-MM-DD HH:mm:ss');
     } else {
       return '';
     }

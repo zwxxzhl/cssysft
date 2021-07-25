@@ -12,6 +12,7 @@
     "bpmn-js-properties-panel": "^0.43.0",
     "camunda-bpmn-moddle": "^5.1.2",
     "custom-translate": "^2.2.8",
+    "dayjs": "^1.10.4",
     "element-plus": "^1.0.2-beta.36",
     "inherits": "^2.0.4",
     "js-cookie": "^2.2.1",
