@@ -1,5 +1,5 @@
 <template>
-  <el-form :model="form" :rules="rules" ref="refElForm" size="mini">
+  <el-form class="form-css" :model="form" :rules="rules" ref="refElForm" size="mini">
     <el-table
       ref="refElTable"
       :size="size"

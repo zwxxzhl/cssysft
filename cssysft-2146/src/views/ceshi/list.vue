@@ -9,42 +9,17 @@
       <el-button type="default" @click="resetData()">清空</el-button>
     </el-form>
 
-<!--    <el-table
-      v-loading="listLoading"
-      :data="list"
-      stripe
-      style="width: 100%"
-      @selection-change="onSelectionChange"
-    >
-      <el-table-column type="selection" width="55"/>
-
-      <el-table-column label="序号" width="70" align="center">
-        <template #default="scope">
-          {{ (page - 1) * limit + scope.$index + 1 }}
-        </template>
-      </el-table-column>
-
-      <el-table-column prop="depId" label="服务部"/>
-      <el-table-column prop="name" label="名称"/>
-      <el-table-column prop="no" label="验光单号"/>
-      <el-table-column prop="date" label="日期"/>
-    </el-table>-->
-
     <table-list
       :table-data="list"
-      :table-column="tableColumn">
-    </table-list>
-
-    <el-pagination
-      :current-page="page"
+      :table-column="tableColumn"
+      :pagination-show="true"
+      :current-page="currentPage"
       :total="total"
-      :page-size="limit"
-      :page-sizes="[5, 10, 20, 30, 40, 50, 100]"
-      style="padding: 30px 0; text-align: center"
-      layout="sizes, prev, pager, next, jumper, ->, total, slot"
+      :page-size="pageSize"
       @current-change="fetchData"
-      @size-change="changeSize"
-    />
+      @size-change="sizeChange"
+    >
+    </table-list>
 
     <dialog-com ref="refDialogCom" title="验光录入" width="50%" top="10vh" :heightPercent="0.6" :footer="false">
       <template #content="sp">
@@ -68,36 +43,38 @@ provide('comMethod', {
 });
 
 
-const listLoading = ref(true);
-
-const list = ref([
-  {depName: '区庄服务部', name: '张三', no: '0132107190002', date: '1627097163637'},
-  {depName: '区庄服务部', name: '张会员', no: '0132107190001', date: '1627097163637'}
-]);
-
-const tableColumn = ref([
-  {type: 'index', label: '序号'},
+let listLoading = ref(true);
+let list = ref([]);
+let total = ref(0);
+let currentPage = ref(1);
+let pageSize = ref(10);
+let tableColumn = reactive([
   {prop: 'depName', label: '部门'},
   {prop: 'name', label: '姓名', width: '90'},
   {prop: 'no', label: '单号'},
   {prop: 'date', label: '开单日期', minWidth: '140', formatter: 'dateYMDHmsFormat'},
 ]);
 
-
-const total = ref(0);
-const page = ref(1);
-const limit = ref(10);
-let searchObj = reactive({});
+let searchObj = ref({});
 const multipleSelection = ref([]);
 
 const refDialogCom = ref(null);
 
-const fetchData = () => {
-  listLoading.value = false;
+const fetchData = (page = 1) => {
+  currentPage.value = page;
+
+  setTimeout(() => {
+    list.value = [
+      {depName: '区庄服务部', name: '张三', no: '0132107190002', date: '1627097163637'},
+      {depName: '区庄服务部', name: '张会员', no: '0132107190001', date: '1627097163637'}
+    ];
+    total.value = 2;
+    listLoading.value = false;
+  }, 1000);
 }
 
-const changeSize = () => {
-
+const sizeChange = (val) => {
+  pageSize.value = val;
 }
 
 const onSelectionChange = () => {

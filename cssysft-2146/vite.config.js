@@ -14,5 +14,5 @@ export default defineConfig({
     }
   },
   // 与全局变量相同 VITE_PRE_URL
-  base: '/dispatchweb'
+  base: '/dispatchweb/'
 })
