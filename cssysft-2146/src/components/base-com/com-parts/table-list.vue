@@ -1,5 +1,5 @@
 <template>
-  <el-form :model="form" :rules="rules" ref="refElForm" size="mini">
+  <el-form :model="form" :rules="rules" ref="refTableForm" size="mini">
     <el-table
       ref="refElTable"
       :size="size"
@@ -261,7 +261,7 @@ const props = defineProps({
 const comMethod = inject('comMethod');
 
 const refElTable = ref(null);
-const refElForm = ref(null);
+const refTableForm = ref(null);
 const form = ref({formList: []});
 
 console.log("comMethod");

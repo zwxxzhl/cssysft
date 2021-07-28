@@ -1,133 +1,168 @@
 <template>
-  <el-form class="form-css" :model="form" :rules="rules" ref="refElForm" size="mini">
-    <el-table
-      ref="refElTable"
-      :size="size"
-      :stripe="stripe"
-      :border="border"
-      :style="style"
-      :height="height"
-      :max-height="maxHeight"
-      :header-row-class-name="headerRowClassName"
-      :header-cell-class-name="headerCellClassName"
-      :row-class-name="rowClassName"
-      :cell-class-name="cellClassName"
-      :highlight-current-row="highlightCurrentRow"
-      :data="form.formList"
-      :row-key="rowKey"
-      @select="$emit('select')"
-      @select-all="$emit('select-all')"
-      @selection-change="$emit('selection-change')"
-      @row-click="$emit('row-click')"
-      @row-dblclick="$emit('row-dblclick')"
-    >
-      <template v-if="selectionShow">
-        <el-table-column type="selection" header-align="center" align="center" fixed="left"></el-table-column>
-      </template>
+  <el-form :model="form" :rules="rules" ref="refForm" :size="size" :disabled="disabled">
 
-      <template v-if="indexShow">
-        <el-table-column type="index" label="序号" width="55" header-align="center" align="center">
-          <template #default="scope">
-            {{ (currentPage - 1) * pageSize + scope.$index + 1 }}
-          </template>
-        </el-table-column>
-      </template>
+    <template v-for="(row, idx) in formRow" :key="idx">
+      <el-row class="op-flex-center flex-warp" type="flex">
 
-      <template v-for="(col, index) in tableColumn" :key="index">
-        <el-table-column
-          v-if="col.formatter"
-          show-overflow-tooltip
-          :header-align="col.headerAlign || 'center'"
-          :align="col.align || 'center'"
-          :width="col.width || ''"
-          :min-width="col.minWidth || ''"
-          :prop="col.prop || ''"
-          :label="col.label || ''"
-          :column-key="index.toString()"
-          :formatter="formatter"
-        >
-          <template #header="scope">
+        <template v-for="(item, index) in row" :key="index">
+          <el-col class="col-class" :span="item.span" v-if="'select' === item.dom">
 
-            <template v-if="!col.headerSlot">
-              <span v-if="col.validate" class="red-xin" @click="$emit('header-click', $event, 'redXin')">*</span>
+            <el-form-item
+              :label="item.label"
+              :prop="item.validate && item.model || ''"
+              :label-width="item.labelWidth && item.labelWidth || '120px'">
 
-              <span v-if="col.iconLeft" :class="col.iconLeftClass" @click="$emit('header-click', $event, 'iconLeft')"
-                    style="padding-top: 5px;"></span>
+              <el-select
+                class="form-width-100"
+                v-model="form[item.model]"
+                @change="eventBusFun(item.eveName,item.eveParams,$event)"
+                :clearable="item.clearable"
+                :filterable="item.filterable"
+                :multiple="item.multiple"
+                :placeholder="item.placeholder"
+                :disabled="item.disabled"
+                autocomplete="off">
+                <el-option
+                  v-for="item in mixProp[item.options]"
+                  :key="item[item.key]"
+                  :label="(!item.optionShow || item.optionShow === 'label') && item[item.label] || item.optionShow === 'label(key)'
+                                        && (item[item.label] + '(' + item[item.key] + ')' ) || (item[item.key] + '(' + item[item.label] + ')' )"
+                  :value="item[item.value]">
+                </el-option>
+              </el-select>
 
-              <span @click="$emit('header-click', $event, scope.column.label)">{{ scope.column.label }}</span>
+            </el-form-item>
 
-              <span v-if="col.iconRight" :class="col.iconRightClass" @click="$emit('header-click', $event, 'iconRight')"
-                    style="padding-top: 5px;"></span>
-            </template>
+          </el-col>
+        </template>
 
-            <template v-else>
-              <slot :name="col.prop.toLowerCase()+'header'" v-bind="this"></slot>
-            </template>
+        <el-col :span="formitem.span" class="col-class" v-else-if="'select-dictObj' === formitem.domType">
+          <el-form-item :label="formitem.formLabel" :prop="formitem.validate && formitem.model || ''"
+                        :label-width="formitem.formLabelWidth && formitem.formLabelWidth || '120px'">
+            <el-select class="form-width-100" v-model="form[formitem.model]"
+                       @change="eventBusFun(formitem.eveName,formitem.eveParams,$event)"
+                       :clearable="formitem.clearable" :filterable="formitem.filterable" :multiple="formitem.multiple"
+                       :placeholder="formitem.placeholder" :disabled="formitem.disabled" autocomplete="off">
+              <el-option
+                v-for="item in dictObj[formitem.options]"
+                :key="item[formitem.key]"
+                :label="(!formitem.optionShow || formitem.optionShow === 'label') && item[formitem.label] || formitem.optionShow === 'label(key)'
+                                        && (item[formitem.label] + '(' + item[formitem.key] + ')' ) || (item[formitem.key] + '(' + item[formitem.label] + ')' )"
+                :value="item[formitem.value]">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
 
-          </template>
-        </el-table-column>
+        <el-col :span="formitem.span" class="col-class" v-else-if="'cascader-mixProp' === formitem.domType">
+          <el-form-item :label="formitem.formLabel" :prop="formitem.validate && formitem.model || ''"
+                        :label-width="formitem.formLabelWidth && formitem.formLabelWidth || '120px'">
+            <el-cascader class="form-width-100" v-model="form[formitem.model]"
+                         :options="mixProp[formitem.options]"
+                         :props="{ checkStrictly: false, value: formitem.value, label: formitem.label }"
+                         @change="eventBusFun(formitem.eveName,formitem.eveParams,$event)"
+                         :clearable="formitem.clearable" :filterable="formitem.filterable" :placeholder="formitem.placeholder"
+                         :disabled="formitem.disabled" autocomplete="off">
+            </el-cascader>
+          </el-form-item>
+        </el-col>
 
-        <el-table-column
-          v-else
-          show-overflow-tooltip
-          :header-align="col.headerAlign || 'center'"
-          :align="col.align || 'center'"
-          :width="col.width || ''"
-          :min-width="col.minWidth || ''"
-          :prop="col.prop || ''"
-          :label="col.label || ''"
-          :column-key="index.toString()"
-        >
-          <template #header="scope">
+        <el-col :span="formitem.span" class="col-class" v-else-if="'select-0-1' === formitem.domType">
+          <el-form-item :label="formitem.formLabel" :prop="formitem.validate && formitem.model || ''"
+                        :label-width="formitem.formLabelWidth && formitem.formLabelWidth || '120px'">
+            <el-select class="form-width-100" v-model="form[formitem.model]"
+                       @change="eventBusFun(formitem.eveName,formitem.eveParams,$event)"
+                       :placeholder="formitem.placeholder" :clearable="formitem.clearable"
+                       :disabled="formitem.disabled" autocomplete="off">
+              <el-option
+                v-for="item in formitem.options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
 
-            <template v-if="!col.headerSlot">
-              <span v-if="col.validate" class="red-xin" @click="$emit('header-click', $event, 'redXin')">*</span>
+        <el-col :span="formitem.span" class="col-class" v-else-if="'date-picker' === formitem.domType">
+          <el-form-item :label="formitem.formLabel" :prop="formitem.validate && formitem.model || ''"
+                        :label-width="formitem.formLabelWidth && formitem.formLabelWidth || '120px'">
+            <el-date-picker class="form-width-100" v-model="form[formitem.model]"
+                            :type="formitem.type" :value-format="formitem.valueFormat"
+                            @change="eventBusFun(formitem.eveName,formitem.eveParams,$event)"
+                            :placeholder="formitem.placeholder" :disabled="formitem.disabled" autocomplete="off">
+            </el-date-picker>
+          </el-form-item>
+        </el-col>
 
-              <span v-if="col.iconLeft" :class="col.iconLeftClass" @click="$emit('header-click', $event, 'iconLeft')"
-                    style="padding-top: 5px;"></span>
+        <el-col :span="formitem.span" class="col-class" v-else-if="'input' === formitem.domType">
+          <el-form-item :label="formitem.formLabel" :prop="formitem.validate && formitem.model || ''"
+                        :label-width="formitem.formLabelWidth && formitem.formLabelWidth || '120px'">
+            <el-input class="form-width-100" v-model="form[formitem.model]"
+                      @change="eventBusFun(formitem.eveName,formitem.eveParams,$event)"
+                      :placeholder="formitem.placeholder" :disabled="formitem.disabled" autocomplete="off">
+            </el-input>
+          </el-form-item>
+        </el-col>
 
-              <span @click="$emit('header-click', $event, scope.column.label)">{{ scope.column.label }}</span>
+        <el-col :span="formitem.span" class="col-class" v-else-if="'textarea' === formitem.domType">
+          <el-form-item :label="formitem.formLabel" :prop="formitem.validate && formitem.model || ''"
+                        :label-width="formitem.formLabelWidth && formitem.formLabelWidth || '120px'">
+            <el-input class="form-width-100" v-model="form[formitem.model]"
+                      :type="formitem.type" :rows="formitem.rows"
+                      @change="eventBusFun(formitem.eveName,formitem.eveParams,$event)"
+                      :placeholder="formitem.placeholder" :disabled="formitem.disabled" autocomplete="off">
+            </el-input>
+          </el-form-item>
+        </el-col>
 
-              <span v-if="col.iconRight" :class="col.iconRightClass" @click="$emit('header-click', $event, 'iconRight')"
-                    style="padding-top: 5px;"></span>
-            </template>
+        <el-col :span="formitem.span" class="col-class" v-else-if="'checkbox' === formitem.domType">
+          <el-form-item :label="formitem.formLabel" :prop="formitem.validate && formitem.model || ''"
+                        :label-width="formitem.formLabelWidth && formitem.formLabelWidth || '120px'">
+            <el-checkbox v-if="formitem.domKey === 'isDel'" class="form-width-100" v-model="form[formitem.model]" :true-label="0" :false-label="1">{{
+                formitem.placeholder
+              }}
+            </el-checkbox>
+            <el-checkbox v-else class="form-width-100" v-model="form[formitem.model]" :true-label="1" :false-label="0">{{ formitem.placeholder }}</el-checkbox>
+          </el-form-item>
+        </el-col>
 
-            <template v-else>
-              <slot :name="col.prop.toLowerCase()+'header'" v-bind="this"></slot>
-            </template>
+        <el-col :span="formitem.span" class="col-class" v-else-if="'radio-mixProp' === formitem.domType">
+          <el-form-item :label="formitem.formLabel" :prop="formitem.validate && formitem.model || ''"
+                        :label-width="formitem.formLabelWidth && formitem.formLabelWidth || '120px'">
+            <div class="radio-layout">
+              <el-radio-group class="form-width-100" v-model="form[formitem.model]"
+                              @change="eventBusFun(formitem.eveName,formitem.eveParams,$event)"
+                              :disabled="formitem.disabled" autocomplete="off">
+                <el-radio v-for="item in mixProp[formitem.options]" :key="item[formitem.key]" :label="item[formitem.value]">{{ item[formitem.label] }}</el-radio>
+              </el-radio-group>
+            </div>
+          </el-form-item>
+        </el-col>
 
-          </template>
+        <el-col :span="formitem.span" class="col-class" v-else-if="'radio-dictObj' === formitem.domType">
+          <el-form-item :label="formitem.formLabel" :prop="formitem.validate && formitem.model || ''"
+                        :label-width="formitem.formLabelWidth && formitem.formLabelWidth || '120px'">
+            <div class="radio-layout">
+              <el-radio-group class="form-width-100" v-model="form[formitem.model]"
+                              @change="eventBusFun(formitem.eveName,formitem.eveParams,$event)"
+                              :disabled="formitem.disabled" autocomplete="off">
+                <el-radio v-for="item in dictObj[formitem.options]" :key="item[formitem.key]" :label="item[formitem.value]">{{ item[formitem.label] }}</el-radio>
+              </el-radio-group>
+            </div>
+          </el-form-item>
+        </el-col>
 
-          <template #default="scope">
-
-            <template v-if="!col.rowslot">
-              <div v-if="col.dom === 'checkbox'">
-                <el-checkbox v-model="scope.row[col.prop]" :true-label="1" :false-label="0" disabled></el-checkbox>
-              </div>
-              <span v-else>{{ scope.row[col.prop] }}</span>
-            </template>
-
-            <template v-else>
-              <slot :name="col.prop.toLowerCase()+'row'" v-bind="this"></slot>
-            </template>
-
-          </template>
-        </el-table-column>
-      </template>
-
-    </el-table>
-
-    <el-pagination
-      v-if="paginationShow"
-      :current-page="currentPage"
-      :total="total"
-      :page-size="pageSize"
-      :page-sizes="[5, 10, 20, 30, 40, 50, 100]"
-      style="padding: 30px 0; text-align: right"
-      layout="sizes, prev, pager, next, jumper, ->, total, slot"
-      @current-change="$emit('current-change')"
-      @size-change="$emit('size-change')">
-    </el-pagination>
+        <el-col :span="formitem.span" class="col-class" v-else="'span' === formitem.domType">
+          <el-form-item>
+            <div :class="formitem.class">
+              <i v-if="mixProp[formitem.model]" class="el-icon-info"></i>
+              <span>{{ mixProp[formitem.model] }}</span>
+            </div>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </template>
   </el-form>
 </template>
 
