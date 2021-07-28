@@ -1,25 +1,18 @@
 <template>
 
-  <el-select
+  <el-cascader
     v-model="form[config.model]"
     @change="$emit('change')"
     :class="config.class"
     :size="config.size"
+    :options="config.options"
+    :props="{ checkStrictly: false, value: config.value, label: config.label }"
     :clearable="config.clearable"
     :filterable="config.filterable"
-    :multiple="config.multiple"
     :placeholder="config.placeholder"
     :disabled="config.disabled"
   >
-    <el-option
-      v-for="item in config.options"
-      :key="config[item.key]"
-      :label="(!config.optionShow || config.optionShow === 'label') && config[item.label]
-              || config.optionShow === 'label(key)' && (config[item.label] + '(' + config[item.key] + ')' )
-              || (config[item.key] + '(' + config[item.label] + ')' )"
-      :value="config[item.value]">
-    </el-option>
-  </el-select>
+  </el-cascader>
 
 </template>
 

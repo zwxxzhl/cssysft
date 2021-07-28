@@ -5,161 +5,71 @@
       <el-row class="op-flex-center flex-warp" type="flex">
 
         <template v-for="(item, index) in row" :key="index">
-          <el-col class="col-class" :span="item.span" v-if="'select' === item.dom">
 
-            <el-form-item
-              :label="item.label"
-              :prop="item.validate && item.model || ''"
-              :label-width="item.labelWidth && item.labelWidth || '120px'">
+          <el-col :span="item.span" v-if="'select' === item.dom">
 
-              <el-select
-                class="form-width-100"
-                v-model="form[item.model]"
-                @change="eventBusFun(item.eveName,item.eveParams,$event)"
-                :clearable="item.clearable"
-                :filterable="item.filterable"
-                :multiple="item.multiple"
-                :placeholder="item.placeholder"
-                :disabled="item.disabled"
-                autocomplete="off">
-                <el-option
-                  v-for="item in mixProp[item.options]"
-                  :key="item[item.key]"
-                  :label="(!item.optionShow || item.optionShow === 'label') && item[item.label] || item.optionShow === 'label(key)'
-                                        && (item[item.label] + '(' + item[item.key] + ')' ) || (item[item.key] + '(' + item[item.label] + ')' )"
-                  :value="item[item.value]">
-                </el-option>
-              </el-select>
+            <el-form-item :config="item">
+
+              <zwx-select :form="form" :config="item" @change="$emit(item.change)"></zwx-select>
 
             </el-form-item>
 
           </el-col>
         </template>
 
-        <el-col :span="formitem.span" class="col-class" v-else-if="'select-dictObj' === formitem.domType">
-          <el-form-item :label="formitem.formLabel" :prop="formitem.validate && formitem.model || ''"
-                        :label-width="formitem.formLabelWidth && formitem.formLabelWidth || '120px'">
-            <el-select class="form-width-100" v-model="form[formitem.model]"
-                       @change="eventBusFun(formitem.eveName,formitem.eveParams,$event)"
-                       :clearable="formitem.clearable" :filterable="formitem.filterable" :multiple="formitem.multiple"
-                       :placeholder="formitem.placeholder" :disabled="formitem.disabled" autocomplete="off">
-              <el-option
-                v-for="item in dictObj[formitem.options]"
-                :key="item[formitem.key]"
-                :label="(!formitem.optionShow || formitem.optionShow === 'label') && item[formitem.label] || formitem.optionShow === 'label(key)'
-                                        && (item[formitem.label] + '(' + item[formitem.key] + ')' ) || (item[formitem.key] + '(' + item[formitem.label] + ')' )"
-                :value="item[formitem.value]">
-              </el-option>
-            </el-select>
+        <el-col :span="item.span" v-else-if="'cascader' === item.dom">
+
+          <el-form-item :config="item">
+
+            <zwx-cascader :form="form" :config="item" @change="$emit(item.change)"></zwx-cascader>
+
           </el-form-item>
+
         </el-col>
 
-        <el-col :span="formitem.span" class="col-class" v-else-if="'cascader-mixProp' === formitem.domType">
-          <el-form-item :label="formitem.formLabel" :prop="formitem.validate && formitem.model || ''"
-                        :label-width="formitem.formLabelWidth && formitem.formLabelWidth || '120px'">
-            <el-cascader class="form-width-100" v-model="form[formitem.model]"
-                         :options="mixProp[formitem.options]"
-                         :props="{ checkStrictly: false, value: formitem.value, label: formitem.label }"
-                         @change="eventBusFun(formitem.eveName,formitem.eveParams,$event)"
-                         :clearable="formitem.clearable" :filterable="formitem.filterable" :placeholder="formitem.placeholder"
-                         :disabled="formitem.disabled" autocomplete="off">
-            </el-cascader>
+        <el-col :span="item.span" v-else-if="'date-picker' === item.dom">
+
+          <el-form-item :config="item">
+
+            <zwx-date-picker :form="form" :config="item" @change="$emit(item.change)"></zwx-date-picker>
+
           </el-form-item>
+
         </el-col>
 
-        <el-col :span="formitem.span" class="col-class" v-else-if="'select-0-1' === formitem.domType">
-          <el-form-item :label="formitem.formLabel" :prop="formitem.validate && formitem.model || ''"
-                        :label-width="formitem.formLabelWidth && formitem.formLabelWidth || '120px'">
-            <el-select class="form-width-100" v-model="form[formitem.model]"
-                       @change="eventBusFun(formitem.eveName,formitem.eveParams,$event)"
-                       :placeholder="formitem.placeholder" :clearable="formitem.clearable"
-                       :disabled="formitem.disabled" autocomplete="off">
-              <el-option
-                v-for="item in formitem.options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
+        <el-col :span="item.span" v-else-if="'input' === item.dom">
 
-        <el-col :span="formitem.span" class="col-class" v-else-if="'date-picker' === formitem.domType">
-          <el-form-item :label="formitem.formLabel" :prop="formitem.validate && formitem.model || ''"
-                        :label-width="formitem.formLabelWidth && formitem.formLabelWidth || '120px'">
-            <el-date-picker class="form-width-100" v-model="form[formitem.model]"
-                            :type="formitem.type" :value-format="formitem.valueFormat"
-                            @change="eventBusFun(formitem.eveName,formitem.eveParams,$event)"
-                            :placeholder="formitem.placeholder" :disabled="formitem.disabled" autocomplete="off">
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
+          <el-form-item :config="item">
 
-        <el-col :span="formitem.span" class="col-class" v-else-if="'input' === formitem.domType">
-          <el-form-item :label="formitem.formLabel" :prop="formitem.validate && formitem.model || ''"
-                        :label-width="formitem.formLabelWidth && formitem.formLabelWidth || '120px'">
-            <el-input class="form-width-100" v-model="form[formitem.model]"
-                      @change="eventBusFun(formitem.eveName,formitem.eveParams,$event)"
-                      :placeholder="formitem.placeholder" :disabled="formitem.disabled" autocomplete="off">
-            </el-input>
-          </el-form-item>
-        </el-col>
+            <zwx-input :form="form" :config="item" @change="$emit(item.change)"></zwx-input>
 
-        <el-col :span="formitem.span" class="col-class" v-else-if="'textarea' === formitem.domType">
-          <el-form-item :label="formitem.formLabel" :prop="formitem.validate && formitem.model || ''"
-                        :label-width="formitem.formLabelWidth && formitem.formLabelWidth || '120px'">
-            <el-input class="form-width-100" v-model="form[formitem.model]"
-                      :type="formitem.type" :rows="formitem.rows"
-                      @change="eventBusFun(formitem.eveName,formitem.eveParams,$event)"
-                      :placeholder="formitem.placeholder" :disabled="formitem.disabled" autocomplete="off">
-            </el-input>
           </el-form-item>
+
         </el-col>
 
         <el-col :span="formitem.span" class="col-class" v-else-if="'checkbox' === formitem.domType">
-          <el-form-item :label="formitem.formLabel" :prop="formitem.validate && formitem.model || ''"
-                        :label-width="formitem.formLabelWidth && formitem.formLabelWidth || '120px'">
-            <el-checkbox v-if="formitem.domKey === 'isDel'" class="form-width-100" v-model="form[formitem.model]" :true-label="0" :false-label="1">{{
-                formitem.placeholder
-              }}
-            </el-checkbox>
-            <el-checkbox v-else class="form-width-100" v-model="form[formitem.model]" :true-label="1" :false-label="0">{{ formitem.placeholder }}</el-checkbox>
+
+          <el-form-item :config="item">
+
+            <zwx-checkbox :form="form" :config="item" @change="$emit(item.change)"></zwx-checkbox>
+
           </el-form-item>
+
         </el-col>
 
-        <el-col :span="formitem.span" class="col-class" v-else-if="'radio-mixProp' === formitem.domType">
-          <el-form-item :label="formitem.formLabel" :prop="formitem.validate && formitem.model || ''"
-                        :label-width="formitem.formLabelWidth && formitem.formLabelWidth || '120px'">
-            <div class="radio-layout">
-              <el-radio-group class="form-width-100" v-model="form[formitem.model]"
-                              @change="eventBusFun(formitem.eveName,formitem.eveParams,$event)"
-                              :disabled="formitem.disabled" autocomplete="off">
-                <el-radio v-for="item in mixProp[formitem.options]" :key="item[formitem.key]" :label="item[formitem.value]">{{ item[formitem.label] }}</el-radio>
-              </el-radio-group>
-            </div>
+        <el-col :span="item.span" v-else-if="'radio-group' === item.dom">
+
+          <el-form-item :config="item">
+
+            <zwx-radio-group :form="form" :config="item" @change="$emit(item.change)"></zwx-radio-group>
+
           </el-form-item>
+
         </el-col>
 
-        <el-col :span="formitem.span" class="col-class" v-else-if="'radio-dictObj' === formitem.domType">
-          <el-form-item :label="formitem.formLabel" :prop="formitem.validate && formitem.model || ''"
-                        :label-width="formitem.formLabelWidth && formitem.formLabelWidth || '120px'">
-            <div class="radio-layout">
-              <el-radio-group class="form-width-100" v-model="form[formitem.model]"
-                              @change="eventBusFun(formitem.eveName,formitem.eveParams,$event)"
-                              :disabled="formitem.disabled" autocomplete="off">
-                <el-radio v-for="item in dictObj[formitem.options]" :key="item[formitem.key]" :label="item[formitem.value]">{{ item[formitem.label] }}</el-radio>
-              </el-radio-group>
-            </div>
-          </el-form-item>
-        </el-col>
-
-        <el-col :span="formitem.span" class="col-class" v-else="'span' === formitem.domType">
-          <el-form-item>
-            <div :class="formitem.class">
-              <i v-if="mixProp[formitem.model]" class="el-icon-info"></i>
-              <span>{{ mixProp[formitem.model] }}</span>
-            </div>
-          </el-form-item>
+<!--        todo 具名插槽-->
+        <el-col :span="item.span" v-else-if="'slot' === item.dom">
+          <slot></slot>
         </el-col>
       </el-row>
     </template>
@@ -167,6 +77,9 @@
 </template>
 
 <script setup>
+import zwxSelect from '../com-el/zwx-select.vue';
+import zwxFormItem from '../com-el/zwx-form-item.vue';
+
 import {
   ref,
   toRef,
@@ -181,7 +94,14 @@ import {
   computed,
   defineProps, watchEffect
 } from "vue";
-
+import ZwxCascader from "../com-el/zwx-cascader";
+import ZwxDatePicker from "../com-el/zwx-date-picker";
+import ZwxInput from "../com-el/zwx-input";
+import ZwxCheckbox from "../com-el/zwx-checkbox";
+import ZwxRadioGroup from "../com-el/zwx-radio-group";
+export default {
+  components: {ZwxRadioGroup, ZwxCheckbox, ZwxInput, ZwxDatePicker, ZwxCascader}
+}
 const props = defineProps({
   size: {
     type: String,
