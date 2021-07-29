@@ -9,6 +9,9 @@
       <el-button type="default" @click="resetData()">清空</el-button>
     </el-form>
 
+
+    <form-mu :form="form" :form-row="formRow"></form-mu>
+
     <table-list
       :table-data="list"
       :table-column="tableColumn"
@@ -32,9 +35,12 @@
 <script setup>
 import DialogCom from "../../components/DialogCom/dialog_com.vue";
 import TableList from "../../components/base-com/com-parts/table-list.vue";
+import FormMu from "../../components/base-com/com-parts/form-mu.vue";
+
 import comUtils from "../../utils/comUtils";
 
 import {ref, onMounted, reactive, getCurrentInstance, provide, useContext} from "vue";
+
 const gp = getCurrentInstance().appContext.config.globalProperties;
 
 let {dateYMDHmsFormat} = comUtils
@@ -42,7 +48,19 @@ provide('comMethod', {
   dateYMDHmsFormat
 });
 
+// form组件
+const form = ref({});
+const formRow = reactive([
+  [
+    {span: 8, dom: 'input', type: 'text', label: '标题', model: 'title', labelWidth: '120px'},
+  ],
+  [
+    {span: 8, dom: 'input', type: 'textarea ', label: '内容', model: 'content', labelWidth: '120px'}
+  ]
+]);
 
+
+// table组件
 let listLoading = ref(true);
 let list = ref([]);
 let total = ref(0);

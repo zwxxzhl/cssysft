@@ -1,5 +1,7 @@
 <template>
 
+  <span>{{ config }}</span>
+
   <el-input
     v-model="form[config.model]"
     @change="$emit('change')"
@@ -16,6 +18,7 @@
 
 <script setup>
 import {
+  defineEmit,
   defineProps
 } from "vue";
 
@@ -29,6 +32,8 @@ const props = defineProps({
     required: true,
   }
 });
+
+let emit = defineEmit(['change']);
 
 </script>
 

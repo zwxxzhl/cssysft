@@ -1,4 +1,5 @@
 <template>
+  <span>{{ 'config: ' + config }}</span>
 
   <el-form-item
     :label="config.label"

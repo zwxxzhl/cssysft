@@ -12,7 +12,7 @@ spring:
     nacos:
       discovery:
         # server-addr: 127.0.0.1:8848 192.168.1.3:28999
-        server-addr: 192.168.1.3:28999
+        server-addr: 127.0.0.1:8848
     # 使用服务发现路由
     gateway:
       discovery:
