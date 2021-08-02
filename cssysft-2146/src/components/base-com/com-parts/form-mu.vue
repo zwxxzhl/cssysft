@@ -7,51 +7,51 @@
         <template v-for="(item, index) in row" :key="index">
 
           <el-col :span="item.span" v-if="'select' === item.dom">
-            <el-form-item :config="item">
+            <zwx-form-item :config="item">
 
-              <zwx-select :form="form" :config="item" @change="$emit(item.change)"></zwx-select>
+              <zwx-select :form="form" :config="item" @change="changeBus($event, item)"></zwx-select>
 
-            </el-form-item>
+            </zwx-form-item>
           </el-col>
 
           <el-col :span="item.span" v-else-if="'cascader' === item.dom">
-            <el-form-item :config="item">
+            <zwx-form-item :config="item">
 
-              <zwx-cascader :form="form" :config="item" @change="$emit(item.change)"></zwx-cascader>
+              <zwx-cascader :form="form" :config="item" @change="changeBus($event, item)"></zwx-cascader>
 
-            </el-form-item>
+            </zwx-form-item>
           </el-col>
 
           <el-col :span="item.span" v-else-if="'date-picker' === item.dom">
-            <el-form-item :config="item">
+            <zwx-form-item :config="item">
 
-              <zwx-date-picker :form="form" :config="item" @change="$emit(item.change)"></zwx-date-picker>
+              <zwx-date-picker :form="form" :config="item" @change="changeBus($event, item)"></zwx-date-picker>
 
-            </el-form-item>
+            </zwx-form-item>
           </el-col>
 
           <el-col :span="item.span" v-else-if="'input' === item.dom">
-            <el-form-item :config="item">
+            <zwx-form-item :config="item">
 
-              <zwx-input :form="form" :config="item" @change="$emit(item.change)"></zwx-input>
+              <zwx-input :form="form" :config="item" @change="changeBus($event, item)"></zwx-input>
 
-            </el-form-item>
+            </zwx-form-item>
           </el-col>
 
           <el-col :span="item.span" class="col-class" v-else-if="'checkbox' === item.dom">
-            <el-form-item :config="item">
+            <zwx-form-item :config="item">
 
-              <zwx-checkbox :form="form" :config="item" @change="$emit(item.change)"></zwx-checkbox>
+              <zwx-checkbox :form="form" :config="item" @change="changeBus($event, item)"></zwx-checkbox>
 
-            </el-form-item>
+            </zwx-form-item>
           </el-col>
 
           <el-col :span="item.span" v-else-if="'radio-group' === item.dom">
-            <el-form-item :config="item">
+            <zwx-form-item :config="item">
 
-              <zwx-radio-group :form="form" :config="item" @change="$emit(item.change)"></zwx-radio-group>
+              <zwx-radio-group :form="form" :config="item" @change="changeBus($event, item)"></zwx-radio-group>
 
-            </el-form-item>
+            </zwx-form-item>
           </el-col>
 
           <el-col :span="item.span" v-else-if="'slot' === item.dom">
@@ -78,17 +78,8 @@ import ZwxRadioGroup from "../com-el/zwx-radio-group.vue";
 
 import {
   ref,
-  toRef,
-  toRefs,
-  reactive,
-  useContext,
-  defineEmit,
-  inject,
-  getCurrentInstance,
-  onMounted,
-  watch,
-  computed,
-  defineProps, watchEffect
+  defineProps,
+  getCurrentInstance
 } from "vue";
 
 const props = defineProps({
@@ -118,21 +109,15 @@ const props = defineProps({
 });
 
 
-let emitArr = [];
-for (const row of props.formRow) {
-  for (const item of row) {
-    if (item.change) {
-      emitArr.push(item.change)
-    }
-  }
-}
-
-console.log('emitArr');
-console.log(emitArr);
-
-let emit = defineEmit([]);
+const { emit } = getCurrentInstance();
 
 const refForm = ref(null);
+
+const changeBus = (val, item) => {
+  if (item.change) {
+    emit(item.change, val);
+  }
+}
 
 </script>
 

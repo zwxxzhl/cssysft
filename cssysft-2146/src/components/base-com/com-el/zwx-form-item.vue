@@ -1,10 +1,9 @@
 <template>
-  <span>{{ 'config: ' + config }}</span>
 
   <el-form-item
     :label="config.label"
     :prop="config.prop"
-    :label-width="config.labelWidth"
+    :label-width="config.labelWidth || '120px'"
     :size="config.size"
   >
 

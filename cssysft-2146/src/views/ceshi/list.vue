@@ -52,10 +52,10 @@ provide('comMethod', {
 const form = ref({});
 const formRow = reactive([
   [
-    {span: 8, dom: 'input', type: 'text', label: '标题', model: 'title', labelWidth: '120px'},
+    {span: 8, dom: 'input', type: 'text', label: '标题：', model: 'title', change: 'title-change'},
   ],
   [
-    {span: 8, dom: 'input', type: 'textarea ', label: '内容', model: 'content', labelWidth: '120px'}
+    {span: 8, dom: 'input', type: 'textarea ', label: '内容：', model: 'content'}
   ]
 ]);
 
