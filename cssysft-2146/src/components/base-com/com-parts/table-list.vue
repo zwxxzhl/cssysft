@@ -2,20 +2,8 @@
   <el-form :model="form" :rules="rules" ref="refTableForm" size="mini">
     <el-table
       ref="refTable"
-      :="$attrs"
-      :size="size"
-      :stripe="stripe"
-      :border="border"
-      :style="style"
-      :height="height"
-      :max-height="maxHeight"
-      :header-row-class-name="headerRowClassName"
-      :header-cell-class-name="headerCellClassName"
-      :row-class-name="rowClassName"
-      :cell-class-name="cellClassName"
-      :highlight-current-row="highlightCurrentRow"
+      v-bind="$attrs"
       :data="form.formList"
-      :row-key="rowKey"
     >
       <template v-if="selectionShow">
         <el-table-column type="selection" header-align="center" align="center" fixed="left"></el-table-column>
@@ -44,7 +32,16 @@
         >
           <template #header="scope">
 
-            <template v-if="!col.headerSlot">
+            <table-header :config="col" :scope="scope">
+
+              <template #[col.hSlotName]>
+                <slot :name="col.hSlotName" v-bind="scope"></slot>
+              </template>
+
+            </table-header>
+
+
+<!--            <template v-if="!col.headerSlot">
               <span v-if="col.validate" class="red-xin" @click="$emit('header-click', $event, 'redXin')">*</span>
 
               <span v-if="col.iconLeft" :class="col.iconLeftClass" @click="$emit('header-click', $event, 'iconLeft')"
@@ -58,7 +55,7 @@
 
             <template v-else>
               <slot :name="col.prop.toLowerCase()+'header'" v-bind="this"></slot>
-            </template>
+            </template>-->
 
           </template>
         </el-table-column>
@@ -76,21 +73,13 @@
         >
           <template #header="scope">
 
-            <template v-if="!col.headerSlot">
-              <span v-if="col.validate" class="red-xin" @click="$emit('header-click', $event, 'redXin')">*</span>
+            <table-header :config="col" :scope="scope">
 
-              <span v-if="col.iconLeft" :class="col.iconLeftClass" @click="$emit('header-click', $event, 'iconLeft')"
-                    style="padding-top: 5px;"></span>
+              <template #[col.hSlotName]>
+                <slot :name="col.hSlotName" v-bind="scope"></slot>
+              </template>
 
-              <span @click="$emit('header-click', $event, scope.column.label)">{{ scope.column.label }}</span>
-
-              <span v-if="col.iconRight" :class="col.iconRightClass" @click="$emit('header-click', $event, 'iconRight')"
-                    style="padding-top: 5px;"></span>
-            </template>
-
-            <template v-else>
-              <slot :name="col.prop.toLowerCase()+'header'" v-bind="this"></slot>
-            </template>
+            </table-header>
 
           </template>
 
@@ -128,6 +117,8 @@
 </template>
 
 <script setup>
+import TableHeader from "./parts/table-header.vue";
+
 import {
   ref,
   toRef,
@@ -144,69 +135,6 @@ import {
 } from "vue";
 
 const props = defineProps({
-  size: {
-    type: String,
-    required: false,
-    default: ''
-  },
-  stripe: {
-    type: Boolean,
-    required: false,
-    default: false
-  },
-  border: {
-    type: Boolean,
-    required: false,
-    default: false
-  },
-  style: {
-    type: String,
-    required: false,
-    default: 'width: 100%'
-  },
-  height: {
-    type: Number,
-    required: false,
-    default: null
-  },
-  maxHeight: {
-    type: Number,
-    required: false,
-    default: null
-  },
-  headerRowClassName: {
-    type: Function,
-    required: false,
-    default: () => {
-    }
-  },
-  headerCellClassName: {
-    type: Function,
-    required: false,
-    default: () => {
-    }
-  },
-  rowClassName: {
-    type: Function,
-    required: false,
-    default: () => {
-    }
-  },
-  cellClassName: {
-    type: Function,
-    required: false,
-    default: () => {
-    }
-  },
-  highlightCurrentRow: {
-    type: Boolean,
-    required: false,
-    default: false
-  },
-  rowKey: {
-    type: String,
-    required: false
-  },
   tableData: {
     type: Array,
     required: false,
@@ -304,10 +232,6 @@ input[type="number"] {
   margin-bottom: 0;
 }
 
-.red-xin {
-  color: #F56C6C;
-  font-size: 12px;
-  margin-right: 4px;
-}
+
 
 </style>

@@ -20,6 +20,7 @@
     </form-mu>
 
     <table-list
+      :size="'medium'"
       :table-data="list"
       :table-column="tableColumn"
       :selection-show="true"
@@ -30,6 +31,7 @@
       @select="onSelect"
       @current-change="fetchData"
       @size-change="sizeChange"
+      @header-click="onHeaderClick"
     >
     </table-list>
 
@@ -97,7 +99,7 @@ let total = ref(0);
 let currentPage = ref(1);
 let pageSize = ref(10);
 let tableColumn = reactive([
-  {prop: 'depName', label: '部门'},
+  {prop: 'depName', label: '部门', hAk: true},
   {prop: 'name', label: '姓名', width: '90'},
   {prop: 'no', label: '单号'},
   {prop: 'date', label: '开单日期', minWidth: '140', formatter: 'dateYMDHmsFormat'},
@@ -128,6 +130,13 @@ const sizeChange = (val) => {
 const onSelect = (selection, row) => {
   console.log(selection)
   console.log(row)
+  debugger
+}
+
+const onHeaderClick = (e, val, ...param) => {
+  console.log(e)
+  console.log(val)
+  console.log(param)
   debugger
 }
 

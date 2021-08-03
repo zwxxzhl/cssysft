@@ -1,22 +1,48 @@
 <template>
 
-  <el-input
-    v-model="form[config.model]"
-    @change="$emit('change')"
-    :class="config.class"
-    :size="config.size"
-    :type="config.type"
-    :rows="config.rows"
-    :placeholder="config.placeholder"
-    :disabled="config.disabled"
-  >
-  </el-input>
+  <template v-if="!config.hSlot">
+
+    <span
+      v-if="config.hAk"
+      class="red-ak"
+      @click="$emit('header-click', $event, 'hAk')"
+    >
+      *
+    </span>
+
+    <span
+      v-if="config.hIconL"
+      :class="config.hIconLC"
+      @click="$emit('header-click', $event, 'hIconL')"
+      style="padding-top: 5px;"
+    >
+    </span>
+
+    <span
+      @click="$emit('header-click', $event, scope.column.label)"
+    >
+      {{ scope.column.label }}
+    </span>
+
+    <span
+      v-if="config.hIconR"
+      :class="config.hIconRC"
+      @click="$emit('header-click', $event, 'hIconR')"
+      style="padding-top: 5px;"
+    >
+    </span>
+  </template>
+
+  <template v-else>
+
+    <slot :name="config.hSlotName" v-bind="this"></slot>
+
+  </template>
 
 </template>
 
 <script setup>
 import {
-  defineEmit,
   defineProps
 } from "vue";
 
@@ -25,16 +51,20 @@ const props = defineProps({
     type: Object,
     required: true
   },
-  form: {
+  scope: {
     type: Object,
     required: true,
   }
 });
 
-let emit = defineEmit(['change']);
-
 </script>
 
 <style scoped>
+
+.red-ak {
+  color: #F56C6C;
+  font-size: 12px;
+  margin-right: 4px;
+}
 
 </style>
