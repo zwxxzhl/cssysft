@@ -2,7 +2,6 @@
 
   <el-input
     v-model="form[config.model]"
-    @change="$emit('change')"
     :class="config.class"
     :size="config.size"
     :type="config.type"
@@ -16,7 +15,6 @@
 
 <script setup>
 import {
-  defineEmit,
   defineProps
 } from "vue";
 
@@ -31,7 +29,10 @@ const props = defineProps({
   }
 });
 
-let emit = defineEmit(['change']);
+const onChange = (val) => {
+  console.log(val)
+  debugger
+}
 
 </script>
 

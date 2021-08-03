@@ -2,7 +2,6 @@
 
   <el-radio-group
     v-model="form[config.model]"
-    @change="$emit('change')"
     :class="config.class"
     :size="config.size"
     :disabled="config.disabled"

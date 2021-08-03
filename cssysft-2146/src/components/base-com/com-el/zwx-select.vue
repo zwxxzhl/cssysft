@@ -2,7 +2,6 @@
 
   <el-select
     v-model="form[config.model]"
-    @change="$emit('change')"
     :class="config.class"
     :size="config.size"
     :clearable="config.clearable"
@@ -13,11 +12,11 @@
   >
     <el-option
       v-for="item in config.options"
-      :key="config[item.key]"
-      :label="(!config.optionShow || config.optionShow === 'label') && config[item.label]
-              || config.optionShow === 'label(key)' && (config[item.label] + '(' + config[item.key] + ')' )
-              || (config[item.key] + '(' + config[item.label] + ')' )"
-      :value="config[item.value]">
+      :key="item[config.opKey]"
+      :label="(!config.optionShow || config.optionShow === 'label') && item[config.opLabel]
+              || config.optionShow === 'label(key)' && (item[config.opLabel] + '(' + item[config.opKey] + ')' )
+              || (item[config.opKey] + '(' + item[config.opLabel] + ')' )"
+      :value="item[config.opValue]">
     </el-option>
   </el-select>
 

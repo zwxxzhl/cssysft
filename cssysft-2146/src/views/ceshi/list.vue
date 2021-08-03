@@ -10,15 +10,24 @@
     </el-form>
 
 
-    <form-mu :form="form" :form-row="formRow"></form-mu>
+    <form-mu
+      :form="form"
+      :form-row="formRow"
+      @title-change="onTitleChange"
+      @content-change="onContentChange"
+      @select-change="onSelectChange"
+    >
+    </form-mu>
 
     <table-list
       :table-data="list"
       :table-column="tableColumn"
+      :selection-show="true"
       :pagination-show="true"
       :current-page="currentPage"
       :total="total"
       :page-size="pageSize"
+      @select="onSelect"
       @current-change="fetchData"
       @size-change="sizeChange"
     >
@@ -53,11 +62,32 @@ const form = ref({});
 const formRow = reactive([
   [
     {span: 8, dom: 'input', type: 'text', label: '标题：', model: 'title', change: 'title-change'},
+    {
+      span: 8, dom: 'select', label: '选择：', model: 'title',
+      options: [{depId: '1', depName: '区庄'}, {depId: '2', depName: '黄埔'}],
+      opKey: 'depId', opLabel: 'depName', opValue: 'depId'
+    },
   ],
   [
-    {span: 8, dom: 'input', type: 'textarea ', label: '内容：', model: 'content'}
+    {span: 8, dom: 'input', type: 'textarea ', label: '内容：', model: 'content', change: 'content-change'}
   ]
 ]);
+
+const onTitleChange = (val) => {
+  console.log(val)
+  debugger
+}
+
+const onContentChange = (val) => {
+  console.log(val)
+  debugger
+}
+
+const onSelectChange = (val) => {
+  console.log(val)
+  debugger
+}
+
 
 
 // table组件
@@ -95,8 +125,10 @@ const sizeChange = (val) => {
   pageSize.value = val;
 }
 
-const onSelectionChange = () => {
-
+const onSelect = (selection, row) => {
+  console.log(selection)
+  console.log(row)
+  debugger
 }
 
 

@@ -9,7 +9,7 @@
           <el-col :span="item.span" v-if="'select' === item.dom">
             <zwx-form-item :config="item">
 
-              <zwx-select :form="form" :config="item" @change="changeBus($event, item)"></zwx-select>
+              <zwx-select :form="form" :config="item" @change="val => item.change && $emit(item.change, val)"></zwx-select>
 
             </zwx-form-item>
           </el-col>
@@ -17,7 +17,7 @@
           <el-col :span="item.span" v-else-if="'cascader' === item.dom">
             <zwx-form-item :config="item">
 
-              <zwx-cascader :form="form" :config="item" @change="changeBus($event, item)"></zwx-cascader>
+              <zwx-cascader :form="form" :config="item" @change="val => item.change && $emit(item.change, val)"></zwx-cascader>
 
             </zwx-form-item>
           </el-col>
@@ -25,7 +25,7 @@
           <el-col :span="item.span" v-else-if="'date-picker' === item.dom">
             <zwx-form-item :config="item">
 
-              <zwx-date-picker :form="form" :config="item" @change="changeBus($event, item)"></zwx-date-picker>
+              <zwx-date-picker :form="form" :config="item" @change="val => item.change && $emit(item.change, val)"></zwx-date-picker>
 
             </zwx-form-item>
           </el-col>
@@ -33,7 +33,7 @@
           <el-col :span="item.span" v-else-if="'input' === item.dom">
             <zwx-form-item :config="item">
 
-              <zwx-input :form="form" :config="item" @change="changeBus($event, item)"></zwx-input>
+              <zwx-input :form="form" :config="item" @change="val => item.change && $emit(item.change, val)"></zwx-input>
 
             </zwx-form-item>
           </el-col>
@@ -41,7 +41,7 @@
           <el-col :span="item.span" class="col-class" v-else-if="'checkbox' === item.dom">
             <zwx-form-item :config="item">
 
-              <zwx-checkbox :form="form" :config="item" @change="changeBus($event, item)"></zwx-checkbox>
+              <zwx-checkbox :form="form" :config="item" @change="val => item.change && $emit(item.change, val)"></zwx-checkbox>
 
             </zwx-form-item>
           </el-col>
@@ -49,7 +49,7 @@
           <el-col :span="item.span" v-else-if="'radio-group' === item.dom">
             <zwx-form-item :config="item">
 
-              <zwx-radio-group :form="form" :config="item" @change="changeBus($event, item)"></zwx-radio-group>
+              <zwx-radio-group :form="form" :config="item" @change="val => item.change && $emit(item.change, val)"></zwx-radio-group>
 
             </zwx-form-item>
           </el-col>
@@ -78,8 +78,7 @@ import ZwxRadioGroup from "../com-el/zwx-radio-group.vue";
 
 import {
   ref,
-  defineProps,
-  getCurrentInstance
+  defineProps
 } from "vue";
 
 const props = defineProps({
@@ -108,16 +107,9 @@ const props = defineProps({
   }
 });
 
-
-const { emit } = getCurrentInstance();
-
 const refForm = ref(null);
 
-const changeBus = (val, item) => {
-  if (item.change) {
-    emit(item.change, val);
-  }
-}
+
 
 </script>
 

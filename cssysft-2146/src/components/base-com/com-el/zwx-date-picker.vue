@@ -2,7 +2,6 @@
 
   <el-date-picker
     v-model="form[config.model]"
-    @change="$emit('change')"
     :class="config.class"
     :size="config.size"
     :type="config.type"

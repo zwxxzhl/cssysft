@@ -2,7 +2,6 @@
 
   <el-cascader
     v-model="form[config.model]"
-    @change="$emit('change')"
     :class="config.class"
     :size="config.size"
     :options="config.options"

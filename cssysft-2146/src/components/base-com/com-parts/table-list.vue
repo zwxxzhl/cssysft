@@ -2,6 +2,7 @@
   <el-form :model="form" :rules="rules" ref="refTableForm" size="mini">
     <el-table
       ref="refTable"
+      :="$attrs"
       :size="size"
       :stripe="stripe"
       :border="border"
@@ -15,11 +16,6 @@
       :highlight-current-row="highlightCurrentRow"
       :data="form.formList"
       :row-key="rowKey"
-      @select="$emit('select')"
-      @select-all="$emit('select-all')"
-      @selection-change="$emit('selection-change')"
-      @row-click="$emit('row-click')"
-      @row-dblclick="$emit('row-dblclick')"
     >
       <template v-if="selectionShow">
         <el-table-column type="selection" header-align="center" align="center" fixed="left"></el-table-column>
@@ -125,8 +121,8 @@
       :page-sizes="[5, 10, 20, 30, 40, 50, 100]"
       style="padding: 30px 0; text-align: right"
       layout="sizes, prev, pager, next, jumper, ->, total, slot"
-      @current-change="$emit('current-change')"
-      @size-change="$emit('size-change')">
+      @current-change="$emit('current-change', $event)"
+      @size-change="$emit('size-change', $event)">
     </el-pagination>
   </el-form>
 </template>
