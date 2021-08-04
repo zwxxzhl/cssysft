@@ -32,7 +32,7 @@
         >
           <template #header="scope">
 
-            <table-header :config="col" :scope="scope">
+            <table-header :config="col" :scope="scope" @header-click="(e, data) => $emit('header-click', e, data)">
 
               <template #[col.hSlotName]>
                 <slot :name="col.hSlotName" v-bind="scope"></slot>

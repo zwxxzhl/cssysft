@@ -5,7 +5,7 @@
     <span
       v-if="config.hAk"
       class="red-ak"
-      @click="$emit('header-click', $event, 'hAk')"
+      @click="e => $emit('header-click', e, 'hAk')"
     >
       *
     </span>
@@ -13,13 +13,13 @@
     <span
       v-if="config.hIconL"
       :class="config.hIconLC"
-      @click="$emit('header-click', $event, 'hIconL')"
+      @click="e => $emit('header-click', e, 'hIconL')"
       style="padding-top: 5px;"
     >
     </span>
 
     <span
-      @click="$emit('header-click', $event, scope.column.label)"
+      @click="e => $emit('header-click', e, scope.column.label)"
     >
       {{ scope.column.label }}
     </span>
@@ -27,7 +27,7 @@
     <span
       v-if="config.hIconR"
       :class="config.hIconRC"
-      @click="$emit('header-click', $event, 'hIconR')"
+      @click="e => $emit('header-click', e, 'hIconR')"
       style="padding-top: 5px;"
     >
     </span>
@@ -43,7 +43,8 @@
 
 <script setup>
 import {
-  defineProps
+  defineProps,
+  defineEmit
 } from "vue";
 
 const props = defineProps({
