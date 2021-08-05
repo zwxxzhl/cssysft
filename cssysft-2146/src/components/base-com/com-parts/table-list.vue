@@ -32,31 +32,14 @@
         >
           <template #header="scope">
 
-<!--            @header-click-cus="(e, val) => $emit('header-click-cus', e, val)"-->
-            <table-header :config="col" :scope="scope" @header-click-cus="onHeaderClickCus" @click-ceshi="onClickCeshi">
+<!--            <table-header :config="col" :scope="scope" @header-click-cus="(e, val) => $emit('header-click-cus', e, val)">-->
+            <table-header :config="col" :scope="scope" v-bind="$attrs['header-click-cus']">
 
               <template #[col.hSlotName]>
                 <slot :name="col.hSlotName" v-bind="scope"></slot>
               </template>
 
             </table-header>
-
-
-<!--            <template v-if="!col.headerSlot">
-              <span v-if="col.validate" class="red-xin" @click="$emit('header-click', $event, 'redXin')">*</span>
-
-              <span v-if="col.iconLeft" :class="col.iconLeftClass" @click="$emit('header-click', $event, 'iconLeft')"
-                    style="padding-top: 5px;"></span>
-
-              <span @click="$emit('header-click', $event, scope.column.label)">{{ scope.column.label }}</span>
-
-              <span v-if="col.iconRight" :class="col.iconRightClass" @click="$emit('header-click', $event, 'iconRight')"
-                    style="padding-top: 5px;"></span>
-            </template>
-
-            <template v-else>
-              <slot :name="col.prop.toLowerCase()+'header'" v-bind="this"></slot>
-            </template>-->
 
           </template>
         </el-table-column>
@@ -74,7 +57,8 @@
         >
           <template #header="scope">
 
-            <table-header :config="col" :scope="scope" @header-click-cus="onHeaderClickCus" @click-ceshi="onClickCeshi">
+<!--            <table-header :config="col" :scope="scope" @header-click-cus="(e, val) => $emit('header-click-cus', e, val)">-->
+            <table-header :config="col" :scope="scope" v-bind="$attrs['header-click-cus']">
 
               <template #[col.hSlotName]>
                 <slot :name="col.hSlotName" v-bind="scope"></slot>
@@ -183,17 +167,6 @@ const props = defineProps({
   }
 });
 
-const onHeaderClickCus = (e, val) => {
-  console.log(e);
-  console.log(val);
-  debugger
-}
-
-const onClickCeshi = (val) => {
-  console.log(val);
-  debugger
-}
-
 
 const comMethod = inject('comMethod');
 
@@ -244,7 +217,6 @@ input[type="number"] {
 .el-form-item {
   margin-bottom: 0;
 }
-
 
 
 </style>
