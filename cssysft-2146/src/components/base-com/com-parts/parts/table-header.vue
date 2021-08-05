@@ -1,50 +1,53 @@
 <template>
+  <div>
 
-  <template v-if="!config.hSlot">
+    <!--  @click="e => $emit('header-click-cus', e, 'hAk')"-->
+    <template v-if="!config.hSlot">
 
     <span
       v-if="config.hAk"
       class="red-ak"
-      @click="e => $emit('header-click', e, 'hAk')"
+      @click="onclick"
     >
       *
     </span>
 
-    <span
-      v-if="config.hIconL"
-      :class="config.hIconLC"
-      @click="e => $emit('header-click', e, 'hIconL')"
-      style="padding-top: 5px;"
-    >
+      <span
+        v-if="config.hIconL"
+        :class="config.hIconLC"
+        @click="e => $emit('header-click-cus', e, 'hIconL')"
+        style="padding-top: 5px;"
+      >
     </span>
 
-    <span
-      @click="e => $emit('header-click', e, scope.column.label)"
-    >
+      <span
+        @click="e => $emit('header-click-cus', e, scope.column.label)"
+      >
       {{ scope.column.label }}
     </span>
 
-    <span
-      v-if="config.hIconR"
-      :class="config.hIconRC"
-      @click="e => $emit('header-click', e, 'hIconR')"
-      style="padding-top: 5px;"
-    >
+      <span
+        v-if="config.hIconR"
+        :class="config.hIconRC"
+        @click="e => $emit('header-click-cus', e, 'hIconR')"
+        style="padding-top: 5px;"
+      >
     </span>
-  </template>
+    </template>
 
-  <template v-else>
+    <template v-else>
 
-    <slot :name="config.hSlotName" v-bind="this"></slot>
+      <slot :name="config.hSlotName" v-bind="this"></slot>
 
-  </template>
+    </template>
+  </div>
 
 </template>
 
 <script setup>
 import {
-  defineProps,
-  defineEmit
+  defineEmit,
+  defineProps
 } from "vue";
 
 const props = defineProps({
@@ -57,6 +60,14 @@ const props = defineProps({
     required: true,
   }
 });
+
+const emits = defineEmit(['header-click-cus']);
+
+const onclick = (val) => {
+  console.log(val);
+  emits('header-click-cus', 'ceshi');
+  debugger
+}
 
 </script>
 

@@ -31,7 +31,7 @@
       @select="onSelect"
       @current-change="fetchData"
       @size-change="sizeChange"
-      @header-click="onHeaderClick"
+      @header-click-cus="headerClickCus"
     >
     </table-list>
 
@@ -133,7 +133,7 @@ const onSelect = (selection, row) => {
   debugger
 }
 
-const onHeaderClick = (e, val, ...param) => {
+const headerClickCus = (e, val, ...param) => {
   console.log(e)
   console.log(val)
   console.log(param)

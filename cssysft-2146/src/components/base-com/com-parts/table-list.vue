@@ -32,7 +32,8 @@
         >
           <template #header="scope">
 
-            <table-header :config="col" :scope="scope" @header-click="(e, data) => $emit('header-click', e, data)">
+<!--            @header-click-cus="(e, val) => $emit('header-click-cus', e, val)"-->
+            <table-header :config="col" :scope="scope" @header-click-cus="onHeaderClickCus" @click="onClickCeshi">
 
               <template #[col.hSlotName]>
                 <slot :name="col.hSlotName" v-bind="scope"></slot>
@@ -181,6 +182,17 @@ const props = defineProps({
     default: () => ({})
   }
 });
+
+const onHeaderClickCus = (val) => {
+  console.log(val);
+  debugger
+}
+
+const onClickCeshi = (val) => {
+  console.log(val);
+  debugger
+}
+
 
 const comMethod = inject('comMethod');
 
