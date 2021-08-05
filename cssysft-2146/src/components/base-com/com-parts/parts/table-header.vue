@@ -4,13 +4,13 @@
     <!--  @click="e => $emit('header-click-cus', e, 'hAk')"-->
     <template v-if="!config.hSlot">
 
-    <span
-      v-if="config.hAk"
-      class="red-ak"
-      @click="onclick"
-    >
-      *
-    </span>
+      <span
+        v-if="config.hAk"
+        class="red-ak"
+        @click="onclickCeshi"
+      >
+        *
+      </span>
 
       <span
         v-if="config.hIconL"
@@ -18,13 +18,13 @@
         @click="e => $emit('header-click-cus', e, 'hIconL')"
         style="padding-top: 5px;"
       >
-    </span>
+      </span>
 
       <span
         @click="e => $emit('header-click-cus', e, scope.column.label)"
       >
       {{ scope.column.label }}
-    </span>
+      </span>
 
       <span
         v-if="config.hIconR"
@@ -32,7 +32,7 @@
         @click="e => $emit('header-click-cus', e, 'hIconR')"
         style="padding-top: 5px;"
       >
-    </span>
+      </span>
     </template>
 
     <template v-else>
@@ -61,12 +61,12 @@ const props = defineProps({
   }
 });
 
-const emits = defineEmit(['header-click-cus']);
+const emits = defineEmit(['header-click-cus', 'click-ceshi']);
 
-const onclick = (val) => {
+const onclickCeshi = (val) => {
   console.log(val);
-  emits('header-click-cus', 'ceshi');
   debugger
+  emits('click-ceshi', 'ceshi');
 }
 
 </script>

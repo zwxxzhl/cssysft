@@ -33,7 +33,7 @@
           <template #header="scope">
 
 <!--            @header-click-cus="(e, val) => $emit('header-click-cus', e, val)"-->
-            <table-header :config="col" :scope="scope" @header-click-cus="onHeaderClickCus" @click="onClickCeshi">
+            <table-header :config="col" :scope="scope" @header-click-cus="onHeaderClickCus" @click-ceshi="onClickCeshi">
 
               <template #[col.hSlotName]>
                 <slot :name="col.hSlotName" v-bind="scope"></slot>
@@ -74,7 +74,7 @@
         >
           <template #header="scope">
 
-            <table-header :config="col" :scope="scope">
+            <table-header :config="col" :scope="scope" @header-click-cus="onHeaderClickCus" @click-ceshi="onClickCeshi">
 
               <template #[col.hSlotName]>
                 <slot :name="col.hSlotName" v-bind="scope"></slot>
@@ -183,7 +183,8 @@ const props = defineProps({
   }
 });
 
-const onHeaderClickCus = (val) => {
+const onHeaderClickCus = (e, val) => {
+  console.log(e);
   console.log(val);
   debugger
 }
