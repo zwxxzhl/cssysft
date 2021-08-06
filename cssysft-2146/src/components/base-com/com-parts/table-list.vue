@@ -33,7 +33,8 @@
           <template #header="scope">
 
 <!--            <table-header :config="col" :scope="scope" @header-click-cus="(e, val) => $emit('header-click-cus', e, val)">-->
-            <table-header :config="col" :scope="scope" v-bind="$attrs['header-click-cus']">
+<!--            <table-header :config="col" :scope="scope" v-bind="{onHeaderClickCus: $attrs.onHeaderClickCus}">-->
+            <table-header :config="col" :scope="scope" v-bind="{onHeaderClickCus: $attrs.onHeaderClickCus}">
 
               <template #[col.hSlotName]>
                 <slot :name="col.hSlotName" v-bind="scope"></slot>
@@ -58,7 +59,8 @@
           <template #header="scope">
 
 <!--            <table-header :config="col" :scope="scope" @header-click-cus="(e, val) => $emit('header-click-cus', e, val)">-->
-            <table-header :config="col" :scope="scope" v-bind="$attrs['header-click-cus']">
+<!--            <table-header :config="col" :scope="scope" v-bind="{onHeaderClickCus: $attrs.onHeaderClickCus}">-->
+            <table-header :config="col" :scope="scope" v-bind="{onHeaderClickCus: $attrs.onHeaderClickCus}">
 
               <template #[col.hSlotName]>
                 <slot :name="col.hSlotName" v-bind="scope"></slot>
@@ -116,7 +118,8 @@ import {
   onMounted,
   watch,
   computed,
-  defineProps, watchEffect
+  defineProps,
+  watchEffect
 } from "vue";
 
 const props = defineProps({
@@ -167,6 +170,11 @@ const props = defineProps({
   }
 });
 
+const { attrs, slots } = useContext();
+console.log('attrs');
+console.log(attrs);
+console.log('slots');
+console.log(slots);
 
 const comMethod = inject('comMethod');
 
