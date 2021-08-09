@@ -124,10 +124,9 @@ const props = defineProps({
     required: false,
     default: () => ({})
   },
-  tableData: {
-    type: Array,
-    required: false,
-    default: () => ([])
+  form: {
+    type: Object,
+    required: true
   },
   tableColumn: {
     type: Array,
@@ -202,7 +201,7 @@ const formatter = (row, column, cellValue, index) => {
 }
 
 watchEffect(() => {
-  form.value.formList = props.tableData;
+
 })
 
 computed(() => {
