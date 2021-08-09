@@ -21,6 +21,7 @@
 
     <table-list
       :size="'medium'"
+      stripe
       :table-data="list"
       :table-column="tableColumn"
       :selection-show="true"
@@ -124,6 +125,7 @@ const fetchData = (page = 1) => {
 }
 
 const sizeChange = (val) => {
+  debugger
   pageSize.value = val;
 }
 

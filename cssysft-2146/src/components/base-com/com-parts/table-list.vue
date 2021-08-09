@@ -1,5 +1,5 @@
 <template>
-  <el-form :model="form" :rules="rules" ref="refTableForm" size="mini">
+  <el-form ref="refTableForm" :model="form" :rules="rules" size="mini">
     <el-table
       ref="refTable"
       v-bind="$attrs"
@@ -32,8 +32,6 @@
         >
           <template #header="scope">
 
-<!--            <table-header :config="col" :scope="scope" @header-click-cus="(e, val) => $emit('header-click-cus', e, val)">-->
-<!--            <table-header :config="col" :scope="scope" v-bind="{onHeaderClickCus: $attrs.onHeaderClickCus}">-->
             <table-header :config="col" :scope="scope" v-bind="{onHeaderClickCus: $attrs.onHeaderClickCus}">
 
               <template #[col.hSlotName]>
@@ -58,8 +56,6 @@
         >
           <template #header="scope">
 
-<!--            <table-header :config="col" :scope="scope" @header-click-cus="(e, val) => $emit('header-click-cus', e, val)">-->
-<!--            <table-header :config="col" :scope="scope" v-bind="{onHeaderClickCus: $attrs.onHeaderClickCus}">-->
             <table-header :config="col" :scope="scope" v-bind="{onHeaderClickCus: $attrs.onHeaderClickCus}">
 
               <template #[col.hSlotName]>
@@ -91,14 +87,13 @@
 
     <el-pagination
       v-if="paginationShow"
+      v-bind="$attrs"
       :current-page="currentPage"
       :total="total"
       :page-size="pageSize"
       :page-sizes="[5, 10, 20, 30, 40, 50, 100]"
       style="padding: 30px 0; text-align: right"
-      layout="sizes, prev, pager, next, jumper, ->, total, slot"
-      @current-change="$emit('current-change', $event)"
-      @size-change="$emit('size-change', $event)">
+      layout="sizes, prev, pager, next, jumper, ->, total, slot">
     </el-pagination>
   </el-form>
 </template>
@@ -113,6 +108,7 @@ import {
   reactive,
   useContext,
   defineEmit,
+  defineComponent,
   inject,
   getCurrentInstance,
   onMounted,
@@ -123,6 +119,11 @@ import {
 } from "vue";
 
 const props = defineProps({
+  rules: {
+    type: Object,
+    required: false,
+    default: () => ({})
+  },
   tableData: {
     type: Array,
     required: false,
@@ -162,12 +163,11 @@ const props = defineProps({
     type: Number,
     required: false,
     default: 10
-  },
-  rules: {
-    type: Object,
-    required: false,
-    default: () => ({})
   }
+});
+
+defineComponent({
+  inheritAttrs: false
 });
 
 const { attrs, slots } = useContext();
@@ -181,6 +181,10 @@ const comMethod = inject('comMethod');
 const refTable = ref(null);
 const refTableForm = ref(null);
 const form = ref({formList: []});
+
+onMounted(() => {
+  console.log(refTableForm.value);
+})
 
 console.log("comMethod");
 console.log(comMethod);
