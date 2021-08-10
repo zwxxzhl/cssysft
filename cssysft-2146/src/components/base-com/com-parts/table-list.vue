@@ -180,7 +180,6 @@ const comMethod = inject('comMethod');
 
 const refTable = ref(null);
 const refTableForm = ref(null);
-const form = ref({formList: []});
 
 onMounted(() => {
   console.log(refTableForm.value);

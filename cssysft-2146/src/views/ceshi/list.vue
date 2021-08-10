@@ -22,7 +22,7 @@
     <table-list
       :size="'medium'"
       stripe
-      :table-data="list"
+      :form="form"
       :table-column="tableColumn"
       :selection-show="true"
       :pagination-show="true"
@@ -61,7 +61,7 @@ provide('comMethod', {
 });
 
 // form组件
-const form = ref({});
+const form = ref({formList: []});
 const formRow = reactive([
   [
     {span: 8, dom: 'input', type: 'text', label: '标题：', model: 'title', change: 'title-change'},
@@ -95,7 +95,6 @@ const onSelectChange = (val) => {
 
 // table组件
 let listLoading = ref(true);
-let list = ref([]);
 let total = ref(0);
 let currentPage = ref(1);
 let pageSize = ref(10);
@@ -115,7 +114,7 @@ const fetchData = (page = 1) => {
   currentPage.value = page;
 
   setTimeout(() => {
-    list.value = [
+    form.value.formList = [
       {depName: '区庄服务部', name: '张三', no: '0132107190002', date: '1627097163637'},
       {depName: '区庄服务部', name: '张会员', no: '0132107190001', date: '1627097163637'}
     ];
