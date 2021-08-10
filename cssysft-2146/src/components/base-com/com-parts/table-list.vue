@@ -3,8 +3,8 @@
     <el-table
       ref="refTable"
       v-bind="$attrs"
-      :data="form.formList"
-    >
+      :data="form.formList">
+
       <template v-if="selectionShow">
         <el-table-column type="selection" header-align="center" align="center" fixed="left"></el-table-column>
       </template>
@@ -28,8 +28,8 @@
           :prop="col.prop || ''"
           :label="col.label || ''"
           :column-key="index.toString()"
-          :formatter="formatter"
-        >
+          :formatter="formatter">
+
           <template #header="scope">
 
             <table-header :config="col" :scope="scope" v-bind="{onHeaderClickCus: $attrs.onHeaderClickCus}">
@@ -52,8 +52,8 @@
           :min-width="col.minWidth || ''"
           :prop="col.prop || ''"
           :label="col.label || ''"
-          :column-key="index.toString()"
-        >
+          :column-key="index.toString()">
+
           <template #header="scope">
 
             <table-header :config="col" :scope="scope" v-bind="{onHeaderClickCus: $attrs.onHeaderClickCus}">
@@ -119,14 +119,15 @@ import {
 } from "vue";
 
 const props = defineProps({
+  form: {
+    type: Object,
+    required: true,
+    default: () => ({formList: []})
+  },
   rules: {
     type: Object,
     required: false,
     default: () => ({})
-  },
-  form: {
-    type: Object,
-    required: true
   },
   tableColumn: {
     type: Array,
