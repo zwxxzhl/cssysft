@@ -7,8 +7,7 @@
     :type="config.type"
     :value-format="config.valueFormat"
     :placeholder="config.placeholder"
-    :disabled="config.disabled"
-  >
+    :disabled="config.disabled">
   </el-date-picker>
 
 </template>

@@ -12,7 +12,7 @@
       <template v-if="indexShow">
         <el-table-column type="index" label="序号" width="55" header-align="center" align="center">
           <template #default="scope">
-            {{ (currentPage - 1) * pageSize + scope.$index + 1 }}
+<!--            {{ (currentPage - 1) * pageSize + scope.$index + 1 }}-->
           </template>
         </el-table-column>
       </template>
@@ -69,10 +69,14 @@
           <template #default="scope">
 
             <template v-if="!col.rowslot">
-              <div v-if="col.dom === 'checkbox'">
-                <el-checkbox v-model="scope.row[col.prop]" :true-label="1" :false-label="0" disabled></el-checkbox>
-              </div>
+
+              <zwx-form-item :config="col" v-if="'checkbox' === col.dom">
+                <zwx-checkbox :form="scope.row" :config="col" @change="val => col.change && $emit(col.change, val)"></zwx-checkbox>
+              </zwx-form-item>
+
+
               <span v-else>{{ scope.row[col.prop] }}</span>
+
             </template>
 
             <template v-else>
@@ -85,21 +89,29 @@
 
     </el-table>
 
-    <el-pagination
+<!--    <el-pagination
       v-if="paginationShow"
-      v-bind="$attrs"
       :current-page="currentPage"
       :total="total"
       :page-size="pageSize"
       :page-sizes="[5, 10, 20, 30, 40, 50, 100]"
       style="padding: 30px 0; text-align: right"
-      layout="sizes, prev, pager, next, jumper, ->, total, slot">
-    </el-pagination>
+      layout="sizes, prev, pager, next, jumper, ->, total, slot"
+      @current-change="$emit('page-current-change', $event)"
+      @size-change="$emit('size-change', $event)">
+    </el-pagination>-->
   </el-form>
 </template>
 
 <script setup>
 import TableHeader from "./parts/table-header.vue";
+import zwxSelect from '../com-el/zwx-select.vue';
+import zwxFormItem from '../com-el/zwx-form-item.vue';
+import ZwxCascader from "../com-el/zwx-cascader.vue";
+import ZwxDatePicker from "../com-el/zwx-date-picker.vue";
+import ZwxInput from "../com-el/zwx-input.vue";
+import ZwxCheckbox from "../com-el/zwx-checkbox.vue";
+import ZwxRadioGroup from "../com-el/zwx-radio-group.vue";
 
 import {
   ref,

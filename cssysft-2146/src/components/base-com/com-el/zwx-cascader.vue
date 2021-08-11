@@ -9,8 +9,7 @@
     :clearable="config.clearable"
     :filterable="config.filterable"
     :placeholder="config.placeholder"
-    :disabled="config.disabled"
-  >
+    :disabled="config.disabled">
   </el-cascader>
 
 </template>

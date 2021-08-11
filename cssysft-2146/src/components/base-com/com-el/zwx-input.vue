@@ -7,8 +7,7 @@
     :type="config.type"
     :rows="config.rows"
     :placeholder="config.placeholder"
-    :disabled="config.disabled"
-  >
+    :disabled="config.disabled">
   </el-input>
 
 </template>

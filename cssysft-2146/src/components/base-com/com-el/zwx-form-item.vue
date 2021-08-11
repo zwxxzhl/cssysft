@@ -3,9 +3,11 @@
   <el-form-item
     :label="config.label"
     :prop="config.prop"
+    :rules="config.rules"
     :label-width="config.labelWidth || '120px'"
     :size="config.size"
-  >
+    :show-message="config.showMessage"
+    :inline-message="config.inlineMessage">
 
     <slot></slot>
 

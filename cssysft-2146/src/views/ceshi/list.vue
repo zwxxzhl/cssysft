@@ -13,10 +13,10 @@
     <zwx-form
       :form="form"
       :form-row="formRow"
+      @select="onSelect"
       @title-change="onTitleChange"
       @content-change="onContentChange"
-      @select-change="onSelectChange"
-    >
+      @select-change="onSelectChange">
     </zwx-form>
 
     <zwx-table-list
@@ -25,16 +25,27 @@
       :form="form"
       :table-column="tableColumn"
       :selection-show="true"
+      @select="onSelect"
+      @header-click-cus="headerClickCus"
       :pagination-show="true"
       :current-page="currentPage"
       :total="total"
       :page-size="pageSize"
-      @select="onSelect"
-      @current-change="fetchData"
-      @size-change="sizeChange"
-      @header-click-cus="headerClickCus"
-    >
+      @page-current-change="fetchData"
+      @size-change="sizeChange">
     </zwx-table-list>
+
+    <el-pagination
+      :current-page="currentPage"
+      :total="total"
+      :page-size="pageSize"
+      :page-sizes="[5, 10, 20, 30, 40, 50, 100]"
+      @select="onSelect"
+      style="padding: 30px 0; text-align: right"
+      layout="sizes, prev, pager, next, jumper, ->, total, slot"
+      @current-change="fetchData"
+      @size-change="sizeChange">
+    </el-pagination>
 
     <dialog-com ref="refDialogCom" title="验光录入" width="50%" top="10vh" :heightPercent="0.6" :footer="false">
       <template #content="sp">
@@ -103,6 +114,9 @@ let tableColumn = reactive([
   {prop: 'name', label: '姓名', width: '90'},
   {prop: 'no', label: '单号'},
   {prop: 'date', label: '开单日期', minWidth: '140', formatter: 'dateYMDHmsFormat'},
+
+  {prop: 'isDel', label: '有效',
+    rowslot: true, dom: 'checkbox', model: 'isDel', trueLabel: 1, falseLabel: 0, disabled: true}
 ]);
 
 let searchObj = ref({});
@@ -110,13 +124,13 @@ const multipleSelection = ref([]);
 
 const refDialogCom = ref(null);
 
-const fetchData = (page = 1) => {
+const fetchData = (page = 1) => {debugger
   currentPage.value = page;
 
   setTimeout(() => {
     form.value.formList = [
-      {depName: '区庄服务部', name: '张三', no: '0132107190002', date: '1627097163637'},
-      {depName: '区庄服务部', name: '张会员', no: '0132107190001', date: '1627097163637'}
+      {depName: '区庄服务部', name: '张三', no: '0132107190002', date: '1627097163637', isDel: 1},
+      {depName: '区庄服务部', name: '张会员', no: '0132107190001', date: '1627097163637', isDel: 0}
     ];
     total.value = 2;
     listLoading.value = false;

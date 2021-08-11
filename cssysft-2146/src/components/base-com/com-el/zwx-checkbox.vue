@@ -7,8 +7,8 @@
     :border="config.border"
     :true-label="config.trueLabel"
     :false-label="config.falseLabel"
-  >
-    {{ config.show }}
+    :disabled=config.disabled>
+    {{ config.checkboxLabel }}
   </el-checkbox>
 
 </template>

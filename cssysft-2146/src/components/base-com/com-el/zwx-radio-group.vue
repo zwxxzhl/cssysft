@@ -4,15 +4,16 @@
     v-model="form[config.model]"
     :class="config.class"
     :size="config.size"
-    :disabled="config.disabled"
-  >
+    :disabled="config.disabled">
+
     <el-radio
       v-for="item in config.options"
       :key="item[config.key]"
       :label="item[config.value]"
-      :border="config.border"
-    >
+      :border="config.border">
+
       {{ item[config.label] }}
+
     </el-radio>
   </el-radio-group>
 

@@ -8,8 +8,8 @@
     :filterable="config.filterable"
     :multiple="config.multiple"
     :placeholder="config.placeholder"
-    :disabled="config.disabled"
-  >
+    :disabled="config.disabled">
+
     <el-option
       v-for="item in config.options"
       :key="item[config.opKey]"
@@ -18,6 +18,7 @@
               || (item[config.opKey] + '(' + item[config.opLabel] + ')' )"
       :value="item[config.opValue]">
     </el-option>
+
   </el-select>
 
 </template>
