@@ -10,16 +10,16 @@
     </el-form>
 
 
-    <form-mu
+    <zwx-form
       :form="form"
       :form-row="formRow"
       @title-change="onTitleChange"
       @content-change="onContentChange"
       @select-change="onSelectChange"
     >
-    </form-mu>
+    </zwx-form>
 
-    <table-list
+    <zwx-table-list
       :size="'medium'"
       stripe
       :form="form"
@@ -34,7 +34,7 @@
       @size-change="sizeChange"
       @header-click-cus="headerClickCus"
     >
-    </table-list>
+    </zwx-table-list>
 
     <dialog-com ref="refDialogCom" title="验光录入" width="50%" top="10vh" :heightPercent="0.6" :footer="false">
       <template #content="sp">
@@ -46,8 +46,8 @@
 
 <script setup>
 import DialogCom from "../../components/DialogCom/dialog_com.vue";
-import TableList from "../../components/base-com/com-parts/table-list.vue";
-import FormMu from "../../components/base-com/com-parts/form-mu.vue";
+import ZwxTableList from "../../components/base-com/com-parts/zwx-table-list.vue";
+import ZwxForm from "../../components/base-com/com-parts/zwx-form.vue";
 
 import comUtils from "../../utils/comUtils";
 

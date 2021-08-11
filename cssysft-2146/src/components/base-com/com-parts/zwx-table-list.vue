@@ -58,8 +58,8 @@
 
             <table-header :config="col" :scope="scope" v-bind="{onHeaderClickCus: $attrs.onHeaderClickCus}">
 
-              <template #[col.hSlotName]>
-                <slot :name="col.hSlotName" v-bind="scope"></slot>
+              <template #[col.headerSlotName]>
+                <slot :name="col.headerSlotName" v-bind="scope"></slot>
               </template>
 
             </table-header>
@@ -76,7 +76,7 @@
             </template>
 
             <template v-else>
-              <slot :name="col.prop.toLowerCase()+'row'" v-bind="this"></slot>
+              <slot :name="col.rowSlotName" v-bind="this"></slot>
             </template>
 
           </template>
