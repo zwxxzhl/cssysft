@@ -13,7 +13,6 @@
     <zwx-form
       :form="form"
       :form-row="formRow"
-      @select="onSelect"
       @title-change="onTitleChange"
       @content-change="onContentChange"
       @select-change="onSelectChange">
@@ -27,6 +26,7 @@
       :selection-show="true"
       @select="onSelect"
       @header-click-cus="headerClickCus"
+      @is-del-change="onIsDelChange"
       :pagination-show="true"
       :current-page="currentPage"
       :total="total"
@@ -34,18 +34,6 @@
       @page-current-change="fetchData"
       @size-change="sizeChange">
     </zwx-table-list>
-
-    <el-pagination
-      :current-page="currentPage"
-      :total="total"
-      :page-size="pageSize"
-      :page-sizes="[5, 10, 20, 30, 40, 50, 100]"
-      @select="onSelect"
-      style="padding: 30px 0; text-align: right"
-      layout="sizes, prev, pager, next, jumper, ->, total, slot"
-      @current-change="fetchData"
-      @size-change="sizeChange">
-    </el-pagination>
 
     <dialog-com ref="refDialogCom" title="验光录入" width="50%" top="10vh" :heightPercent="0.6" :footer="false">
       <template #content="sp">
@@ -115,8 +103,7 @@ let tableColumn = reactive([
   {prop: 'no', label: '单号'},
   {prop: 'date', label: '开单日期', minWidth: '140', formatter: 'dateYMDHmsFormat'},
 
-  {prop: 'isDel', label: '有效',
-    rowslot: true, dom: 'checkbox', model: 'isDel', trueLabel: 1, falseLabel: 0, disabled: true}
+  {prop: 'isDel', label: '有效', dom: 'checkbox', domObj: {labelWidth: '0px', model: 'isDel', trueLabel: 1, falseLabel: 0, change: 'is-del-change'}}
 ]);
 
 let searchObj = ref({});
@@ -124,7 +111,7 @@ const multipleSelection = ref([]);
 
 const refDialogCom = ref(null);
 
-const fetchData = (page = 1) => {debugger
+const fetchData = (page = 1) => {
   currentPage.value = page;
 
   setTimeout(() => {
@@ -152,6 +139,11 @@ const headerClickCus = (e, val, ...param) => {
   console.log(e)
   console.log(val)
   console.log(param)
+  debugger
+}
+
+const onIsDelChange = (val) => {
+  console.log(val)
   debugger
 }
 

@@ -12,7 +12,7 @@
       <template v-if="indexShow">
         <el-table-column type="index" label="序号" width="55" header-align="center" align="center">
           <template #default="scope">
-<!--            {{ (currentPage - 1) * pageSize + scope.$index + 1 }}-->
+            {{ (currentPage - 1) * pageSize + scope.$index + 1 }}
           </template>
         </el-table-column>
       </template>
@@ -70,10 +70,9 @@
 
             <template v-if="!col.rowslot">
 
-              <zwx-form-item :config="col" v-if="'checkbox' === col.dom">
-                <zwx-checkbox :form="scope.row" :config="col" @change="val => col.change && $emit(col.change, val)"></zwx-checkbox>
+              <zwx-form-item :config="col.domObj" v-if="'checkbox' === col.dom">
+                <zwx-checkbox :form="scope.row" :config="col.domObj" @change="val => col.domObj.change && $emit(col.domObj.change, val)"></zwx-checkbox>
               </zwx-form-item>
-
 
               <span v-else>{{ scope.row[col.prop] }}</span>
 
@@ -89,7 +88,8 @@
 
     </el-table>
 
-<!--    <el-pagination
+    <!-- @current-change 需重命名，与 el-table 中事件冲突；另选 el-input 框中数字会触发 @select 事件，也与 el-table 中事件冲突，无法拦截，混合组件肯定冲突，开发时需要注意 -->
+    <el-pagination
       v-if="paginationShow"
       :current-page="currentPage"
       :total="total"
@@ -99,14 +99,14 @@
       layout="sizes, prev, pager, next, jumper, ->, total, slot"
       @current-change="$emit('page-current-change', $event)"
       @size-change="$emit('size-change', $event)">
-    </el-pagination>-->
+    </el-pagination>
   </el-form>
 </template>
 
 <script setup>
 import TableHeader from "./parts/table-header.vue";
-import zwxSelect from '../com-el/zwx-select.vue';
 import zwxFormItem from '../com-el/zwx-form-item.vue';
+import zwxSelect from '../com-el/zwx-select.vue';
 import ZwxCascader from "../com-el/zwx-cascader.vue";
 import ZwxDatePicker from "../com-el/zwx-date-picker.vue";
 import ZwxInput from "../com-el/zwx-input.vue";
