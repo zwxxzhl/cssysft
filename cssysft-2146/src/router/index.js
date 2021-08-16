@@ -20,9 +20,9 @@ const whiteList = ['/login', '/auth-redirect'] // no redirect whitelist
 
 let flag = 0
 router.beforeEach(async(to, from, next) => {
-  next()
+  // next()
 
-  /*// start progress bar
+  // start progress bar
   NProgress.start()
 
   // determine whether the user has logged in
@@ -58,7 +58,7 @@ router.beforeEach(async(to, from, next) => {
       }
     }
   } else {
-    /!* has no token*!/
+    /* has no token*/
 
     let arr = whiteList.filter(f => to.path.indexOf(f) !== -1)
     if (arr.length > 0) {
@@ -69,7 +69,7 @@ router.beforeEach(async(to, from, next) => {
       next(`${PRE_URL}/login?redirect=${to.path}`)
       NProgress.done()
     }
-  }*/
+  }
 })
 
 router.afterEach(() => {

@@ -60,7 +60,7 @@ public class UserController {
         return R.ok().data("items", pageModel.getRecords()).data("total", pageModel.getTotal());
     }
 
-    @ApiOperation(value = "新增管理用户")
+    @ApiOperation(value = "新增用户")
     @PostMapping("save")
     public R save(@RequestBody User user) {
         user.setPassword(MD5.encrypt(user.getPassword()));

@@ -25,7 +25,6 @@ public class CodeGenerator {
     public static String scanner(String tip) {
         Scanner scanner = new Scanner(System.in);
         StringBuilder help = new StringBuilder();
-        // 输入模块名：aclservice
         help.append("请输入" + tip + "：");
         System.out.println(help.toString());
         if (scanner.hasNext()) {
@@ -43,8 +42,8 @@ public class CodeGenerator {
 
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
+        // 定位到当前目录路径 F:\vscodeproject\cssys\cssysft\cssysbk-2146
         String projectPathTemp = System.getProperty("user.dir");
-        // F:\vscodeproject\cssys\cssysft\cssysbk-2146
         // F:\vscodeproject\cssys\cssysft\cssysbk-2146\service\service_acl\src
         String projectPath = projectPathTemp + "/service/service_acl";
 
@@ -56,7 +55,7 @@ public class CodeGenerator {
 
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://localhost:3306/acldb?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8");
+        dsc.setUrl("jdbc:mysql://121.8.142.154:3306/dispatchs?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8");
         // dsc.setSchemaName("public");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
@@ -66,7 +65,7 @@ public class CodeGenerator {
         // 包配置
         PackageConfig pc = new PackageConfig();
         pc.setModuleName(scanner("模块名"));
-        // 输入模块名：aclservice
+        // todo 输入模块名 + 下面的 parent 变为： aclservice --> com.atguigu.aclservice
         pc.setParent("com.atguigu");
         mpg.setPackageInfo(pc);
 
@@ -141,7 +140,8 @@ public class CodeGenerator {
         // strategy.setSuperEntityColumns("id");
         strategy.setInclude(scanner("表名，多个英文逗号分割").split(","));
         strategy.setControllerMappingHyphenStyle(true);
-        strategy.setTablePrefix(pc.getModuleName() + "_");
+        // todo 去掉表名前缀： acl_dep --> dep
+        strategy.setTablePrefix("acl_");
         mpg.setStrategy(strategy);
         // 默认引擎不是 velocity 时，需要设置模板引擎
         // mpg.setTemplateEngine(new FreemarkerTemplateEngine());
