@@ -41,8 +41,8 @@
 
 <script setup>
 import DialogCom from "../../../components/DialogCom/dialog_com.vue";
-import ZwxTableMu from "../../../components/base-com/com-parts/zwx-table-list.vue";
-import ZwxFormMu from "../../../components/base-com/com-parts/zwx-form.vue";
+import ZwxTableMu from "../../../components/base-com/com-parts/zwx-table-mu.vue";
+import ZwxFormMu from "../../../components/base-com/com-parts/zwx-form-mu.vue";
 import ZwxButtonMu from "../../../components/base-com/com-parts/zwx-button-mu.vue";
 
 import comCfg from "../../../components/base-com/com-config/com-config.js";

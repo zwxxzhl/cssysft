@@ -10,11 +10,11 @@ export default {
             params: searchObj
         })
     },
-    select(id) {
+    select(params) {
         return request({
             url: `${api_name}/select`,
             method: "get",
-            params: { id }
+            params: params
         })
     },
     update(form) {

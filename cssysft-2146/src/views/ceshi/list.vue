@@ -45,8 +45,8 @@
 
 <script setup>
 import DialogCom from "../../components/DialogCom/dialog_com.vue";
-import ZwxTableList from "../../components/base-com/com-parts/zwx-table-list.vue";
-import ZwxForm from "../../components/base-com/com-parts/zwx-form.vue";
+import ZwxTableList from "../../components/base-com/com-parts/zwx-table-mu.vue";
+import ZwxForm from "../../components/base-com/com-parts/zwx-form-mu.vue";
 
 import comUtils from "../../utils/comUtils";
 
