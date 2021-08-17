@@ -88,7 +88,7 @@
 
     </el-table>
 
-    <!-- @current-change 需重命名，与 el-table 中事件冲突；另选 el-input 框中数字会触发 @select 事件，也与 el-table 中事件冲突，无法拦截，混合组件肯定冲突，开发时需要注意 -->
+    <!-- @current-change 需重命名，与 el-table 中事件冲突；另选 el-input 框中数字会触发 @select 事件，也与 el-table 中事件冲突，无法拦截。混合组件肯定冲突，开发时需要注意 -->
     <el-pagination
       v-if="paginationShow"
       :current-page="currentPage"

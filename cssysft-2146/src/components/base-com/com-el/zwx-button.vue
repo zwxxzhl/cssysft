@@ -1,14 +1,19 @@
 <template>
 
-  <el-input
-    v-model="form[config.model]"
+  <el-button
     :class="config.class"
     :size="config.size"
     :type="config.type"
-    :rows="config.rows"
-    :placeholder="config.placeholder"
-    :disabled="config.disabled">
-  </el-input>
+    :plain="config.plain"
+    :round="config.round"
+    :circle="config.circle"
+    :loading="config.loading"
+    :disabled="config.disabled"
+    :icon="config.icon">
+
+    {{ config.label }}
+
+  </el-button>
 
 </template>
 
@@ -21,10 +26,6 @@ const props = defineProps({
   config: {
     type: Object,
     required: true
-  },
-  form: {
-    type: Object,
-    required: true,
   }
 });
 

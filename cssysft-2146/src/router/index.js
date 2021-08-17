@@ -20,6 +20,7 @@ const whiteList = ['/login', '/auth-redirect'] // no redirect whitelist
 
 let flag = 0
 router.beforeEach(async(to, from, next) => {
+  // 封装测试
   // next()
 
   // start progress bar

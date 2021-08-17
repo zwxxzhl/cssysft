@@ -43,7 +43,7 @@ public class BusTaskFormController {
     }
 
     @ApiOperation(value = "保存任务表单")
-    @PutMapping("save")
+    @PostMapping("save")
     public R save(@RequestBody JSONObject params) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.selectByUsername(username);

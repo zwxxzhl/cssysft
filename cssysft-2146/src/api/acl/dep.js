@@ -1,18 +1,18 @@
 import request from '@/utils/request'
 
-const api_name = '/admin/acl/bustaskform'
+const api_name = '/admin/acl/dep'
 
 export default {
-    selectTree(procinstId){
+    page(page, limit, searchObj) {
         return request({
-            url: `${api_name}/selectTree`,
-            method: "get",
-            params: { procinstId }
+            url: `${api_name}/${page}/${limit}`,
+            method: 'get',
+            params: searchObj
         })
     },
-    find(id) {
+    select(id) {
         return request({
-            url: `${api_name}/find`,
+            url: `${api_name}/select`,
             method: "get",
             params: { id }
         })
