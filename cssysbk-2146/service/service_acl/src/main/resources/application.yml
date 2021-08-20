@@ -11,10 +11,10 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     # url: jdbc:mysql://localhost:3306/acldb
-    url: jdbc:mysql://localhost:3306/dispatchs?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true
+    url: jdbc:mysql://121.8.142.154:3306/dispatchs?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true
     username: root
     # localhost Mysql_123456
-    password: root
+    password: vscbqnHWMI8Z032t
 
   # redis连接
   redis:

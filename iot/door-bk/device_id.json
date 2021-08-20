@@ -1,0 +1,16 @@
+{
+  "productKey": "a19NUVLGQcS",
+  "deviceName": "MQTT_01",
+  "productSecret":"BCF1D1A84BD286B06952AE9E417A15A3DDC8D57B",
+  "deviceSecret": "d581731eda9e40745d89f47fce58b3f5",
+  "subDevice": [
+    {
+      "productKey": "",
+      "deviceName": ""
+    },
+    {
+      "productKey": "",
+      "deviceName": ""
+    }
+  ]
+}
