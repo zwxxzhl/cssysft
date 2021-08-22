@@ -25,7 +25,7 @@ public class MqttSample extends BaseSample {
     public void publish() {
         MqttPublishRequest request = new MqttPublishRequest();
         // topic 用户根据实际场景填写
-        request.topic = "/" + productKey + "/" + deviceName + "/user/update";
+        request.topic = "/sys/" + productKey + "/" + deviceName + "/thing/event/property/post";
         /**
          * 订阅回复的 replyTopic
          * 如果业务有相应的响应需求，可以设置 replyTopic，且 isRPC=true
@@ -67,7 +67,7 @@ public class MqttSample extends BaseSample {
     public void subscribe() {
         MqttSubscribeRequest request = new MqttSubscribeRequest();
         // topic 用户根据实际场景填写
-        request.topic = "/" + productKey + "/" + deviceName + "/user/get";
+        request.topic = "/sys/" + productKey + "/" + deviceName + "/thing/service/property/set";
         request.isSubscribe = true;
         LinkKit.getInstance().subscribe(request, new IConnectSubscribeListener() {
             @Override

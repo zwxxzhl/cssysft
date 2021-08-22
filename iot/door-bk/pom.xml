@@ -25,11 +25,24 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.aliyun.alink.linksdk</groupId>
             <artifactId>iot-linkkit-java</artifactId>
             <version>1.2.0.1</version>
             <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-iot</artifactId>
+            <version>7.17.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-core</artifactId>
+            <version>4.5.6</version>
         </dependency>
 
         <dependency>
