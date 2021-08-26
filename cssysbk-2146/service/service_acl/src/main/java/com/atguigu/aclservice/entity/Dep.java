@@ -1,5 +1,6 @@
 package com.atguigu.aclservice.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -32,13 +33,11 @@ public class Dep implements Serializable {
     /**
      * 部门名称
      */
-    @TableField("depName")
     private String depName;
 
     /**
      * 部门编码
      */
-    @TableField("depNo")
     private String depNo;
 
     /**
@@ -59,6 +58,7 @@ public class Dep implements Serializable {
     /**
      * 创建时间
      */
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime gmtCreate;
 
     /**
@@ -74,6 +74,7 @@ public class Dep implements Serializable {
     /**
      * 更新时间
      */
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime gmtModified;
 
 

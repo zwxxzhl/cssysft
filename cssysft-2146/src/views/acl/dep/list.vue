@@ -8,7 +8,7 @@
 
     <zwx-button-mu
       :button-row="buttonRow"
-      @search-click="onSearch">
+      @search-click="onSearch()">
     </zwx-button-mu>
 
     <el-button type="primary" icon="el-icon-search" @click="onSearch()">查询</el-button>
@@ -95,7 +95,7 @@ const onSearch = (page = 1) => {
   currentPage.value = page;
 
   depApi
-    .page(page.value, pageSize.value, search)
+    .page(currentPage.value, pageSize.value, search)
     .then((res) => {
       form.value.formList = res.data.items;
       total.value = res.data.total;

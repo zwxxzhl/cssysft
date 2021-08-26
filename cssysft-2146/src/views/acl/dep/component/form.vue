@@ -1,12 +1,12 @@
 <template>
 
-  <zwx-form
+  <zwx-form-mu
     ref="refForm"
     :form="form"
     :form-row="formRow"
     :rules="rules"
     @dep-no-change="onDepNoChange">
-  </zwx-form>
+  </zwx-form-mu>
 
   <el-row class="dialog-bottom" type="flex" justify="center">
     <el-col :span="4">

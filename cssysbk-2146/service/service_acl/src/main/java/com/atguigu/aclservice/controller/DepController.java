@@ -61,10 +61,10 @@ public class DepController {
             wrapper.eq("id", queryVo.getId());
         }
         if(!StringUtils.isEmpty(queryVo.getDepName())) {
-            wrapper.like("depName", queryVo.getDepName());
+            wrapper.like("dep_name", queryVo.getDepName());
         }
         if(!StringUtils.isEmpty(queryVo.getDepNo())) {
-            wrapper.eq("depNo", queryVo.getDepNo());
+            wrapper.eq("dep_no", queryVo.getDepNo());
         }
 
         IPage<Dep> pageModel = depService.page(pageParam, wrapper);
@@ -79,10 +79,10 @@ public class DepController {
             wrapper.eq("id", queryVo.getId());
         }
         if(!StringUtils.isEmpty(queryVo.getDepName())) {
-            wrapper.like("depName", queryVo.getDepName());
+            wrapper.like("dep_name", queryVo.getDepName());
         }
         if(!StringUtils.isEmpty(queryVo.getDepNo())) {
-            wrapper.eq("depNo", queryVo.getDepNo());
+            wrapper.eq("dep_no", queryVo.getDepNo());
         }
 
         List<Dep> list = depService.list(wrapper);
