@@ -1,5 +1,5 @@
 <template>
-  <el-form :model="form" :rules="rules" ref="refForm" :size="size" :disabled="disabled">
+  <el-form ref="refForm" :model="form" :rules="rules" :size="size" :disabled="disabled">
 
     <template v-for="(row, idx) in formRow" :key="idx">
       <el-row class="op-flex-center flex-warp" type="flex">
@@ -68,8 +68,8 @@
 </template>
 
 <script setup>
-import zwxSelect from '../com-el/zwx-select.vue';
-import zwxFormItem from '../com-el/zwx-form-item.vue';
+import ZwxSelect from '../com-el/zwx-select.vue';
+import ZwxFormItem from '../com-el/zwx-form-item.vue';
 import ZwxCascader from "../com-el/zwx-cascader.vue";
 import ZwxDatePicker from "../com-el/zwx-date-picker.vue";
 import ZwxInput from "../com-el/zwx-input.vue";
@@ -77,9 +77,12 @@ import ZwxCheckbox from "../com-el/zwx-checkbox.vue";
 import ZwxRadioGroup from "../com-el/zwx-radio-group.vue";
 
 import {
-  ref,
-  defineProps
+  defineComponent, defineProps, ref, useContext
 } from "vue";
+
+defineComponent({
+  inheritAttrs: false
+});
 
 const props = defineProps({
   form: {
@@ -107,9 +110,13 @@ const props = defineProps({
   }
 });
 
+const {expose} = useContext();
+
 const refForm = ref(null);
 
-
+expose({
+  refForm
+});
 
 </script>
 

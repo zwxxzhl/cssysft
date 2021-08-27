@@ -3,12 +3,14 @@
 
     <zwx-form-mu
       :form="search"
-      :form-row="searchRow">
+      :form-row="searchRow"
+      @dep-name-change="onDepNameChange">
     </zwx-form-mu>
 
     <zwx-button-mu
       :button-row="buttonRow"
-      @search-click="onSearch()">
+      @search-click="onSearch()"
+      @add-click="onAdd">
     </zwx-button-mu>
 
     <el-button type="primary" icon="el-icon-search" @click="onSearch()">查询</el-button>
@@ -21,36 +23,37 @@
       :table-column="tableColumn"
       :selection-show="true"
       @select="onSelect"
-      @header-click-cus="headerClickCus"
+      @header-event="onHeaderEvent"
       :pagination-show="true"
       :current-page="currentPage"
       :total="total"
       :page-size="pageSize"
       @page-current-change="onSearch"
-      @size-change="sizeChange">
+      @size-change="onSizeChange">
     </zwx-table-mu>
 
-    <dialog-com ref="refDialogCom" title="验光录入" width="50%" top="10vh" :heightPercent="0.6" :footer="false">
+    <dialog-mu ref="refDialogCom" title="部门表单" width="50%" top="10vh" :heightPercent="0.6" :footer="false">
       <template #content="sp">
-        <span>验光录入</span>
+        <dep-form ref="refDepForm"></dep-form>
       </template>
-    </dialog-com>
+    </dialog-mu>
 
   </div>
 </template>
 
 <script setup>
-import DialogCom from "../../../components/DialogCom/dialog_com.vue";
+import DialogMu from "../../../components/DialogCom/dialog-mu.vue";
 import ZwxTableMu from "../../../components/base-com/com-parts/zwx-table-mu.vue";
 import ZwxFormMu from "../../../components/base-com/com-parts/zwx-form-mu.vue";
 import ZwxButtonMu from "../../../components/base-com/com-parts/zwx-button-mu.vue";
+import DepForm from "./component/form.vue";
 
 import comCfg from "../../../components/base-com/com-config/com-config.js";
 import comUtils from "../../../utils/comUtils.js";
 import depApi from "../../../api/acl/dep.js";
 
 import {ref, onMounted, reactive, getCurrentInstance, provide, useContext} from "vue";
-import activitiApi from "../../../api/acl/activiti";
+import enums from "../../../utils/enums";
 
 const gp = getCurrentInstance().appContext.config.globalProperties;
 
@@ -62,7 +65,7 @@ provide('comMethod', {
 let search = reactive({});
 const searchRow = reactive([
   [
-    {span: 6, dom: 'input', type: 'text', model: 'depName', placeholder: '部门名称'},
+    {span: 6, dom: 'input', type: 'text', model: 'depName', placeholder: '部门名称', change: 'dep-name-change'},
     {span: 6, dom: 'input', type: 'text', model: 'depNo', placeholder: '部门编码'}
   ]
 ]);
@@ -78,7 +81,7 @@ const buttonRow = reactive([
 
 const form = ref({formList: []});
 let tableColumn = reactive([
-  {prop: 'depName', label: '部门', hAk: true},
+  {prop: 'depName', label: '部门', headerAk: true, headerEvent: 'header-event'},
   {prop: 'depNo', label: '编码', width: '90'},
   {prop: 'sequence', label: '顺序'}
 ]);
@@ -90,6 +93,13 @@ let pageSize = ref(10);
 const multipleSelection = ref([]);
 
 const refDialogCom = ref(null);
+const refDepForm = ref(null);
+
+/* ============================================= */
+
+const onAdd = () => {
+  refDialogCom.value.open(null, refDepForm.value, enums.formType.add);
+}
 
 const onSearch = (page = 1) => {
   currentPage.value = page;
@@ -104,7 +114,7 @@ const onSearch = (page = 1) => {
     });
 }
 
-const sizeChange = (val) => {
+const onSizeChange = (val) => {
   debugger
   pageSize.value = val;
 }
@@ -115,10 +125,14 @@ const onSelect = (selection, row) => {
   debugger
 }
 
-const headerClickCus = (e, val, ...param) => {
-  console.log(e)
+const onHeaderEvent = (val, e) => {
   console.log(val)
-  console.log(param)
+  console.log(e)
+  debugger
+}
+
+const onDepNameChange = (val) => {
+  console.log(val)
   debugger
 }
 

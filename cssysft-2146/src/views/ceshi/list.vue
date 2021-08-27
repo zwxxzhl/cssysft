@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-import DialogCom from "../../components/DialogCom/dialog_com.vue";
+import DialogCom from "../../components/DialogCom/dialog-mu.vue";
 import ZwxTableList from "../../components/base-com/com-parts/zwx-table-mu.vue";
 import ZwxForm from "../../components/base-com/com-parts/zwx-form-mu.vue";
 

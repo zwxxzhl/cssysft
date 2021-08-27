@@ -32,7 +32,7 @@
 
           <template #header="scope">
 
-            <table-header :config="col" :scope="scope" v-bind="{onHeaderClickCus: $attrs.onHeaderClickCus}">
+            <table-header :config="col" :scope="scope" @[col.headerEvent]="(val, e) => col.headerEvent && $emit(col.headerEvent, val, e)">
 
               <template #[col.hSlotName]>
                 <slot :name="col.hSlotName" v-bind="scope"></slot>
@@ -56,7 +56,7 @@
 
           <template #header="scope">
 
-            <table-header :config="col" :scope="scope" v-bind="{onHeaderClickCus: $attrs.onHeaderClickCus}">
+            <table-header :config="col" :scope="scope" @[col.headerEvent]="(val, e) => col.headerEvent && $emit(col.headerEvent, val, e)">
 
               <template #[col.headerSlotName]>
                 <slot :name="col.headerSlotName" v-bind="scope"></slot>

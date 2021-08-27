@@ -85,7 +85,7 @@
 <script setup>
 import DialogBpmnJs from "../../../components/BpmnJs/dialog_bpmnjs.vue";
 import SubList from "./components/sub_list.vue";
-import DialogCom from "../../../components/DialogCom/dialog_com.vue";
+import DialogCom from "../../../components/DialogCom/dialog-mu.vue";
 import InstForm from "../definition/component/inst_form.vue";
 import TaskForm from "./components/task_form.vue";
 

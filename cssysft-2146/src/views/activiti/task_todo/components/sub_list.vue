@@ -73,7 +73,7 @@
 
 <script setup>
 import DialogBpmnJs from "../../../../components/BpmnJs/dialog_bpmnjs.vue";
-import DialogCom from "../../../../components/DialogCom/dialog_com.vue";
+import DialogCom from "../../../../components/DialogCom/dialog-mu.vue";
 import InstForm from "../../definition/component/inst_form.vue";
 
 import enums from "../../../../utils/enums";

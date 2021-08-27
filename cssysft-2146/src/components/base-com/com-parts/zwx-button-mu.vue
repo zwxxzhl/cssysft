@@ -25,15 +25,15 @@ import {
   defineProps, defineComponent
 } from "vue";
 
+defineComponent({
+  inheritAttrs: false
+});
+
 const props = defineProps({
   buttonRow: {
     type: Array,
     required: true
   }
-});
-
-defineComponent({
-  inheritAttrs: false
 });
 
 </script>
