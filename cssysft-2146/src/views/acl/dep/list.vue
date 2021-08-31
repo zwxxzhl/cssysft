@@ -32,7 +32,7 @@
       @size-change="onSizeChange">
     </zwx-table-mu>
 
-    <dialog-mu ref="refDialogCom" title="部门表单" width="50%" top="10vh" :heightPercent="0.6" :footer="false">
+    <dialog-mu ref="refDialogMu" title="部门表单" width="50%" top="10vh" :heightPercent="0.6" :footer="false">
       <template #content="sp">
         <dep-form ref="refDepForm"></dep-form>
       </template>
@@ -92,13 +92,13 @@ let currentPage = ref(1);
 let pageSize = ref(10);
 const multipleSelection = ref([]);
 
-const refDialogCom = ref(null);
+const refDialogMu = ref(null);
 const refDepForm = ref(null);
 
 /* ============================================= */
 
 const onAdd = () => {
-  refDialogCom.value.open(null, refDepForm.value, enums.formType.add);
+  refDialogMu.value.open(null, refDepForm.value, enums.formType.add);
 }
 
 const onSearch = (page = 1) => {

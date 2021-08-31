@@ -1,13 +1,12 @@
 package com.atguigu.aclservice.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableName;
-import java.time.LocalDateTime;
-import com.baomidou.mybatisplus.annotation.TableField;
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -28,6 +27,7 @@ public class Dep implements Serializable {
     /**
      * 主键id
      */
+    @TableId(value = "id", type = IdType.ID_WORKER_STR)
     private String id;
 
     /**
@@ -59,7 +59,7 @@ public class Dep implements Serializable {
      * 创建时间
      */
     @TableField(fill = FieldFill.INSERT)
-    private LocalDateTime gmtCreate;
+    private Date gmtCreate;
 
     /**
      * 创建人
@@ -75,7 +75,7 @@ public class Dep implements Serializable {
      * 更新时间
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime gmtModified;
+    private Date gmtModified;
 
 
 }

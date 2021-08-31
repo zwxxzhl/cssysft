@@ -4,8 +4,7 @@
       ref="refFormMu"
       :form="form"
       :form-row="formRow"
-      :rules="rules"
-      @dep-no-change="onDepNoChange">
+      :rules="rules">
     </zwx-form-mu>
 
     <el-row class="dialog-bottom" type="flex" justify="center">
@@ -34,6 +33,7 @@ import {
   ref, useContext, defineEmit, inject, reactive, defineComponent,
   getCurrentInstance, onMounted
 } from "vue";
+import de from "element-plus/packages/locale/lang/de";
 
 defineComponent({
   inheritAttrs: false
@@ -61,8 +61,11 @@ const rules = ref({
 });
 const loading = ref(false);
 
+
+
 const initData = () => {
   loading.value = false;
+  refFormMu.value.refForm.clearValidate();
   form.value = {};
   if (enums.formType.add !== openType.value) {
     depApi.select({id: dialogData.value.id}).then(res => {
@@ -80,6 +83,8 @@ const updateForm = () => {
   depApi.update(form.value).then(res => {
     if (res.success) {
       globalProperties.$message.success(res.message);
+    } else {
+      globalProperties.$message.error(res.message);
     }
     loading.value = false;
     dialogClose();
@@ -91,6 +96,8 @@ const saveForm = () => {
   depApi.save(form.value).then(res => {
     if (res.success) {
       globalProperties.$message.success(res.message);
+    } else {
+      globalProperties.$message.error(res.message);
     }
     loading.value = false;
     dialogClose();
@@ -101,23 +108,10 @@ const onSaveOrUpdate = () => {
   refFormMu.value.refForm.validate(valid => {
     if (valid) {
       if (enums.formType.add === openType.value) {
-        alert("校验通过")
-        // saveForm();
+        saveForm();
       } else if (enums.formType.edit === openType.value) {
-        // updateForm();
+        updateForm();
       }
-    }
-  })
-}
-
-const onDepNoChange = (val) => {
-  debugger
-  console.log(val)
-  depApi.select({depNo: val}).then(res => {
-    if (res.success) {
-      // todo 判断编码是否已存在
-      debugger
-      res.data;
     }
   })
 }

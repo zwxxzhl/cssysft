@@ -2,7 +2,7 @@
 
   <el-form-item
     :label="config.label"
-    :prop="config.prop"
+    :prop="config.model"
     :rules="config.rules"
     :label-width="config.labelWidth || '100px'"
     :size="config.size"
