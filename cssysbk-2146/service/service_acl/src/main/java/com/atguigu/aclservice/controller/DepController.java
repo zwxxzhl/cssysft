@@ -45,7 +45,7 @@ public class DepController {
         }
         List<Dep> list = depService.list(wrapper);
         if (list.size() > 0) {
-            return R.error().message("部门编码已存在!");
+            return R.ok().success(false).message("部门编码已存在");
         }
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -67,7 +67,7 @@ public class DepController {
         }
         List<Dep> list = depService.list(wrapper);
         if (list.size() > 2 || (list.size() == 1 && !list.get(0).getId().equals(dep.getId()))) {
-            return R.error().message("部门编码已存在!");
+            return R.ok().success(false).message("部门编码已存在");
         }
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();

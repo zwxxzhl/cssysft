@@ -1,13 +1,13 @@
 <template>
     <div>
       <template v-for="(row, idx) in buttonRow" :key="idx">
-        <el-row class="op-flex-center flex-warp" type="flex">
+        <el-row type="flex">
 
           <template v-for="(item, index) in row" :key="index">
 
-            <el-col :span="item.span">
+            <el-col :span="item.rowObj.span">
 
-              <zwxButton :config="item" @click="val => item.click && $emit(item.click, val)"></zwxButton>
+              <zwx-button :config="item.domObj" @click="val => item.domObj.click && $emit(item.domObj.click, val)"></zwx-button>
 
             </el-col>
 
@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-import zwxButton from '../com-el/zwx-button.vue';
+import ZwxButton from '../com-el/zwx-button.vue';
 
 import {
   defineProps, defineComponent

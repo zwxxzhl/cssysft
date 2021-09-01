@@ -1,22 +1,25 @@
 <template>
   <div class="app-container">
 
-    <zwx-form-mu
-      :form="search"
-      :form-row="searchRow"
-      @dep-name-change="onDepNameChange">
-    </zwx-form-mu>
+    <el-row type="flex" style="padding-bottom: 10px">
+      <el-col :span="4">
+        <zwx-form-mu
+          :form="search"
+          :form-row="searchRow"
+          @dep-name-change="onDepNameChange">
+        </zwx-form-mu>
+      </el-col>
+      <el-col :span="6">
+        <zwx-button-mu
+          :button-row="buttonRow"
+          @search-click="onSearch()"
+          @add-click="onAdd">
+        </zwx-button-mu>
+      </el-col>
+    </el-row>
 
-    <zwx-button-mu
-      :button-row="buttonRow"
-      @search-click="onSearch()"
-      @add-click="onAdd">
-    </zwx-button-mu>
-
-    <el-button type="primary" icon="el-icon-search" @click="onSearch()">查询</el-button>
-    <el-button type="default" @click="resetData()">清空</el-button>
-
-    <zwx-table-mu
+    <!--<zwx-table-mu
+      :header-row-class-name="() => 'header-row-class'"
       :size="'medium'"
       stripe
       :form="form"
@@ -30,11 +33,28 @@
       :page-size="pageSize"
       @page-current-change="onSearch"
       @size-change="onSizeChange">
-    </zwx-table-mu>
+    </zwx-table-mu>-->
+
+    <zwx-list-mu
+      :header-row-class-name="() => 'header-row-class'"
+      :size="'medium'"
+      stripe
+      :form="form"
+      :table-column="tableColumn"
+      :selection-show="true"
+      @select="onSelect"
+      @header-event="onHeaderEvent"
+      :pagination-show="true"
+      :current-page="currentPage"
+      :total="total"
+      :page-size="pageSize"
+      @page-current-change="onSearch"
+      @size-change="onSizeChange">
+    </zwx-list-mu>
 
     <dialog-mu ref="refDialogMu" title="部门表单" width="50%" top="10vh" :heightPercent="0.6" :footer="false">
       <template #content="sp">
-        <dep-form ref="refDepForm"></dep-form>
+        <dep-form ref="refDepForm" @after-save="onAfterSave"></dep-form>
       </template>
     </dialog-mu>
 
@@ -43,7 +63,7 @@
 
 <script setup>
 import DialogMu from "../../../components/DialogCom/dialog-mu.vue";
-import ZwxTableMu from "../../../components/base-com/com-parts/zwx-table-mu.vue";
+import ZwxListMu from "../../../components/base-com/com-parts/zwx-list-mu.vue";
 import ZwxFormMu from "../../../components/base-com/com-parts/zwx-form-mu.vue";
 import ZwxButtonMu from "../../../components/base-com/com-parts/zwx-button-mu.vue";
 import DepForm from "./component/form.vue";
@@ -65,17 +85,37 @@ provide('comMethod', {
 let search = reactive({});
 const searchRow = reactive([
   [
-    {span: 6, dom: 'input', type: 'text', model: 'depName', placeholder: '部门名称', change: 'dep-name-change'},
-    {span: 6, dom: 'input', type: 'text', model: 'depNo', placeholder: '部门编码'}
+    {
+      rowObj: {span: 12},
+      formItemObj: {prop: 'depName', labelWidth: '0px', size: 'medium', style: {marginBottom: '0'}},
+      domObj: {model: 'depName', placeholder: '部门名称', change: 'dep-name-change', dom: 'input', type: 'text'},
+    },
+    {
+      rowObj: {span: 12},
+      formItemObj: {prop: '', labelWidth: '10px', size: 'medium', style: {marginBottom: '0'}},
+      domObj: {model: 'depNo', placeholder: '部门编码', dom: 'input', type: 'text'},
+    }
   ]
 ]);
 
 const buttonRow = reactive([
   [
-    {span: 6, size: comCfg.buttonSize, type: comCfg.searchBtnType, label: '搜索', icon: comCfg.searchBtnIcon, click: 'search-click'},
-    {span: 6, size: comCfg.buttonSize, type: comCfg.addBtnType, label: '新增', icon: comCfg.addBtnIcon, click: 'add-click'},
-    {span: 6, size: comCfg.buttonSize, type: comCfg.editBtnType, label: '编辑', icon: comCfg.editBtnIcon, click: 'edit-click'},
-    {span: 6, size: comCfg.buttonSize, type: comCfg.deleteBtnType, label: '删除', icon: comCfg.deleteBtnIcon, click: 'delete-click'},
+    {
+      rowObj: {span: 6},
+      domObj: {label: '搜索', click: 'search-click', type: comCfg.searchBtnType, icon: comCfg.searchBtnIcon, size: comCfg.buttonSize},
+    },
+    {
+      rowObj: {span: 6},
+      domObj: {label: '新增', click: 'add-click', type: comCfg.addBtnType, icon: comCfg.addBtnIcon, size: comCfg.buttonSize},
+    },
+    {
+      rowObj: {span: 6},
+      domObj: {label: '编辑', click: 'edit-click', type: comCfg.editBtnType, icon: comCfg.editBtnIcon, size: comCfg.buttonSize},
+    },
+    {
+      rowObj: {span: 6},
+      domObj: {label: '删除', click: 'delete-click', type: comCfg.deleteBtnType, icon: comCfg.deleteBtnIcon, size: comCfg.buttonSize},
+    }
   ]
 ]);
 
@@ -117,6 +157,10 @@ const onSearch = (page = 1) => {
 const onSizeChange = (val) => {
   debugger
   pageSize.value = val;
+}
+
+const onAfterSave = () => {
+  onSearch();
 }
 
 const onSelect = (selection, row) => {

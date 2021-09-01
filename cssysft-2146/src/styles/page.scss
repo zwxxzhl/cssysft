@@ -1,3 +1,5 @@
+@import './variables.scss';
+
 .color-red {
     color: $colorRed !important;
 }
@@ -62,4 +64,9 @@
     bottom: 0;
     left: 0;
     right: 0;
+}
+
+.header-row-class th {
+    color: $colorInfo-02;
+    background-color: $colorPrimary-03;
 }

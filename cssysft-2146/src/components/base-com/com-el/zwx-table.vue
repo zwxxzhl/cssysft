@@ -12,7 +12,7 @@
       <template v-if="indexShow">
         <el-table-column type="index" label="序号" width="55" header-align="center" align="center">
           <template #default="scope">
-            {{ (currentPage - 1) * pageSize + scope.$index + 1 }}
+            {{ ($attrs.currentPage - 1) * $attrs.pageSize + scope.$index + 1 }}
           </template>
         </el-table-column>
       </template>
@@ -87,19 +87,6 @@
       </template>
 
     </el-table>
-
-    <!-- @current-change 需重命名，与 el-table 中事件冲突；另选 el-input 框中数字会触发 @select 事件，也与 el-table 中事件冲突，无法拦截。混合组件肯定冲突，开发时需要注意 -->
-    <el-pagination
-      v-if="paginationShow"
-      :current-page="currentPage"
-      :total="total"
-      :page-size="pageSize"
-      :page-sizes="[5, 10, 20, 30, 40, 50, 100]"
-      style="padding: 30px 0; text-align: right"
-      layout="sizes, prev, pager, next, jumper, ->, total, slot"
-      @current-change="$emit('page-current-change', $event)"
-      @size-change="$emit('size-change', $event)">
-    </el-pagination>
   </el-form>
 </template>
 
@@ -155,26 +142,6 @@ const props = defineProps({
     type: Boolean,
     required: false,
     default: false
-  },
-  paginationShow: {
-    type: Boolean,
-    required: false,
-    default: false
-  },
-  total: {
-    type: Number,
-    required: false,
-    default: 0
-  },
-  currentPage: {
-    type: Number,
-    required: false,
-    default: 1
-  },
-  pageSize: {
-    type: Number,
-    required: false,
-    default: 10
   }
 });
 
@@ -223,23 +190,5 @@ computed(() => {
 </script>
 
 <style scoped>
-
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none
-}
-
-input[type="number"] {
-  -moz-appearance: textfield;
-}
-
-.el-form-item--mini.el-form-item {
-  margin-bottom: 0;
-}
-
-.el-form-item {
-  margin-bottom: 0;
-}
-
 
 </style>

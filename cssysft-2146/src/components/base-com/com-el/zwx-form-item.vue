@@ -2,12 +2,13 @@
 
   <el-form-item
     :label="config.label"
-    :prop="config.model"
+    :prop="config.prop"
     :rules="config.rules"
     :label-width="config.labelWidth || '100px'"
     :size="config.size"
     :show-message="config.showMessage"
-    :inline-message="config.inlineMessage">
+    :inline-message="config.inlineMessage"
+    :style="config.style">
 
     <slot></slot>
 
