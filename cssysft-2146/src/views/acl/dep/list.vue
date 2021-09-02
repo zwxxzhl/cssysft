@@ -131,7 +131,7 @@ let tableColumn = reactive([
   {
     columnObj: {prop: 'sequence', label: '顺序'}
   },
-  {
+  { //todo 换成input，事件是否冲突
     columnObj: {prop: 'sequence', label: '有效'},
     formItemObj: {prop: '', labelWidth: '0px', size: 'mini', style: {marginBottom: '0'}},
     domObj: {dom: 'checkbox', model: 'isDel', trueLabel: 1, falseLabel: 0}
