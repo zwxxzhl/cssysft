@@ -56,7 +56,7 @@
 
           <el-col :span="item.rowObj.span" v-else-if="'slot' === item.domObj.dom">
 
-            <slot :name="item.rowObj.slotName" v-bind="this"></slot>
+            <slot :name="item.domObj.slotName" v-bind="this"></slot>
 
           </el-col>
 

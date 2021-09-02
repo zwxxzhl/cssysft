@@ -9,12 +9,12 @@
           @dep-name-change="onDepNameChange">
         </zwx-form-mu>
       </el-col>
-      <el-col :span="6">
-        <zwx-button-mu
-          :button-row="buttonRow"
+      <el-col :span="6" style="padding-left: 30px">
+        <zwx-cols-mu
+          :col-list="buttonCols"
           @search-click="onSearch()"
           @add-click="onAdd">
-        </zwx-button-mu>
+        </zwx-cols-mu>
       </el-col>
     </el-row>
 
@@ -43,13 +43,14 @@
       :table-column="tableColumn"
       :selection-show="true"
       @select="onSelect"
+      @current-change="ceshi"
       @header-event="onHeaderEvent"
       :pagination-show="true"
       :current-page="currentPage"
       :total="total"
       :page-size="pageSize"
-      @page-current-change="onSearch"
-      @size-change="onSizeChange">
+      @page-current-change="onCurrentChange"
+      @page-size-change="onSizeChange">
     </zwx-list-mu>
 
     <dialog-mu ref="refDialogMu" title="部门表单" width="50%" top="10vh" :heightPercent="0.6" :footer="false">
@@ -65,7 +66,7 @@
 import DialogMu from "../../../components/DialogCom/dialog-mu.vue";
 import ZwxListMu from "../../../components/base-com/com-parts/zwx-list-mu.vue";
 import ZwxFormMu from "../../../components/base-com/com-parts/zwx-form-mu.vue";
-import ZwxButtonMu from "../../../components/base-com/com-parts/zwx-button-mu.vue";
+import ZwxColsMu from "../../../components/base-com/com-parts/zwx-cols-mu.vue";
 import DepForm from "./component/form.vue";
 
 import comCfg from "../../../components/base-com/com-config/com-config.js";
@@ -98,32 +99,43 @@ const searchRow = reactive([
   ]
 ]);
 
-const buttonRow = reactive([
+const buttonCols = reactive([
   [
     {
       rowObj: {span: 6},
-      domObj: {label: '搜索', click: 'search-click', type: comCfg.searchBtnType, icon: comCfg.searchBtnIcon, size: comCfg.buttonSize},
+      domObj: {dom: 'button', label: '搜索', click: 'search-click', type: comCfg.searchBtnType, icon: comCfg.searchBtnIcon, size: comCfg.buttonSize},
     },
     {
       rowObj: {span: 6},
-      domObj: {label: '新增', click: 'add-click', type: comCfg.addBtnType, icon: comCfg.addBtnIcon, size: comCfg.buttonSize},
+      domObj: {dom: 'button', label: '新增', click: 'add-click', type: comCfg.addBtnType, icon: comCfg.addBtnIcon, size: comCfg.buttonSize},
     },
     {
       rowObj: {span: 6},
-      domObj: {label: '编辑', click: 'edit-click', type: comCfg.editBtnType, icon: comCfg.editBtnIcon, size: comCfg.buttonSize},
+      domObj: {dom: 'button', label: '编辑', click: 'edit-click', type: comCfg.editBtnType, icon: comCfg.editBtnIcon, size: comCfg.buttonSize},
     },
     {
       rowObj: {span: 6},
-      domObj: {label: '删除', click: 'delete-click', type: comCfg.deleteBtnType, icon: comCfg.deleteBtnIcon, size: comCfg.buttonSize},
+      domObj: {dom: 'button', label: '删除', click: 'delete-click', type: comCfg.deleteBtnType, icon: comCfg.deleteBtnIcon, size: comCfg.buttonSize},
     }
   ]
 ]);
 
 const form = ref({formList: []});
 let tableColumn = reactive([
-  {prop: 'depName', label: '部门', headerAk: true, headerEvent: 'header-event'},
-  {prop: 'depNo', label: '编码', width: '90'},
-  {prop: 'sequence', label: '顺序'}
+  {
+    columnObj: {prop: 'depName', label: '部门', headerAk: true, headerEvent: 'header-event'},
+  },
+  {
+    columnObj: {prop: 'depNo', label: '编码', width: '90'},
+  },
+  {
+    columnObj: {prop: 'sequence', label: '顺序'}
+  },
+  {
+    columnObj: {prop: 'sequence', label: '有效'},
+    formItemObj: {prop: '', labelWidth: '0px', size: 'mini', style: {marginBottom: '0'}},
+    domObj: {dom: 'checkbox', model: 'isDel', trueLabel: 1, falseLabel: 0}
+  }
 ]);
 
 let listLoading = ref(true);
@@ -154,9 +166,18 @@ const onSearch = (page = 1) => {
     });
 }
 
+const onCurrentChange = (val) => {
+  debugger
+  onSearch(val);
+}
 const onSizeChange = (val) => {
   debugger
   pageSize.value = val;
+  onSearch();
+}
+
+const ceshi = (val) => {
+  debugger
 }
 
 const onAfterSave = () => {

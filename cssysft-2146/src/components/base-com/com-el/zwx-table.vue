@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="refTableForm" :model="form" :rules="rules" size="mini">
+  <el-form ref="refTableForm" :model="form" :rules="rules">
     <el-table
       ref="refTable"
       v-bind="$attrs"
@@ -12,30 +12,31 @@
       <template v-if="indexShow">
         <el-table-column type="index" label="序号" width="55" header-align="center" align="center">
           <template #default="scope">
-            {{ ($attrs.currentPage - 1) * $attrs.pageSize + scope.$index + 1 }}
+            <span v-if="$attrs['page-size']">{{ ($attrs['current-page'] - 1) * $attrs['page-size'] + scope.$index + 1 }}</span>
+            <span v-else>{{ scope.$index + 1 }}</span>
           </template>
         </el-table-column>
       </template>
 
       <template v-for="(col, index) in tableColumn" :key="index">
         <el-table-column
-          v-if="col.formatter"
+          v-if="col.columnObj.formatter"
           show-overflow-tooltip
-          :header-align="col.headerAlign || 'center'"
-          :align="col.align || 'center'"
-          :width="col.width || ''"
-          :min-width="col.minWidth || ''"
-          :prop="col.prop || ''"
-          :label="col.label || ''"
+          :header-align="col.columnObj.headerAlign || 'center'"
+          :align="col.columnObj.align || 'center'"
+          :width="col.columnObj.width || ''"
+          :min-width="col.columnObj.minWidth || ''"
+          :prop="col.columnObj.prop || ''"
+          :label="col.columnObj.label || ''"
           :column-key="index.toString()"
           :formatter="formatter">
 
           <template #header="scope">
 
-            <table-header :config="col" :scope="scope" @[col.headerEvent]="(val, e) => col.headerEvent && $emit(col.headerEvent, val, e)">
+            <table-header :config="col.columnObj" :scope="scope" @[col.columnObj.headerEvent]="(val, e) => col.columnObj.headerEvent && $emit(col.columnObj.headerEvent, val, e)">
 
-              <template #[col.headerSlotName]>
-                <slot :name="col.headerSlotName" v-bind="scope"></slot>
+              <template #[col.columnObj.headerSlotName]>
+                <slot :name="col.columnObj.headerSlotName" v-bind="scope"></slot>
               </template>
 
             </table-header>
@@ -46,20 +47,20 @@
         <el-table-column
           v-else
           show-overflow-tooltip
-          :header-align="col.headerAlign || 'center'"
-          :align="col.align || 'center'"
-          :width="col.width || ''"
-          :min-width="col.minWidth || ''"
-          :prop="col.prop || ''"
-          :label="col.label || ''"
+          :header-align="col.columnObj.headerAlign || 'center'"
+          :align="col.columnObj.align || 'center'"
+          :width="col.columnObj.width || ''"
+          :min-width="col.columnObj.minWidth || ''"
+          :prop="col.columnObj.prop || ''"
+          :label="col.columnObj.label || ''"
           :column-key="index.toString()">
 
           <template #header="scope">
 
-            <table-header :config="col" :scope="scope" @[col.headerEvent]="(val, e) => col.headerEvent && $emit(col.headerEvent, val, e)">
+            <table-header :config="col.columnObj" :scope="scope" @[col.columnObj.headerEvent]="(val, e) => col.columnObj.headerEvent && $emit(col.columnObj.headerEvent, val, e)">
 
-              <template #[col.headerSlotName]>
-                <slot :name="col.headerSlotName" v-bind="scope"></slot>
+              <template #[col.columnObj.headerSlotName]>
+                <slot :name="col.columnObj.headerSlotName" v-bind="scope"></slot>
               </template>
 
             </table-header>
@@ -68,23 +69,25 @@
 
           <template #default="scope">
 
-            <template v-if="!col.rowslot">
+            <template v-if="!col.columnObj.rowslot">
 
-              <zwx-form-item :config="col.formItemObj" v-if="'checkbox' === col.dom">
+              <zwx-form-item :config="col.formItemObj" v-if="col.domObj && 'checkbox' === col.domObj.dom">
                 <zwx-checkbox :form="scope.row" :config="col.domObj" @change="val => col.domObj.change && $emit(col.domObj.change, val)"></zwx-checkbox>
               </zwx-form-item>
 
-              <span v-else>{{ scope.row[col.prop] }}</span>
+              <span v-else>{{ scope.row[col.columnObj.prop] }}</span>
 
             </template>
 
             <template v-else>
-              <slot :name="col.rowSlotName" v-bind="this"></slot>
+              <slot :name="col.columnObj.rowSlotName" v-bind="this"></slot>
             </template>
 
           </template>
         </el-table-column>
       </template>
+
+      <slot name="operation" v-bind="this"></slot>
 
     </el-table>
   </el-form>

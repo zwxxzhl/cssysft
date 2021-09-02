@@ -1,46 +1,39 @@
 <template>
-  <div>
-    <!-- @current-change 需重命名，与 el-table 中事件冲突；另选择页码输入框(el-input) 中数字会触发 @select 事件，也与 el-table 中事件冲突，无法拦截，开发时需要注意 -->
+
+    <!-- @current-change 与 el-table 中事件冲突；另选择页码输入框(el-input) 中数字会触发 @select 事件，也与 el-table 中事件冲突；
+    所以不要与 el-table 一起封装，除非冲突的两个事件，在 el-talbe 与 el-pagination 中全部重命名 -->
+
     <el-pagination
       :current-page="currentPage"
       :total="total"
       :page-size="pageSize"
-      :page-sizes="[5, 10, 20, 30, 40, 50, 100]"
-      style="padding: 30px 0; text-align: right"
-      layout="sizes, prev, pager, next, jumper, ->, total, slot"
-      @current-change="$emit('page-current-change', $event)"
-      @size-change="$emit('size-change', $event)">
+      :page-sizes="[1, 5, 10, 20, 30, 40, 50, 100]"
+      layout="sizes, prev, pager, next, jumper, ->, total, slot">
     </el-pagination>
-  </div>
+
 </template>
 
 <script setup>
-import ZwxTable from '../com-el/zwx-table.vue';
-
 import {
-  defineComponent, defineProps
+  defineProps
 } from "vue";
 
 const props = defineProps({
-  total: {
-    type: Number,
-    required: false,
-    default: 0
-  },
   currentPage: {
     type: Number,
     required: false,
     default: 1
+  },
+  total: {
+    type: Number,
+    required: false,
+    default: 0
   },
   pageSize: {
     type: Number,
     required: false,
     default: 10
   }
-});
-
-defineComponent({
-  inheritAttrs: false
 });
 </script>
 

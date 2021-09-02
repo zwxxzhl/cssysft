@@ -1,13 +1,19 @@
 <template>
     <div>
-      <template v-for="(row, idx) in buttonRow" :key="idx">
+      <template v-for="(row, idx) in colList" :key="idx">
         <el-row type="flex">
 
           <template v-for="(item, index) in row" :key="index">
 
-            <el-col :span="item.rowObj.span">
+            <el-col :span="item.rowObj.span" v-if="'button' === item.domObj.dom">
 
               <zwx-button :config="item.domObj" @click="val => item.domObj.click && $emit(item.domObj.click, val)"></zwx-button>
+
+            </el-col>
+
+            <el-col :span="item.rowObj.span" v-else-if="'slot' === item.domObj.dom">
+
+              <slot :name="item.domObj.slotName" v-bind="this"></slot>
 
             </el-col>
 
@@ -30,7 +36,7 @@ defineComponent({
 });
 
 const props = defineProps({
-  buttonRow: {
+  colList: {
     type: Array,
     required: true
   }
