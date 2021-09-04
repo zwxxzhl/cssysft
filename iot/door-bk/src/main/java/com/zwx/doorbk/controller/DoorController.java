@@ -44,10 +44,10 @@ public class DoorController {
     }
 
     private void sentSet(String msg) {
-        String accessKey = "LTAI5tQQjRBHyQqcAGf9dhsT"; //您阿里云账号的AccessKey。
-        String accessKeySecret = "V2s6lmsnEG7dTEOEVzJ1e2eyhoUAQB"; //您阿里云账号的AccessKey Secret。
+        String accessKey = ""; //您阿里云账号的AccessKey。
+        String accessKeySecret = ""; //您阿里云账号的AccessKey Secret。
         String iotInstanceId = ""; //您企业版实例的实例ID。
-        String productKey = "a19NUVLGQcS"; //产品的ProductKey。
+        String productKey = ""; //产品的ProductKey。
 
         IClientProfile profile = DefaultProfile.getProfile("cn-shanghai", accessKey, accessKeySecret); //cn-shenzhen为实例所属地域，需修改为您实例的所属地域。
         DefaultAcsClient client = new DefaultAcsClient(profile);
