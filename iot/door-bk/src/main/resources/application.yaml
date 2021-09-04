@@ -1,4 +1,13 @@
 server:
-  port: 8111
+  port: 8811
   servlet:
     context-path: /iot
+
+# 开发阶段关闭thymeleaf的模板缓存
+#设置false不缓存修改页面及时生效
+spring:
+  thymeleaf:
+    cache: false
+    suffix: .html
+    prefix: classpath:/templates/
+    encoding: UTF-8

@@ -11,8 +11,8 @@ import com.google.gson.Gson;
 
 public class InstancePubClient {
 
-    private static String accessKey = ""; //您阿里云账号的AccessKey。
-    private static String accessKeySecret = ""; //您阿里云账号的AccessKey Secret。
+    private static String accessKey = "LTAI5tQQjRBHyQqcAGf9dhsT"; //您阿里云账号的AccessKey。
+    private static String accessKeySecret = "V2s6lmsnEG7dTEOEVzJ1e2eyhoUAQB"; //您阿里云账号的AccessKey Secret。
     private static String iotInstanceId = ""; //您企业版实例的实例ID。
     public static void main(String[] args)  {
 
@@ -25,8 +25,11 @@ public class InstancePubClient {
         //request.setMessageContent("Q01ELDgyOTIzLGFkMzIyCiA=");//原始报文 : CMD,82923,ad322。
 
         // 开 eyJpZCI6IjQ0NjA4OTI3OCIsInZlcnNpb24iOiIxLjAiLCJtZXRob2QiOiJ0aGluZy5zZXJ2aWNlLnByb3BlcnR5LnNldCIsInBhcmFtcyI6eyJwcm9fMDFfc3dpdGNoIjoxfX0=
-        // 关 eyJpZCI6IjQ0NjA4OTI3OCIsInZlcnNpb24iOiIxLjAiLCJtZXRob2QiOiJ0aGluZy5zZXJ2aWNlLnByb3BlcnR5LnNldCIsInBhcmFtcyI6eyJwcm9fMDFfc3dpdGNoIjowfX0=
         request.setMessageContent("eyJpZCI6IjQ0NjA4OTI3OCIsInZlcnNpb24iOiIxLjAiLCJtZXRob2QiOiJ0aGluZy5zZXJ2aWNlLnByb3BlcnR5LnNldCIsInBhcmFtcyI6eyJwcm9fMDFfc3dpdGNoIjoxfX0=");
+
+        // 关 eyJpZCI6IjQ0NjA4OTI3OCIsInZlcnNpb24iOiIxLjAiLCJtZXRob2QiOiJ0aGluZy5zZXJ2aWNlLnByb3BlcnR5LnNldCIsInBhcmFtcyI6eyJwcm9fMDFfc3dpdGNoIjowfX0=
+//         request.setMessageContent("eyJpZCI6IjQ0NjA4OTI3OCIsInZlcnNpb24iOiIxLjAiLCJtZXRob2QiOiJ0aGluZy5zZXJ2aWNlLnByb3BlcnR5LnNldCIsInBhcmFtcyI6eyJwcm9fMDFfc3dpdGNoIjowfX0=");
+
         request.setProductKey("a19NUVLGQcS"); //产品的ProductKey。
         request.setIotInstanceId(iotInstanceId);
         request.setQos(1);

@@ -61,10 +61,10 @@ public class MqttPasswordUtil {
         params.put("clientId", "MQTT_01");
         //时间戳，可选参数。传入时，删除下面两行代码前的正斜线
         //String t = System.currentTimeMillis() + "";
-        //params.put("timestamp", t);
+        params.put("timestamp", "1234567890");
 
         String sign = MqttPasswordUtil.sign(params, "d581731eda9e40745d89f47fce58b3f5", "hmacsha1");
-        System.out.print(sign);
+        System.out.println(sign);
         System.out.println(System.getProperty("user.dir"));
     }
 
