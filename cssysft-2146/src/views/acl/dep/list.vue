@@ -83,6 +83,8 @@ provide('comMethod', {
   dateYMDHmsFormat
 });
 
+let screenWidth = ref(0);
+
 let search = reactive({});
 const searchRow = reactive([
   [
@@ -204,6 +206,16 @@ const onDepNameChange = (val) => {
 
 onMounted(() => {
   onSearch();
+  console.log("=========================");
+  console.log(document.body.clientWidth);
+  window.onresize = () => {
+    return (() => {
+      window.screenWidth = document.body.clientWidth;
+      screenWidth = window.screenWidth;
+      console.log("=========================");
+      console.log(screenWidth);
+    })()
+  }
 })
 
 </script>
