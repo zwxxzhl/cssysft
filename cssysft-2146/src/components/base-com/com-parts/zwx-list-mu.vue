@@ -5,13 +5,17 @@
       v-bind="$attrs">
     </zwx-table>
 
+    <!-- @current-change 以及 选中页码输入框(el-input) 中数字会触发 @select 事件，与 el-table 中事件冲突 -->
     <zwx-pagination
-      ref="refZwxPagination"
       v-if="paginationShow"
-      v-bind="$attrs"
-      style="padding: 30px 0; text-align: left"
+      ref="refZwxPagination"
+      style="padding: 5px 0; text-align: left"
+      :current-page="$attrs.currentPage"
+      :total="$attrs.total"
+      :page-size="$attrs.pageSize"
       @current-change="$emit('page-current-change', $event)"
-      @size-change="$emit('page-size-change', $event)">
+      @size-change="$emit('page-size-change', $event)"
+      @select.stop="$emit('page-select', $event)">
     </zwx-pagination>
   </div>
 </template>

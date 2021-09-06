@@ -72,7 +72,18 @@
             <template v-if="!col.columnObj.rowslot">
 
               <zwx-form-item :config="col.formItemObj" v-if="col.domObj && 'checkbox' === col.domObj.dom">
-                <zwx-checkbox :form="scope.row" :config="col.domObj" @change="val => col.domObj.change && $emit(col.domObj.change, val)"></zwx-checkbox>
+                <zwx-checkbox
+                  :form="scope.row" :config="col.domObj"
+                  @change="val => col.domObj.change && $emit(col.domObj.change, val)">
+                </zwx-checkbox>
+              </zwx-form-item>
+
+              <zwx-form-item :config="col.formItemObj" v-else-if="col.domObj && 'input' === col.domObj.dom">
+                <zwx-input
+                  :form="form" :config="col.domObj"
+                  @change="val => col.domObj.change && $emit(col.domObj.change, val)"
+                  @select.stop.self="val => col.domObj.select && $emit(col.domObj.select, val)">
+                </zwx-input>
               </zwx-form-item>
 
               <span v-else>{{ scope.row[col.columnObj.prop] }}</span>

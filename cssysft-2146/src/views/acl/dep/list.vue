@@ -1,39 +1,13 @@
 <template>
   <div class="app-container">
 
-    <el-row type="flex" style="padding-bottom: 10px">
-      <el-col :span="4">
-        <zwx-form-mu
-          :form="search"
-          :form-row="searchRow"
-          @dep-name-change="onDepNameChange">
-        </zwx-form-mu>
-      </el-col>
-      <el-col :span="6" style="padding-left: 30px">
-        <zwx-cols-mu
-          :col-list="buttonCols"
-          @search-click="onSearch()"
-          @add-click="onAdd">
-        </zwx-cols-mu>
-      </el-col>
-    </el-row>
-
-    <!--<zwx-table-mu
-      :header-row-class-name="() => 'header-row-class'"
-      :size="'medium'"
-      stripe
-      :form="form"
-      :table-column="tableColumn"
-      :selection-show="true"
-      @select="onSelect"
-      @header-event="onHeaderEvent"
-      :pagination-show="true"
-      :current-page="currentPage"
-      :total="total"
-      :page-size="pageSize"
-      @page-current-change="onSearch"
-      @size-change="onSizeChange">
-    </zwx-table-mu>-->
+    <zwx-form-mu
+      :form="search"
+      :form-row="searchRow"
+      @dep-name-change="onDepNameChange"
+      @search-click="onSearch()"
+      @add-click="onAdd">
+    </zwx-form-mu>
 
     <zwx-list-mu
       :header-row-class-name="() => 'header-row-class'"
@@ -43,14 +17,15 @@
       :table-column="tableColumn"
       :selection-show="true"
       @select="onSelect"
-      @current-change="ceshi"
+      @current-change="onCurrentChange"
       @header-event="onHeaderEvent"
       :pagination-show="true"
       :current-page="currentPage"
       :total="total"
       :page-size="pageSize"
-      @page-current-change="onCurrentChange"
-      @page-size-change="onSizeChange">
+      @page-select="onPageSelect"
+      @page-current-change="onPageCurrentChange"
+      @page-size-change="onPageSizeChange">
     </zwx-list-mu>
 
     <dialog-mu ref="refDialogMu" title="部门表单" width="50%" top="10vh" :heightPercent="0.6" :footer="false">
@@ -89,34 +64,29 @@ let search = reactive({});
 const searchRow = reactive([
   [
     {
-      rowObj: {span: 12},
+      rowObj: {colStyle: {width: '100px', margin: '0 5px 5px 0px'}},
       formItemObj: {prop: 'depName', labelWidth: '0px', size: 'medium', style: {marginBottom: '0'}},
       domObj: {model: 'depName', placeholder: '部门名称', change: 'dep-name-change', dom: 'input', type: 'text'},
     },
     {
-      rowObj: {span: 12},
-      formItemObj: {prop: '', labelWidth: '10px', size: 'medium', style: {marginBottom: '0'}},
+      rowObj: {colStyle: {width: '100px', margin: '0 5px 5px 5px'}},
+      formItemObj: {prop: '', labelWidth: '0px', size: 'medium', style: {marginBottom: '0'}},
       domObj: {model: 'depNo', placeholder: '部门编码', dom: 'input', type: 'text'},
-    }
-  ]
-]);
-
-const buttonCols = reactive([
-  [
+    },
     {
-      rowObj: {span: 6},
+      rowObj: {colStyle: {width: '89px', margin: '0 5px 5px 15px'}},
       domObj: {dom: 'button', label: '搜索', click: 'search-click', type: comCfg.searchBtnType, icon: comCfg.searchBtnIcon, size: comCfg.buttonSize},
     },
     {
-      rowObj: {span: 6},
+      rowObj: {colStyle: {width: '89px', margin: '0 5px 5px 5px'}},
       domObj: {dom: 'button', label: '新增', click: 'add-click', type: comCfg.addBtnType, icon: comCfg.addBtnIcon, size: comCfg.buttonSize},
     },
     {
-      rowObj: {span: 6},
+      rowObj: {colStyle: {width: '89px', margin: '0 5px 5px 5px'}},
       domObj: {dom: 'button', label: '编辑', click: 'edit-click', type: comCfg.editBtnType, icon: comCfg.editBtnIcon, size: comCfg.buttonSize},
     },
     {
-      rowObj: {span: 6},
+      rowObj: {span: 0, colStyle: {width: '89px', margin: '0 5px 5px 5px'}},
       domObj: {dom: 'button', label: '删除', click: 'delete-click', type: comCfg.deleteBtnType, icon: comCfg.deleteBtnIcon, size: comCfg.buttonSize},
     }
   ]
@@ -128,22 +98,22 @@ let tableColumn = reactive([
     columnObj: {prop: 'depName', label: '部门', headerAk: true, headerEvent: 'header-event'},
   },
   {
-    columnObj: {prop: 'depNo', label: '编码', width: '90'},
+    columnObj: {prop: 'depNo', label: '编码'},
   },
   {
     columnObj: {prop: 'sequence', label: '顺序'}
   },
-  { //todo 换成input，事件是否冲突
+  {
     columnObj: {prop: 'sequence', label: '有效'},
     formItemObj: {prop: '', labelWidth: '0px', size: 'mini', style: {marginBottom: '0'}},
-    domObj: {dom: 'checkbox', model: 'isDel', trueLabel: 1, falseLabel: 0}
+    domObj: {dom: 'input', type: 'text', model: 'isDel'}
   }
 ]);
 
 let listLoading = ref(true);
 let total = ref(0);
 let currentPage = ref(1);
-let pageSize = ref(10);
+let pageSize = ref(20);
 const multipleSelection = ref([]);
 
 const refDialogMu = ref(null);
@@ -168,17 +138,17 @@ const onSearch = (page = 1) => {
     });
 }
 
-const onCurrentChange = (val) => {
+const onPageCurrentChange = (val) => {
   debugger
   onSearch(val);
 }
-const onSizeChange = (val) => {
+const onPageSizeChange = (val) => {
   debugger
   pageSize.value = val;
   onSearch();
 }
 
-const ceshi = (val) => {
+const onCurrentChange = (val) => {
   debugger
 }
 
@@ -187,6 +157,12 @@ const onAfterSave = () => {
 }
 
 const onSelect = (selection, row) => {
+  console.log(selection)
+  console.log(row)
+  debugger
+}
+
+const onPageSelect = (selection, row) => {
   console.log(selection)
   console.log(row)
   debugger
@@ -206,12 +182,9 @@ const onDepNameChange = (val) => {
 
 onMounted(() => {
   onSearch();
-  console.log("=========================");
-  console.log(document.body.clientWidth);
   window.onresize = () => {
     return (() => {
-      window.screenWidth = document.body.clientWidth;
-      screenWidth = window.screenWidth;
+      screenWidth = window.innerWidth;
       console.log("=========================");
       console.log(screenWidth);
     })()

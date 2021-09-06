@@ -6,11 +6,11 @@
     </el-aside>
 
     <el-container>
-      <el-header class="header-layout">
+      <el-header style="height: 50px; padding: 0 20px 0 5px">
         <navbar></navbar>
       </el-header>
 
-      <el-main>
+      <el-main style="padding: 5px 5px 5px 10px">
         <router-view></router-view>
       </el-main>
     </el-container>

@@ -1,8 +1,5 @@
 <template>
 
-    <!-- @current-change 与 el-table 中事件冲突；另选择页码输入框(el-input) 中数字会触发 @select 事件，也与 el-table 中事件冲突；
-    所以不要与 el-table 一起封装，除非冲突的两个事件，在 el-talbe 与 el-pagination 中全部重命名 -->
-
     <el-pagination
       :current-page="currentPage"
       :total="total"

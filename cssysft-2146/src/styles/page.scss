@@ -66,6 +66,10 @@
     right: 0;
 }
 
+.flex-warp {
+    flex-wrap: wrap;
+}
+
 .header-row-class th {
     color: $colorInfo-02;
     background-color: $colorPrimary-03;

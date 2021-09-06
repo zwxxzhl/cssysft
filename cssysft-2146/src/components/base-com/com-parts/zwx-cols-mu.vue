@@ -1,7 +1,7 @@
 <template>
     <div>
       <template v-for="(row, idx) in colList" :key="idx">
-        <el-row type="flex">
+        <el-row>
 
           <template v-for="(item, index) in row" :key="index">
 
