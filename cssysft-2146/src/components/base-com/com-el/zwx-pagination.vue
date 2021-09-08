@@ -37,10 +37,11 @@ const props = defineProps({
 let key = ref(0);
 
 watch([() => props.currentPage, () => props.pageSize],
-  ([pageVal, pagePreVal], [sizeVal, sizePreVal]) => {
+  ([pageVal, pagePreVal], [sizeVal, sizePreVal]) => {debugger
+    pageVal;pagePreVal;sizeVal;sizePreVal;
     key.value++;
     console.log("触发了watch");
-  })
+  }, {deep: true});
 
 </script>
 
