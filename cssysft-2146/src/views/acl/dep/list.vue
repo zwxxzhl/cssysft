@@ -19,9 +19,10 @@
       @select="onSelect"
       @current-change="onCurrentChange"
       @header-event="onHeaderEvent"
+      @dom-input-select="onDomInputSelect"
       :pagination-show="true"
-      :current-page="currentPage"
       :total="total"
+      :current-page="currentPage"
       :page-size="pageSize"
       @page-select="onPageSelect"
       @page-current-change="onPageCurrentChange"
@@ -50,6 +51,7 @@ import depApi from "../../../api/acl/dep.js";
 
 import {ref, onMounted, reactive, getCurrentInstance, provide, useContext} from "vue";
 import enums from "../../../utils/enums";
+import de from "element-plus/packages/locale/lang/de";
 
 const gp = getCurrentInstance().appContext.config.globalProperties;
 
@@ -106,14 +108,14 @@ let tableColumn = reactive([
   {
     columnObj: {prop: 'sequence', label: '有效'},
     formItemObj: {prop: '', labelWidth: '0px', size: 'mini', style: {marginBottom: '0'}},
-    domObj: {dom: 'input', type: 'text', model: 'isDel'}
+    domObj: {dom: 'input', type: 'text', model: 'isDel', select: 'dom-input-select'}
   }
 ]);
 
 let listLoading = ref(true);
 let total = ref(0);
 let currentPage = ref(1);
-let pageSize = ref(20);
+let pageSize = ref(1);
 const multipleSelection = ref([]);
 
 const refDialogMu = ref(null);
@@ -127,12 +129,12 @@ const onAdd = () => {
 
 const onSearch = (page = 1) => {
   currentPage.value = page;
-
   depApi
     .page(currentPage.value, pageSize.value, search)
     .then((res) => {
       form.value.formList = res.data.items;
-      total.value = res.data.total;
+      // total.value = res.data.total;
+      total.value = 100;
 
       listLoading.value = false;
     });
@@ -163,6 +165,12 @@ const onSelect = (selection, row) => {
 }
 
 const onPageSelect = (selection, row) => {
+  console.log(selection)
+  console.log(row)
+  debugger
+}
+
+const onDomInputSelect = (selection, row) => {
   console.log(selection)
   console.log(row)
   debugger

@@ -82,7 +82,7 @@
                 <zwx-input
                   :form="form" :config="col.domObj"
                   @change="val => col.domObj.change && $emit(col.domObj.change, val)"
-                  @select.stop.self="val => col.domObj.select && $emit(col.domObj.select, val)">
+                  @select.stop="val => col.domObj.select && $emit(col.domObj.select, val)">
                 </zwx-input>
               </zwx-form-item>
 
