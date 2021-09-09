@@ -84,12 +84,8 @@ import ZwxRadioGroup from "../com-el/zwx-radio-group.vue";
 import ZwxButton from '../com-el/zwx-button.vue';
 
 import {
-  defineComponent, defineProps, ref, useContext
+  defineProps, ref, useContext
 } from "vue";
-
-defineComponent({
-  inheritAttrs: false
-});
 
 const props = defineProps({
   form: {

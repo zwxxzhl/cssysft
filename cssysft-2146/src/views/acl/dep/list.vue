@@ -6,20 +6,23 @@
       :form-row="searchRow"
       @dep-name-change="onDepNameChange"
       @search-click="onSearch()"
-      @add-click="onAdd">
+      @add-click="onAdd"
+      @edit-click="onEdit"
+      @delete-click="onDelete">
     </zwx-form-mu>
 
     <zwx-list-mu
+      :key="key"
       :header-row-class-name="() => 'header-row-class'"
       :size="'medium'"
       stripe
       :form="form"
       :table-column="tableColumn"
-      :selection-show="true"
+      :selection-show="selectionShow"
       @select="onSelect"
       @current-change="onCurrentChange"
       @header-event="onHeaderEvent"
-      @dom-input-select="onDomInputSelect"
+      @dom-input-change="onDomInputChange"
       :pagination-show="true"
       :total="total"
       :current-page="currentPage"
@@ -51,7 +54,6 @@ import depApi from "../../../api/acl/dep.js";
 
 import {ref, onMounted, reactive, getCurrentInstance, provide, useContext} from "vue";
 import enums from "../../../utils/enums";
-import de from "element-plus/packages/locale/lang/de";
 
 const gp = getCurrentInstance().appContext.config.globalProperties;
 
@@ -61,6 +63,7 @@ provide('comMethod', {
 });
 
 let screenWidth = ref(0);
+let key = ref(0);
 
 let search = reactive({});
 const searchRow = reactive([
@@ -108,14 +111,15 @@ let tableColumn = reactive([
   {
     columnObj: {prop: 'sequence', label: '有效'},
     formItemObj: {prop: '', labelWidth: '0px', size: 'mini', style: {marginBottom: '0'}},
-    domObj: {dom: 'input', type: 'text', model: 'isDel', select: 'dom-input-select'}
+    domObj: {dom: 'input', type: 'text', model: 'sequence', change: 'dom-input-change'}
   }
 ]);
 
 let listLoading = ref(true);
+let selectionShow = ref(false);
 let total = ref(0);
 let currentPage = ref(1);
-let pageSize = ref(1);
+let pageSize = ref(10);
 const multipleSelection = ref([]);
 
 const refDialogMu = ref(null);
@@ -123,8 +127,22 @@ const refDepForm = ref(null);
 
 /* ============================================= */
 
+const toRenderTable = () => {
+  key.value++;
+}
+
 const onAdd = () => {
   refDialogMu.value.open(null, refDepForm.value, enums.formType.add);
+}
+
+const onEdit = () => {
+  // selectionShow.value = !selectionShow.value;
+  form.value.formList[1].sequence++;
+  toRenderTable();
+}
+const onDelete = () => {
+  form.value.formList.splice(1, 1);
+  toRenderTable();
 }
 
 const onSearch = (page = 1) => {
@@ -133,8 +151,7 @@ const onSearch = (page = 1) => {
     .page(currentPage.value, pageSize.value, search)
     .then((res) => {
       form.value.formList = res.data.items;
-      // total.value = res.data.total;
-      total.value = 100;
+      total.value = res.data.total;
 
       listLoading.value = false;
     });
@@ -151,7 +168,7 @@ const onPageSizeChange = (val) => {
 }
 
 const onCurrentChange = (val) => {
-  debugger
+  console.log('当前选择row改变');
 }
 
 const onAfterSave = () => {
@@ -170,10 +187,11 @@ const onPageSelect = (selection, row) => {
   debugger
 }
 
-const onDomInputSelect = (selection, row) => {
-  console.log(selection)
-  console.log(row)
-  debugger
+const onDomInputChange = (val, row) => {
+  toRenderTable();
+  console.log("table 中 input 改变事件");
+  console.log(val);
+  console.log(row);
 }
 
 const onHeaderEvent = (val, e) => {

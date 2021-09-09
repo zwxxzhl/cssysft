@@ -26,14 +26,9 @@ import depApi from "../../../../api/acl/dep.js";
 import enums from "../../../../utils/enums.js";
 
 import {
-  ref, useContext, defineEmit, inject, reactive, defineComponent,
+  ref, useContext, defineEmit, inject, reactive,
   getCurrentInstance, onMounted
 } from "vue";
-import de from "element-plus/packages/locale/lang/de";
-
-defineComponent({
-  inheritAttrs: false
-});
 
 const globalProperties = getCurrentInstance().appContext.config.globalProperties;
 
@@ -68,7 +63,6 @@ const rules = ref({
   depNo: [{required: true, trigger: 'blur', message: '编码必须输入'}]
 });
 const loading = ref(false);
-
 
 
 const initData = () => {

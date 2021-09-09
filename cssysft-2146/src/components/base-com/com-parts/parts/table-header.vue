@@ -38,12 +38,8 @@
 
 <script setup>
 import {
-  defineComponent, defineProps
+  defineProps
 } from "vue";
-
-defineComponent({
-  inheritAttrs: false
-});
 
 const props = defineProps({
   config: {

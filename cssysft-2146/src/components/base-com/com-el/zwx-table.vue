@@ -74,15 +74,15 @@
               <zwx-form-item :config="col.formItemObj" v-if="col.domObj && 'checkbox' === col.domObj.dom">
                 <zwx-checkbox
                   :form="scope.row" :config="col.domObj"
-                  @change="val => col.domObj.change && $emit(col.domObj.change, val)">
+                  @change="val => col.domObj.change && $emit(col.domObj.change, val, scope.row)">
                 </zwx-checkbox>
               </zwx-form-item>
 
               <zwx-form-item :config="col.formItemObj" v-else-if="col.domObj && 'input' === col.domObj.dom">
                 <zwx-input
-                  :form="form" :config="col.domObj"
-                  @change="val => col.domObj.change && $emit(col.domObj.change, val)"
-                  @select.stop="val => col.domObj.select && $emit(col.domObj.select, val)">
+                  :form="scope.row" :config="col.domObj"
+                  @change="val => col.domObj.change && $emit(col.domObj.change, val, scope.row)"
+                  @select.stop="val => col.domObj.select && $emit(col.domObj.select, val, scope.row)">
                 </zwx-input>
               </zwx-form-item>
 
@@ -131,11 +131,15 @@ import {
   watchEffect
 } from "vue";
 
+defineComponent({
+  inheritAttrs: false
+});
+
 const props = defineProps({
   form: {
     type: Object,
-    required: true,
-    default: () => ({formList: []})
+    required: false,
+    default: () => (ref({formList: []}))
   },
   rules: {
     type: Object,
@@ -157,10 +161,6 @@ const props = defineProps({
     required: false,
     default: false
   }
-});
-
-defineComponent({
-  inheritAttrs: false
 });
 
 const { attrs, slots } = useContext();
@@ -194,7 +194,8 @@ const formatter = (row, column, cellValue, index) => {
 }
 
 watchEffect(() => {
-
+  console.log('table 监控');
+  console.log(props.selectionShow);
 })
 
 computed(() => {

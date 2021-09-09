@@ -1,19 +1,22 @@
 <template>
-
-  <el-pagination
-    :key="currentPage"
-    :total="total"
-    :current-page="currentPage"
-    :page-size="pageSize"
-    :page-sizes="[1, 5, 10, 20, 30, 40, 50, 100]"
-    layout="sizes, prev, pager, next, jumper, ->, total, slot">
-  </el-pagination>
-
+  <div>
+    <!-- @current-change 以及 选中页码输入框(el-input) 中数字会触发 @select 事件，与 el-table 中事件冲突 -->
+    <el-pagination
+      :total="total"
+      :current-page="currentPage"
+      :page-size="pageSize"
+      :page-sizes="[1, 5, 10, 20, 30, 40, 50, 100]"
+      @current-change="$emit('page-current-change', $event)"
+      @size-change="$emit('page-size-change', $event)"
+      @select.stop="$emit('page-select', $event)"
+      layout="sizes, prev, pager, next, jumper, ->, total, slot">
+    </el-pagination>
+  </div>
 </template>
 
 <script setup>
 import {
-  defineProps, ref, watch
+  defineProps, ref, watch, watchEffect
 } from "vue";
 
 const props = defineProps({
@@ -33,15 +36,6 @@ const props = defineProps({
     default: 10
   }
 });
-
-let key = ref(0);
-
-watch([() => props.currentPage, () => props.pageSize],
-  ([pageVal, pagePreVal], [sizeVal, sizePreVal]) => {debugger
-    pageVal;pagePreVal;sizeVal;sizePreVal;
-    key.value++;
-    console.log("触发了watch");
-  }, {deep: true});
 
 </script>
 
