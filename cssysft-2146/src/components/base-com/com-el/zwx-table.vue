@@ -138,8 +138,7 @@ defineComponent({
 const props = defineProps({
   form: {
     type: Object,
-    required: false,
-    default: () => (ref({formList: []}))
+    required: true
   },
   rules: {
     type: Object,

@@ -1,7 +1,8 @@
 <template>
   <zwx-table
     ref="refZwxTable"
-    v-bind="$attrs">
+    v-bind="$attrs"
+    :form="form">
   </zwx-table>
 
   <zwx-pagination
@@ -21,6 +22,10 @@ import {
 } from "vue";
 
 const props = defineProps({
+  form: {
+    type: Object,
+    required: true
+  },
   paginationShow: {
     type: Boolean,
     required: false,

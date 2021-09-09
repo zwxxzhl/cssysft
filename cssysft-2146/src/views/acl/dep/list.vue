@@ -32,6 +32,17 @@
       @page-size-change="onPageSizeChange">
     </zwx-list-mu>
 
+    <!--<el-form ref="refTableForm" :model="form">
+      <el-table :data="form.formList" style="width: 100%">
+        <template v-if="selectionShow">
+          <el-table-column type="selection" header-align="center" align="center" fixed="left"></el-table-column>
+        </template>
+        <el-table-column prop="depNo" label="编码" width="180"></el-table-column>
+        <el-table-column prop="depName" label="名称" width="180"></el-table-column>
+        <el-table-column prop="sequence" label="排序"></el-table-column>
+      </el-table>
+    </el-form>-->
+
     <dialog-mu ref="refDialogMu" title="部门表单" width="50%" top="10vh" :heightPercent="0.6" :footer="false">
       <template #content="sp">
         <dep-form ref="refDepForm" @after-save="onAfterSave"></dep-form>
@@ -80,19 +91,47 @@ const searchRow = reactive([
     },
     {
       rowObj: {colStyle: {width: '89px', margin: '0 5px 5px 15px'}},
-      domObj: {dom: 'button', label: '搜索', click: 'search-click', type: comCfg.searchBtnType, icon: comCfg.searchBtnIcon, size: comCfg.buttonSize},
+      domObj: {
+        dom: 'button',
+        label: '搜索',
+        click: 'search-click',
+        type: comCfg.searchBtnType,
+        icon: comCfg.searchBtnIcon,
+        size: comCfg.buttonSize
+      },
     },
     {
       rowObj: {colStyle: {width: '89px', margin: '0 5px 5px 5px'}},
-      domObj: {dom: 'button', label: '新增', click: 'add-click', type: comCfg.addBtnType, icon: comCfg.addBtnIcon, size: comCfg.buttonSize},
+      domObj: {
+        dom: 'button',
+        label: '新增',
+        click: 'add-click',
+        type: comCfg.addBtnType,
+        icon: comCfg.addBtnIcon,
+        size: comCfg.buttonSize
+      },
     },
     {
       rowObj: {colStyle: {width: '89px', margin: '0 5px 5px 5px'}},
-      domObj: {dom: 'button', label: '编辑', click: 'edit-click', type: comCfg.editBtnType, icon: comCfg.editBtnIcon, size: comCfg.buttonSize},
+      domObj: {
+        dom: 'button',
+        label: '编辑',
+        click: 'edit-click',
+        type: comCfg.editBtnType,
+        icon: comCfg.editBtnIcon,
+        size: comCfg.buttonSize
+      },
     },
     {
       rowObj: {span: 0, colStyle: {width: '89px', margin: '0 5px 5px 5px'}},
-      domObj: {dom: 'button', label: '删除', click: 'delete-click', type: comCfg.deleteBtnType, icon: comCfg.deleteBtnIcon, size: comCfg.buttonSize},
+      domObj: {
+        dom: 'button',
+        label: '删除',
+        click: 'delete-click',
+        type: comCfg.deleteBtnType,
+        icon: comCfg.deleteBtnIcon,
+        size: comCfg.buttonSize
+      },
     }
   ]
 ]);
@@ -138,11 +177,11 @@ const onAdd = () => {
 const onEdit = () => {
   // selectionShow.value = !selectionShow.value;
   form.value.formList[1].sequence++;
-  toRenderTable();
+  // toRenderTable();
 }
 const onDelete = () => {
   form.value.formList.splice(1, 1);
-  toRenderTable();
+  // toRenderTable();
 }
 
 const onSearch = (page = 1) => {
@@ -188,7 +227,7 @@ const onPageSelect = (selection, row) => {
 }
 
 const onDomInputChange = (val, row) => {
-  toRenderTable();
+  // toRenderTable();
   console.log("table 中 input 改变事件");
   console.log(val);
   console.log(row);
