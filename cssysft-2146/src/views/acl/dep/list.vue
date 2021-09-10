@@ -12,6 +12,7 @@
     </zwx-form-mu>
 
     <zwx-list-mu
+      ref="refZwxListMu"
       :key="key"
       :header-row-class-name="() => 'header-row-class'"
       :size="'medium'"
@@ -37,9 +38,21 @@
         <template v-if="selectionShow">
           <el-table-column type="selection" header-align="center" align="center" fixed="left"></el-table-column>
         </template>
-        <el-table-column prop="depNo" label="编码" width="180"></el-table-column>
-        <el-table-column prop="depName" label="名称" width="180"></el-table-column>
-        <el-table-column prop="sequence" label="排序"></el-table-column>
+
+        <template v-if="false">
+          <el-table-column prop="depNo" label="编码" width="180"></el-table-column>
+          <el-table-column prop="depName" label="名称" width="180"></el-table-column>
+          <el-table-column prop="sequence" label="排序"></el-table-column>
+        </template>
+        <template v-else>
+          <el-table-column prop="depNo" label="编码" width="180"></el-table-column>
+          <el-table-column prop="depName" label="名称" width="180">
+            <template #default="scope">
+              <span>自定义名称</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="sequence" label="排序"></el-table-column>
+        </template>
       </el-table>
     </el-form>-->
 
@@ -164,6 +177,8 @@ const multipleSelection = ref([]);
 const refDialogMu = ref(null);
 const refDepForm = ref(null);
 
+const refZwxListMu = ref(null);
+
 /* ============================================= */
 
 const toRenderTable = () => {
@@ -178,6 +193,9 @@ const onEdit = () => {
   // selectionShow.value = !selectionShow.value;
   form.value.formList[1].sequence++;
   // toRenderTable();
+
+  refZwxListMu.value.refZwxTable.ceshiForm.formList[1].sequence++;
+  // refZwxListMu.value.refZwxTable.selectionShowCeshi = !refZwxListMu.value.refZwxTable.selectionShowCeshi;
 }
 const onDelete = () => {
   form.value.formList.splice(1, 1);
