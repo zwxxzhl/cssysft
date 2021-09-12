@@ -11,14 +11,14 @@
       @delete-click="onDelete">
     </zwx-form-mu>
 
-    <zwx-list-mu
+    <!--<zwx-list-mu
       ref="refZwxListMu"
-      :key="key"
       :header-row-class-name="() => 'header-row-class'"
       :size="'medium'"
       stripe
       :form="form"
       :table-column="tableColumn"
+      row-key="id"
       :selection-show="selectionShow"
       @select="onSelect"
       @current-change="onCurrentChange"
@@ -31,30 +31,34 @@
       @page-select="onPageSelect"
       @page-current-change="onPageCurrentChange"
       @page-size-change="onPageSizeChange">
-    </zwx-list-mu>
+    </zwx-list-mu>-->
 
-    <!--<el-form ref="refTableForm" :model="form">
+    <el-form ref="refTableForm" :model="form">
       <el-table :data="form.formList" style="width: 100%">
         <template v-if="selectionShow">
           <el-table-column type="selection" header-align="center" align="center" fixed="left"></el-table-column>
         </template>
 
-        <template v-if="false">
+        <!--<template v-if="false">
           <el-table-column prop="depNo" label="编码" width="180"></el-table-column>
           <el-table-column prop="depName" label="名称" width="180"></el-table-column>
           <el-table-column prop="sequence" label="排序"></el-table-column>
         </template>
         <template v-else>
+        </template>-->
           <el-table-column prop="depNo" label="编码" width="180"></el-table-column>
           <el-table-column prop="depName" label="名称" width="180">
             <template #default="scope">
-              <span>自定义名称</span>
+              <el-form-item label="aa">
+                <el-input v-model="abcVal"></el-input>
+              </el-form-item>
             </template>
           </el-table-column>
           <el-table-column prop="sequence" label="排序"></el-table-column>
-        </template>
       </el-table>
-    </el-form>-->
+    </el-form>
+
+    <el-input v-model="abcVal"></el-input>
 
     <dialog-mu ref="refDialogMu" title="部门表单" width="50%" top="10vh" :heightPercent="0.6" :footer="false">
       <template #content="sp">
@@ -88,6 +92,7 @@ provide('comMethod', {
 
 let screenWidth = ref(0);
 let key = ref(0);
+let abcVal = ref('aaaa');
 
 let search = reactive({});
 const searchRow = reactive([
@@ -192,10 +197,11 @@ const onAdd = () => {
 const onEdit = () => {
   // selectionShow.value = !selectionShow.value;
   form.value.formList[1].sequence++;
-  // toRenderTable();
+  toRenderTable();
 
-  refZwxListMu.value.refZwxTable.ceshiForm.formList[1].sequence++;
+  // refZwxListMu.value.refZwxTable.ceshiForm.formList[1].sequence++;
   // refZwxListMu.value.refZwxTable.selectionShowCeshi = !refZwxListMu.value.refZwxTable.selectionShowCeshi;
+  // refZwxListMu.value.refZwxTable.key++;
 }
 const onDelete = () => {
   form.value.formList.splice(1, 1);

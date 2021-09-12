@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="refTableForm" :model="form" :rules="rules">
+  <el-form ref="refTableForm" :model="ceshiForm" :rules="rules">
     <el-table
       ref="refTable"
       v-bind="$attrs"
@@ -73,7 +73,6 @@
               </template>
 
               <template v-else>
-
                 <template v-if="col.domObj && 'checkbox' === col.domObj.dom">
                   <zwx-form-item :config="col.formItemObj">
                     <zwx-checkbox
@@ -84,13 +83,16 @@
                 </template>
 
                 <template v-else-if="col.domObj && 'input' === col.domObj.dom">
-                  <zwx-form-item :config="col.formItemObj">
+                  <!--<zwx-form-item :config="col.formItemObj">
                     <zwx-input
                       :form="scope.row" :config="col.domObj"
                       @change="val => col.domObj.change && $emit(col.domObj.change, val, scope.row)"
                       @select.stop="val => col.domObj.select && $emit(col.domObj.select, val, scope.row)">
                     </zwx-input>
-                  </zwx-form-item>
+                  </zwx-form-item>-->
+                  <el-form-item label="aa">
+                    <el-input v-model="ceshiForm.formList[1].sequence"></el-input>
+                  </el-form-item>
                 </template>
 
                 <span v-else>{{ scope.row[col.columnObj.prop] }}</span>
@@ -170,13 +172,16 @@ const props = defineProps({
 const {expose} = useContext();
 
 const ceshiForm = ref({
+  int: 1,
   formList: [
-    {depId: '1', depName: '区庄服务部', depNo: '013', sequence: 1},
-    {depId: '2', depName: '黄埔服务部', depNo: '015', sequence: 2},
-    {depId: '3', depName: '番禺服务部', depNo: '016', sequence: 3}
+    {id: '1', depName: '区庄服务部', depNo: '013', sequence: 1},
+    {id: '2', depName: '黄埔服务部', depNo: '015', sequence: 2},
+    {id: '3', depName: '番禺服务部', depNo: '016', sequence: 3}
   ]
 });
 let selectionShowCeshi = ref(true);
+let key = ref(0);
+let int = ref(1);
 
 const {attrs, slots} = useContext();
 console.log('attrs');
@@ -209,8 +214,9 @@ const formatter = (row, column, cellValue, index) => {
 }
 
 watchEffect(() => {
-  console.log('table 监控');
+  console.log('table == 监控');
   console.log(props.selectionShow);
+  console.log(key.value);
 })
 
 computed(() => {
@@ -218,7 +224,7 @@ computed(() => {
 });
 
 expose({
-  refTable, refTableForm, ceshiForm, selectionShowCeshi
+  refTable, refTableForm, ceshiForm, selectionShowCeshi, key
 });
 
 </script>
