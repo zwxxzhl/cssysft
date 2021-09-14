@@ -1,0 +1,76 @@
+@import './variables.scss';
+
+.color-red {
+    color: $colorRed !important;
+}
+
+.color-blue {
+    color: $colorBlue !important;
+}
+
+.color-aqua-blue {
+    color: $colorAquaBlue !important;
+}
+
+.color-orange {
+    color: $colorOrange !important;
+}
+
+.color-green {
+    color: $colorGreen !important;
+}
+
+.color-dark-green {
+    color: $colorDarkGreen !important;
+}
+
+.color-gray {
+    color: $colorGray !important;
+}
+
+.color-purple {
+    color: $colorPurple !important;
+}
+
+.dialog-content {
+    position: absolute;
+    top: 0;
+    bottom: 61px;
+    left: 0;
+    right: 0;
+    overflow: auto;
+}
+
+.dialog-bottom {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    padding: 10px 0 15px 0;
+    background-color: white;
+}
+
+.icon-layout-mini {
+    padding: 0 5px;
+    cursor: pointer;
+}
+
+.flex-row-center {
+    display: flex;
+    justify-content: center;
+}
+
+.fixed-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.flex-warp {
+    flex-wrap: wrap;
+}
+
+.header-row-class th {
+    color: $colorInfo-02;
+    background-color: $colorPrimary-03;
+}
