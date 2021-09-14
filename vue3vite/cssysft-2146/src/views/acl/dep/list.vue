@@ -33,8 +33,8 @@
       @page-size-change="onPageSizeChange">
     </zwx-list-mu>
 
-    <!--<el-form ref="refTableForm" :model="form">
-      <el-table :data="form.formList" style="width: 100%">
+   <!-- <el-form ref="refTableForm" :model="form">
+      <el-table :data="form.formList" style="width: 100%" :header-row-class-name="() => 'header-row-class'">
         <template v-if="selectionShow">
           <el-table-column type="selection" header-align="center" align="center" fixed="left"></el-table-column>
         </template>
@@ -48,17 +48,20 @@
         </template>&ndash;&gt;
           <el-table-column prop="depNo" label="编码" width="180"></el-table-column>
           <el-table-column prop="depName" label="名称" width="180">
+            &lt;!&ndash;<span>111</span>&ndash;&gt;
+          </el-table-column>
+          &lt;!&ndash;<el-table-column prop="depName" label="名称" width="180">
             <template #default="scope">
               <el-form-item label="aa">
                 <el-input v-model="scope.row.sequence"></el-input>
               </el-form-item>
             </template>
-          </el-table-column>
+          </el-table-column>&ndash;&gt;
           <el-table-column prop="sequence" label="排序"></el-table-column>
       </el-table>
-    </el-form>
+    </el-form>-->
 
-    <el-input v-model="abcVal"></el-input>-->
+    <el-input v-model="abcVal"></el-input>
 
     <dialog-mu ref="refDialogMu" title="部门表单" width="50%" top="10vh" :heightPercent="0.6" :footer="false">
       <template #content="sp">

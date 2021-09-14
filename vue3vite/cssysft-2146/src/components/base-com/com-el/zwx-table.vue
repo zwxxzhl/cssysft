@@ -20,8 +20,7 @@
 
       <template v-for="(col, index) in tableColumn" :key="index">
 
-        <!--<template v-if="col.columnObj.formatter">-->
-        <template v-if="true">
+        <template v-if="col.columnObj.formatter">
           <el-table-column
             show-overflow-tooltip
             :header-align="col.columnObj.headerAlign || 'center'"
@@ -31,8 +30,7 @@
             :prop="col.columnObj.prop || ''"
             :label="col.columnObj.label || ''"
             :column-key="index.toString()"
-            >
-            <!--:formatter="formatter">-->
+            :formatter="formatter">
 
             <template #header="scope">
               <table-header :config="col.columnObj" :scope="scope" @[col.columnObj.headerEvent]="(val, e) => col.columnObj.headerEvent && $emit(col.columnObj.headerEvent, val, e)">
