@@ -36,11 +36,6 @@
         <span>编辑</span>
       </template>
 
-      <!--<template #ceshislot>
-        <span>删除</span>
-        &lt;!&ndash;<el-table-column prop="depNo" label="测试" header-align="center" align="center"></el-table-column>&ndash;&gt;
-      </template>-->
-
     </zwx-list-mu>
 
    <!-- <el-form ref="refTableForm" :model="form">
@@ -113,6 +108,7 @@ import depApi from "../../../api/acl/dep.js";
 
 import {ref, onMounted, reactive, getCurrentInstance, provide} from "vue";
 import enums from "../../../utils/enums";
+import dayjs from "dayjs";
 
 const gp = getCurrentInstance().appContext.config.globalProperties;
 
@@ -120,6 +116,15 @@ let {dateYMDHmsFormat} = comUtils
 provide('comMethod', {
   dateYMDHmsFormat
 });
+
+const sequenceFormatte = (row,column) => {
+  let data = row[column.property];
+  if (1 === data) {
+    return '是'
+  } else {
+    return '否';
+  }
+}
 
 let screenWidth = ref(0);
 let key = ref(0);
@@ -188,10 +193,19 @@ const searchRow = reactive([
 const form = ref({formList: []});
 let tableColumn = reactive([
   {
-    columnObj: {prop: 'depName', label: '部门', headerAk: true, headerEvent: 'header-event'},
+    columnObj: {type: 'selection'}
   },
   {
-    columnObj: {prop: 'depNo', label: '编码'},
+    columnObj: {type: 'index', label: '序号'}
+  },
+  {
+    columnObj: {prop: 'sequence', label: '时间', formatter: sequenceFormatte}
+  },
+  {
+    columnObj: {prop: 'depName', label: '部门', headerAk: true, headerEvent: 'header-event', width: 800}
+  },
+  {
+    columnObj: {prop: 'depNo', label: '编码', width: 800}
   },
   {
     columnObj: {prop: 'sequence', label: '顺序'}
@@ -202,7 +216,7 @@ let tableColumn = reactive([
     domObj: {dom: 'input', type: 'text', model: 'sequence', change: 'dom-input-change'}
   },
   {
-    columnObj: {label: '操作', rowSlot: true, rowSlotName: 'operation'}
+    columnObj: {label: '操作', rowSlot: true, rowSlotName: 'operation', fixed: 'right'}
   }
 ]);
 
