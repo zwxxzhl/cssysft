@@ -1,8 +1,7 @@
 <template>
   <zwx-table
     ref="refZwxTable"
-    v-bind="$attrs"
-    :form="form">
+    v-bind="$attrs">
 
     <template v-for="slotName in Object.keys($slots)" #[slotName]="scope">
       <slot :name="slotName" v-bind="scope"></slot>
@@ -27,10 +26,6 @@ import {
 } from "vue";
 
 const props = defineProps({
-  form: {
-    type: Object,
-    required: true
-  },
   paginationShow: {
     type: Boolean,
     required: false,
@@ -44,14 +39,6 @@ defineComponent({
 
 const refZwxTable = ref(null);
 const refZwxPagination = ref(null);
-
-const attrs = useAttrs();
-const slots = useSlots();
-console.log('parent-attrs');
-console.log(attrs);
-console.log('parent-slots');
-console.log(slots);
-console.log(Object.keys(slots));
 
 defineExpose({
   refZwxTable, refZwxPagination

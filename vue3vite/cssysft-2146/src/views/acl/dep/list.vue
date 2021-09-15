@@ -13,13 +13,12 @@
 
     <zwx-list-mu
       ref="refZwxListMu"
-      :header-row-class-name="() => 'header-row-class'"
-      :size="'medium'"
-      stripe
+      :header-row-class-name="() => comCfg.elTable.headerRowClassName"
+      :size="comCfg.elTable.size"
+      :stripe="comCfg.elTable.stripe"
       :form="form"
       :table-column="tableColumn"
       row-key="id"
-      :selection-show="selectionShow"
       @select="onSelect"
       @current-change="onCurrentChange"
       @header-event="onHeaderEvent"
@@ -149,9 +148,9 @@ const searchRow = reactive([
         dom: 'button',
         label: '搜索',
         click: 'search-click',
-        type: comCfg.searchBtnType,
-        icon: comCfg.searchBtnIcon,
-        size: comCfg.buttonSize
+        type: comCfg.elButton.search,
+        icon: comCfg.elButton.searchIcon,
+        size: comCfg.elButton.size
       }
     },
     {
@@ -160,9 +159,9 @@ const searchRow = reactive([
         dom: 'button',
         label: '新增',
         click: 'add-click',
-        type: comCfg.addBtnType,
-        icon: comCfg.addBtnIcon,
-        size: comCfg.buttonSize
+        type: comCfg.elButton.add,
+        icon: comCfg.elButton.addIcon,
+        size: comCfg.elButton.size
       }
     },
     {
@@ -171,9 +170,9 @@ const searchRow = reactive([
         dom: 'button',
         label: '编辑',
         click: 'edit-click',
-        type: comCfg.editBtnType,
-        icon: comCfg.editBtnIcon,
-        size: comCfg.buttonSize
+        type: comCfg.elButton.edit,
+        icon: comCfg.elButton.editIcon,
+        size: comCfg.elButton.size
       }
     },
     {
@@ -182,9 +181,9 @@ const searchRow = reactive([
         dom: 'button',
         label: '删除',
         click: 'delete-click',
-        type: comCfg.deleteBtnType,
-        icon: comCfg.deleteBtnIcon,
-        size: comCfg.buttonSize
+        type: comCfg.elButton.delete,
+        icon: comCfg.elButton.deleteIcon,
+        size: comCfg.elButton.size
       }
     }
   ]
@@ -202,10 +201,10 @@ let tableColumn = reactive([
     columnObj: {prop: 'sequence', label: '时间', formatter: sequenceFormatte}
   },
   {
-    columnObj: {prop: 'depName', label: '部门', headerAk: true, headerEvent: 'header-event', width: 800}
+    columnObj: {prop: 'depName', label: '部门', headerAk: true, headerEvent: 'header-event'}
   },
   {
-    columnObj: {prop: 'depNo', label: '编码', width: 800}
+    columnObj: {prop: 'depNo', label: '编码'}
   },
   {
     columnObj: {prop: 'sequence', label: '顺序'}

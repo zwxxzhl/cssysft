@@ -70,7 +70,7 @@
     flex-wrap: wrap;
 }
 
-.header-row-class th {
+.table-header th.el-table__cell {
     color: $colorInfo-02;
     background-color: $colorPrimary-03;
 }

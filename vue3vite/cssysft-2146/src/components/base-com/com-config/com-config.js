@@ -1,30 +1,28 @@
 export default {
-    buttonSize: 'medium',
-
-    searchBtnType: 'primary',
-    searchBtnIcon: 'el-icon-search',
-
-    addBtnType: 'success',
-    addBtnIcon: 'el-icon-plus',
-
-    editBtnType: 'danger',
-    editBtnIcon: 'el-icon-edit',
-
-    deleteBtnType: 'info',
-    deleteBtnIcon: 'el-icon-delete',
-
-    printBtnType: 'warning',
-    printBtnIcon: 'el-icon-printer',
-
-    confirmBtnType: 'success',
-    confirmBtnIcon: 'el-icon-check',
-
-    closeBtnType: 'info',
-    closeBtnIcon: 'el-icon-close',
-
-    uploadBtnType: 'danger',
-    uploadBtnIcon: 'el-icon-top',
-
-    downloadBtnType: 'info',
-    downloadBtnIcon: 'el-icon-bottom'
+    elTable: {
+        size: 'medium',
+        stripe: true,
+        headerRowClassName: 'table-header'
+    },
+    elButton: {
+        size: 'medium',
+        search: 'primary',
+        searchIcon: 'el-icon-search',
+        add: 'success',
+        addIcon: 'el-icon-plus',
+        edit: 'danger',
+        editIcon: 'el-icon-edit',
+        delete: 'info',
+        deleteIcon: 'el-icon-delete',
+        print: 'warning',
+        printIcon: 'el-icon-printer',
+        confirm: 'success',
+        confirmIcon: 'el-icon-check',
+        close: 'info',
+        closeIcon: 'el-icon-close',
+        upload: 'danger',
+        uploadIcon: 'el-icon-top',
+        download: 'info',
+        downloadIcon: 'el-icon-bottom'
+    }
 }

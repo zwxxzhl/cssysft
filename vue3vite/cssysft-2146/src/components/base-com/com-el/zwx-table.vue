@@ -8,19 +8,21 @@
       <template v-for="(col, index) in tableColumn" :key="index">
         <el-table-column
           :type="col.columnObj.type"
-          :show-overflow-tooltip="col.columnObj.showOverflowTooltip || false"
+          :index="col.columnObj.index || indexMethod"
+          :show-overflow-tooltip="col.columnObj.showOverflowTooltip"
           :header-align="col.columnObj.headerAlign || 'center'"
           :align="col.columnObj.align || 'center'"
-          :width="col.columnObj.width || ''"
-          :min-width="col.columnObj.minWidth || ''"
+          :width="col.columnObj.width"
+          :min-width="col.columnObj.minWidth"
           :column-key="index.toString()"
-          :prop="col.columnObj.prop || ''"
-          :label="col.columnObj.label || ''"
+          :prop="col.columnObj.prop"
+          :label="col.columnObj.label"
           :formatter="col.columnObj.formatter"
           :fixed="col.columnObj.fixed">
 
           <template #[slotHeaderFun(col)]="scope">
-            <table-header :config="col.columnObj" :scope="scope" @[col.columnObj.headerEvent]="(val, e) => col.columnObj.headerEvent && $emit(col.columnObj.headerEvent, val, e)">
+            <table-header :config="col.columnObj" :scope="scope"
+                          @[col.columnObj.headerEvent]="(val, e) => col.columnObj.headerEvent && $emit(col.columnObj.headerEvent, val, e)">
 
               <template #[col.columnObj.headerSlotName]>
                 <slot :name="col.columnObj.headerSlotName" v-bind="scope"></slot>
@@ -141,21 +143,30 @@ let columnRowSlot = computed(() => {
 
 const attrs = useAttrs();
 const slots = useSlots();
-console.log('attrs');
+console.log('zwx-table attrs');
 console.log(attrs);
-console.log('slots');
+console.log('zwx-table slots');
 console.log(slots);
+
+const indexMethod = (index) => {
+  if (attrs['page-size']) {
+    return (attrs['current-page'] - 1) * attrs['page-size'] + index + 1;
+  } else {
+    return index;
+  }
+}
 
 
 const refTable = ref(null);
 const refTableForm = ref(null);
 
 onMounted(() => {
+  console.log('zwx-table refTableForm');
   console.log(refTableForm.value);
 })
 
 watchEffect(() => {
-  console.log('table == 监控');
+  console.log('zwx-table ==> watchEffect');
 })
 
 defineExpose({
@@ -165,5 +176,7 @@ defineExpose({
 </script>
 
 <style scoped>
-
+.el-table :deep(.el-table__cell div .el-checkbox) {
+  height: unset !important;
+}
 </style>
