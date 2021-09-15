@@ -3,14 +3,17 @@
     ref="refZwxTable"
     v-bind="$attrs"
     :form="form">
+    <template #ceshislot>
+      <span>删除</span>
+    </template>
   </zwx-table>
 
-  <!--<zwx-pagination
+  <zwx-pagination
     v-if="paginationShow"
     ref="refZwxPagination"
     style="padding: 5px 0; text-align: left"
     v-bind="$attrs">
-  </zwx-pagination>-->
+  </zwx-pagination>
 </template>
 
 <script setup>

@@ -29,11 +29,11 @@ export const constantRoutes = [
       },
     ]
   },
-  {
-    path: `${PRE_URL}/auth-redirect`,
-    component: () => import('../views/ceshi/list.vue'),
-    hidden: true
-  },
+  // {
+  //   path: `${PRE_URL}/auth-redirect`,
+  //   component: () => import('../views/ceshi/list.vue'),
+  //   hidden: true
+  // },
   {
     path: `${PRE_URL}/login`,
     component: () => import('../views/login/index.vue'),

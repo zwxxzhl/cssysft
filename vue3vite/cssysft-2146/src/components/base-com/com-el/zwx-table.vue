@@ -5,7 +5,7 @@
       v-bind="$attrs"
       :data="form.formList">
 
-      <template v-if="selectionShowCeshi">
+      <!--<template v-if="selectionShow">
         <el-table-column type="selection" header-align="center" align="center" fixed="left"></el-table-column>
       </template>
 
@@ -29,8 +29,9 @@
             :min-width="col.columnObj.minWidth || ''"
             :prop="col.columnObj.prop || ''"
             :label="col.columnObj.label || ''"
+            :formatter="formatter"
             :column-key="index.toString()"
-            :formatter="formatter">
+            :fixed="col.columnObj.fixed">
 
             <template #header="scope">
               <table-header :config="col.columnObj" :scope="scope" @[col.columnObj.headerEvent]="(val, e) => col.columnObj.headerEvent && $emit(col.columnObj.headerEvent, val, e)">
@@ -45,7 +46,7 @@
           </el-table-column>
         </template>
 
-        <!--<template v-else>
+        <template v-else>
           <el-table-column
             show-overflow-tooltip
             :header-align="col.columnObj.headerAlign || 'center'"
@@ -54,7 +55,8 @@
             :min-width="col.columnObj.minWidth || ''"
             :prop="col.columnObj.prop || ''"
             :label="col.columnObj.label || ''"
-            :column-key="index.toString()">
+            :column-key="index.toString()"
+            :fixed="col.columnObj.fixed">
 
             <template #header="scope">
               <table-header :config="col.columnObj" :scope="scope" @[col.columnObj.headerEvent]="(val, e) => col.columnObj.headerEvent && $emit(col.columnObj.headerEvent, val, e)">
@@ -67,9 +69,9 @@
             </template>
 
             <template #default="scope">
-
-              <template v-if="col.columnObj.rowslot">
-                <slot :name="col.columnObj.rowSlotName" v-bind="this"></slot>
+              <template v-if="col.columnObj.rowSlot">
+                <span>{{col.columnObj.rowSlotName}}</span>
+                <slot :name="col.columnObj.rowSlotName" v-bind="scope"></slot>
               </template>
 
               <template v-else>
@@ -94,15 +96,18 @@
 
                 <span v-else>{{ scope.row[col.columnObj.prop] }}</span>
               </template>
-
             </template>
 
           </el-table-column>
-        </template>-->
+        </template>
 
-      </template>
+      </template>-->
 
-      <slot name="operation" v-bind="this"></slot>
+      <el-table-column type="index" label="序号" width="55" header-align="center" align="center">
+        <template #default="scope">
+          <slot name="ceshislot"></slot>
+        </template>
+      </el-table-column>
 
     </el-table>
   </el-form>
@@ -166,18 +171,6 @@ const props = defineProps({
 });
 
 
-const ceshiForm = ref({
-  int: 1,
-  formList: [
-    {id: '1', depName: '区庄服务部', depNo: '013', sequence: 1},
-    {id: '2', depName: '黄埔服务部', depNo: '015', sequence: 2},
-    {id: '3', depName: '番禺服务部', depNo: '016', sequence: 3}
-  ]
-});
-let selectionShowCeshi = ref(true);
-let key = ref(0);
-let int = ref(1);
-
 const attrs = useAttrs();
 const slots = useSlots();
 console.log('attrs');
@@ -212,7 +205,6 @@ const formatter = (row, column, cellValue, index) => {
 watchEffect(() => {
   console.log('table == 监控');
   console.log(props.selectionShow);
-  console.log(key.value);
 })
 
 computed(() => {
@@ -220,7 +212,7 @@ computed(() => {
 });
 
 defineExpose({
-  refTable, refTableForm, ceshiForm, selectionShowCeshi, key
+  refTable, refTableForm
 });
 
 </script>

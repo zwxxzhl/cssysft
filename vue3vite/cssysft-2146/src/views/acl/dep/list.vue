@@ -31,6 +31,16 @@
       @page-select="onPageSelect"
       @page-current-change="onPageCurrentChange"
       @page-size-change="onPageSizeChange">
+
+      <template #operation="scope">
+        <span>编辑</span>
+      </template>
+
+      <!--<template #ceshislot>
+        <span>删除</span>
+        &lt;!&ndash;<el-table-column prop="depNo" label="测试" header-align="center" align="center"></el-table-column>&ndash;&gt;
+      </template>-->
+
     </zwx-list-mu>
 
    <!-- <el-form ref="refTableForm" :model="form">
@@ -61,7 +71,7 @@
       </el-table>
     </el-form>-->
 
-    <el-input v-model="abcVal"></el-input>
+    <!--<el-input v-model="abcVal"></el-input>-->
 
     <dialog-mu ref="refDialogMu" title="部门表单" width="50%" top="10vh" :heightPercent="0.6" :footer="false">
       <template #content="sp">
@@ -162,7 +172,7 @@ const searchRow = reactive([
       }
     },
     {
-      rowObj: {span: 0, colStyle: {flex: '0 0 89px', margin: '0 5px 5px 5px'}},
+      rowObj: {colStyle: {flex: '0 0 89px', margin: '0 5px 5px 5px'}},
       domObj: {
         dom: 'button',
         label: '删除',
@@ -190,6 +200,9 @@ let tableColumn = reactive([
     columnObj: {prop: 'sequence', label: '有效'},
     formItemObj: {prop: '', labelWidth: '0px', size: 'mini', style: {marginBottom: '0'}},
     domObj: {dom: 'input', type: 'text', model: 'sequence', change: 'dom-input-change'}
+  },
+  {
+    columnObj: {label: '操作', rowSlot: true, rowSlotName: 'operation'}
   }
 ]);
 

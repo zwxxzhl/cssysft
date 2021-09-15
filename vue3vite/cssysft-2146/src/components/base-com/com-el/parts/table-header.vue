@@ -30,7 +30,7 @@
 
     <template v-else>
 
-      <slot :name="config.headerSlotName" v-bind="this"></slot>
+      <slot :name="config.headerSlotName" v-bind="scope"></slot>
 
     </template>
   </div>
