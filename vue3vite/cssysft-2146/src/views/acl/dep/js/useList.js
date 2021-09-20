@@ -1,7 +1,14 @@
-import {reactive, ref} from "vue";
+import {getCurrentInstance, reactive, ref} from "vue";
+import depApi from "../../../../api/acl/dep";
 
-export default function useUserRepositories() {
-  const sequenceFormatte = (row,column) => {
+export default function useList(search, form, searchLoading) {
+  const globalProperties = getCurrentInstance().appContext.config.globalProperties;
+
+  let total = ref(0);
+  let currentPage = ref(1);
+  let pageSize = ref(10);
+
+  const sequenceFormatter = (row, column) => {
     let data = row[column.property];
     if (1 === data) {
       return '是'
@@ -10,7 +17,6 @@ export default function useUserRepositories() {
     }
   }
 
-  const form = ref({formList: []});
   let tableColumn = reactive([
     {
       columnObj: {type: 'selection'}
@@ -19,7 +25,7 @@ export default function useUserRepositories() {
       columnObj: {type: 'index', label: '序号'}
     },
     {
-      columnObj: {prop: 'sequence', label: '时间', formatter: sequenceFormatte}
+      columnObj: {prop: 'sequence', label: '时间', formatter: sequenceFormatter}
     },
     {
       columnObj: {prop: 'depName', label: '部门', headerAk: true, headerEvent: 'header-event'}
@@ -40,8 +46,76 @@ export default function useUserRepositories() {
     }
   ]);
 
+  const onSearch = (page = 1) => {
+    currentPage.value = page;
+    searchLoading.value = true;
+    depApi
+      .page(currentPage.value, pageSize.value, search)
+      .then((res) => {
+        if (res.success) {
+          form.value.formList = res.data.items;
+          total.value = res.data.total;
+
+          globalProperties.$message.success(res.message);
+          searchLoading.value = false;
+        } else {
+          globalProperties.$message.error(res.message);
+        }
+      });
+  }
+
+  const onSelect = (selection, row) => {
+    console.log(selection)
+    console.log(row)
+    debugger
+  }
+
+  const onCurrentChange = (val) => {
+    console.log('当前选择row改变');
+  }
+
+  const onHeaderEvent = (val, e) => {
+    console.log(val)
+    console.log(e)
+    debugger
+  }
+
+  const onDomInputChange = (val, row) => {
+    console.log("table 中 input 改变事件");
+    console.log(val);
+    console.log(row);
+  }
+
+  const onPageSelect = (selection, row) => {
+    console.log(selection)
+    console.log(row)
+    debugger
+  }
+
+  const onPageCurrentChange = (val) => {
+    debugger
+    onSearch(val);
+  }
+
+  const onPageSizeChange = (val) => {
+    debugger
+    pageSize.value = val;
+    onSearch();
+  }
+
   return {
     form,
-    tableColumn
+    tableColumn,
+    total,
+    currentPage,
+    pageSize,
+    onSearch,
+    onSelect,
+    onCurrentChange,
+    onHeaderEvent,
+    onDomInputChange,
+    onPageSelect,
+    onPageCurrentChange,
+    onPageSizeChange
   }
 }

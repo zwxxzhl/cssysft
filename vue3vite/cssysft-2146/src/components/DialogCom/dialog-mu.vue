@@ -7,7 +7,7 @@
     @opened="opened"
   >
     <div class="dialog-layout" ref="refDialogContent">
-      <slot name="content" v-bind="this"></slot>
+      <slot name="content"></slot>
     </div>
     <template #footer v-if="footer">
       <div class="dialog-footer">
@@ -77,16 +77,13 @@ defineExpose({
 });
 </script>
 
-<style>
-.el-dialog__body {
+<style scoped>
+.el-dialog :deep(.el-dialog__body) {
   padding: 5px 20px;
   color: #606266;
   font-size: 14px;
   word-break: break-all;
 }
-</style>
-
-<style scoped>
 .dialog-layout {
   position: relative;
 }
