@@ -1,7 +1,7 @@
 import {getCurrentInstance, reactive, ref} from "vue";
 import depApi from "../../../../api/acl/dep";
 
-export default function useList(search, form, searchLoading) {
+export default function useList(search, form, multipleSelection, searchLoading) {
   const globalProperties = getCurrentInstance().appContext.config.globalProperties;
 
   let total = ref(0);
@@ -64,14 +64,17 @@ export default function useList(search, form, searchLoading) {
       });
   }
 
-  const onSelect = (selection, row) => {
-    console.log(selection)
-    console.log(row)
-    debugger
+  const onSelect = (selection, row) => {debugger
+    // todo 刷新，清空选择项，或保留选择项，但是点击分页时，又需要清空选择性
+    multipleSelection.value = selection;
   }
 
   const onCurrentChange = (val) => {
     console.log('当前选择row改变');
+  }
+
+  const onSelectionChange = (val) => {
+    multipleSelection.value = val;
   }
 
   const onHeaderEvent = (val, e) => {
@@ -89,16 +92,13 @@ export default function useList(search, form, searchLoading) {
   const onPageSelect = (selection, row) => {
     console.log(selection)
     console.log(row)
-    debugger
   }
 
   const onPageCurrentChange = (val) => {
-    debugger
     onSearch(val);
   }
 
   const onPageSizeChange = (val) => {
-    debugger
     pageSize.value = val;
     onSearch();
   }
@@ -112,6 +112,7 @@ export default function useList(search, form, searchLoading) {
     onSearch,
     onSelect,
     onCurrentChange,
+    onSelectionChange,
     onHeaderEvent,
     onDomInputChange,
     onPageSelect,

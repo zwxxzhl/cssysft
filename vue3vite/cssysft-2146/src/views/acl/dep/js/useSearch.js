@@ -1,8 +1,10 @@
-import {reactive, ref} from 'vue'
+import {getCurrentInstance, reactive, ref} from 'vue'
 import comCfg from "../../../../components/base-com/com-config/com-config";
 import enums from "../../../../utils/enums";
 
-export default function useSearch(search, form, refDialogMu, refDepForm) {
+export default function useSearch(search, form, multipleSelection, refDialogMu, refDepForm) {
+  const gp = getCurrentInstance().appContext.config.globalProperties;
+
   const searchRow = reactive([
     [
       {
@@ -52,8 +54,13 @@ export default function useSearch(search, form, refDialogMu, refDepForm) {
     refDialogMu.value.open(null, refDepForm.value, enums.formType.add);
   }
 
-  const onEdit = () => {
-    form.value.formList[1].sequence++;
+  const onEdit = (row) => {
+    if (row || multipleSelection.value.length === 1) {
+      let data = (row || multipleSelection.value.length === 1 && multipleSelection.value[0])
+      refDialogMu.value.open(data, refDepForm.value, enums.formType.edit);
+    } else {
+      gp.$message.warning("请选择单行");
+    }
   }
 
   const onDelete = () => {

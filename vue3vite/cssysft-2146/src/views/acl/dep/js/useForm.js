@@ -13,12 +13,12 @@ export default function useForm(dialogData, openType, dialogClose, emit) {
     [{
       rowObj: {span: 24},
       formItemObj: {prop: 'depName', label: '部门名称：'},
-      domObj: {dom: 'input', type: 'text', model: 'depName'},
+      domObj: {model: 'depName', dom: 'input', type: 'text'},
     }],
     [{
       rowObj: {span: 24},
       formItemObj: {prop: 'depNo', label: '部门编码：'},
-      domObj: {model: 'depName', change: 'dep-no-change', dom: 'input', type: 'text'},
+      domObj: {model: 'depNo', change: 'dep-no-change', dom: 'input', type: 'text'},
     }],
     [{
       rowObj: {span: 24},
@@ -37,7 +37,7 @@ export default function useForm(dialogData, openType, dialogClose, emit) {
     form.value = {};
     if (enums.formType.add !== openType.value) {
       depApi.select({id: dialogData.value.id}).then(res => {
-        form.value = res.data;
+        form.value = res.data.items[0];
       })
     }
   }
@@ -91,6 +91,7 @@ export default function useForm(dialogData, openType, dialogClose, emit) {
     form,
     formRow,
     rules,
+    loading,
     initData,
     onSaveOrUpdate,
     onPageClose

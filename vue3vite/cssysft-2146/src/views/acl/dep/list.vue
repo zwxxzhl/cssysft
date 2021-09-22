@@ -7,8 +7,8 @@
       @dep-name-change="onDepNameChange"
       @search-click="onSearch()"
       @add-click="onAdd"
-      @edit-click="onEdit"
-      @delete-click="onDelete">
+      @edit-click="onEdit()"
+      @delete-click="onDelete()">
     </zwx-form-mu>
 
     <zwx-list-mu
@@ -32,7 +32,12 @@
       @page-size-change="onPageSizeChange">
 
       <template #operation="scope">
-        <span>编辑</span>
+        <el-tooltip v-if="hasPerm('dep.update')" effect="dark" content="编辑" placement="left-start">
+          <i class="el-icon-edit icon-layout-mini color-orange" @click="onEdit(scope.row)"></i>
+        </el-tooltip>
+        <el-tooltip v-if="hasPerm('dep.remove')" effect="dark" content="删除" placement="bottom-end">
+          <i class="el-icon-delete icon-layout-mini color-gray" @click="onDelete(scope.row)"></i>
+        </el-tooltip>
       </template>
 
     </zwx-list-mu>
@@ -79,12 +84,12 @@ let multipleSelection = ref([]);
 
 const {
   searchRow, searchLoading, onAdd, onEdit, onDelete, onDepNameChange
-} = useSearch(search, form, refDialogMu, refDepForm);
+} = useSearch(search, form, multipleSelection, refDialogMu, refDepForm);
 
 const {
   tableColumn, total, currentPage, pageSize, onSearch, onSelect, onCurrentChange,
   onHeaderEvent, onDomInputChange, onPageSelect, onPageCurrentChange, onPageSizeChange
-} = useList(search, form, searchLoading);
+} = useList(search, form, multipleSelection, searchLoading);
 
 const onAfterSave = () => {
   onSearch();
