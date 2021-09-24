@@ -1,10 +1,10 @@
 package com.atguigu.aclservice.controller;
 
-
 import com.atguigu.aclservice.entity.Dep;
 import com.atguigu.aclservice.entity.User;
 import com.atguigu.aclservice.service.IDepService;
 import com.atguigu.aclservice.service.UserService;
+import com.atguigu.utils.utils.Helpers;
 import com.atguigu.utils.utils.R;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -13,10 +13,10 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * <p>
@@ -40,7 +40,7 @@ public class DepController {
     @PostMapping("save")
     public R save(@RequestBody Dep dep) {
         QueryWrapper<Dep> wrapper = new QueryWrapper<>();
-        if(!StringUtils.isEmpty(dep.getDepNo())) {
+        if(Helpers.isNotBlank(dep.getDepNo())) {
             wrapper.eq("dep_no", dep.getDepNo());
         }
         List<Dep> list = depService.list(wrapper);
@@ -62,7 +62,7 @@ public class DepController {
     @PutMapping("update")
     public R update(@RequestBody Dep dep) {
         QueryWrapper<Dep> wrapper = new QueryWrapper<>();
-        if(!StringUtils.isEmpty(dep.getDepNo())) {
+        if(Helpers.isNotBlank(dep.getDepNo())) {
             wrapper.eq("dep_no", dep.getDepNo());
         }
         List<Dep> list = depService.list(wrapper);
@@ -79,6 +79,17 @@ public class DepController {
         return R.ok();
     }
 
+    @ApiOperation(value = "删除部门")
+    @DeleteMapping("remove")
+    public R remove(@RequestBody List<String> ids) {
+        if (Optional.ofNullable(ids).isPresent() && ids.size() > 0) {
+            depService.removeByIds(ids);
+        } else {
+            return R.error().message("未传入删除参数");
+        }
+        return R.ok();
+    }
+
     @ApiOperation(value = "获取部门(分页)")
     @GetMapping("{page}/{limit}")
     public R index(
@@ -89,39 +100,33 @@ public class DepController {
             @PathVariable Long limit,
 
             @ApiParam(name = "courseQuery", value = "查询对象", required = false)
-                    Dep queryVo) {
-        Page<Dep> pageParam = new Page<>(page, limit);
-        QueryWrapper<Dep> wrapper = new QueryWrapper<>();
-        if(!StringUtils.isEmpty(queryVo.getId())) {
-            wrapper.eq("id", queryVo.getId());
-        }
-        if(!StringUtils.isEmpty(queryVo.getDepName())) {
-            wrapper.like("dep_name", queryVo.getDepName());
-        }
-        if(!StringUtils.isEmpty(queryVo.getDepNo())) {
-            wrapper.eq("dep_no", queryVo.getDepNo());
-        }
+                    Dep dep) {
 
-        IPage<Dep> pageModel = depService.page(pageParam, wrapper);
+        Page<Dep> pageParam = new Page<>(page, limit);
+        IPage<Dep> pageModel = depService.page(pageParam, getQueryWrapper(dep));
+
         return R.ok().data("items", pageModel.getRecords()).data("total", pageModel.getTotal());
     }
 
     @ApiOperation(value = "获取部门(不分页)")
     @GetMapping("/select")
-    public R select(Dep queryVo) {
-        QueryWrapper<Dep> wrapper = new QueryWrapper<>();
-        if(!StringUtils.isEmpty(queryVo.getId())) {
-            wrapper.eq("id", queryVo.getId());
-        }
-        if(!StringUtils.isEmpty(queryVo.getDepName())) {
-            wrapper.like("dep_name", queryVo.getDepName());
-        }
-        if(!StringUtils.isEmpty(queryVo.getDepNo())) {
-            wrapper.eq("dep_no", queryVo.getDepNo());
-        }
-
-        List<Dep> list = depService.list(wrapper);
+    public R select(Dep dep) {
+        List<Dep> list = depService.list(getQueryWrapper(dep));
         return R.ok().data(R.ITEMS, list);
+    }
+
+    private QueryWrapper<Dep> getQueryWrapper(Dep dep) {
+        QueryWrapper<Dep> wrapper = new QueryWrapper<>();
+        if(Helpers.isNotBlank(dep.getId())) {
+            wrapper.eq("id", dep.getId());
+        }
+        if(Helpers.isNotBlank(dep.getDepName())) {
+            wrapper.like("dep_name", dep.getDepName());
+        }
+        if(Helpers.isNotBlank(dep.getDepNo())) {
+            wrapper.eq("dep_no", dep.getDepNo());
+        }
+        return wrapper;
     }
 
 }

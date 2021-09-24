@@ -47,7 +47,6 @@ export default function useForm(dialogData, openType, dialogClose, emit) {
     depApi.update(form.value).then(res => {
       if (res.success) {
         emit('after-save');
-        globalProperties.$message.success(res.message);
         dialogClose();
       } else {
         globalProperties.$message.error(res.message);
@@ -61,7 +60,6 @@ export default function useForm(dialogData, openType, dialogClose, emit) {
     depApi.save(form.value).then(res => {
       if (res.success) {
         emit('after-save');
-        globalProperties.$message.success(res.message);
         dialogClose();
       } else {
         globalProperties.$message.error(res.message);

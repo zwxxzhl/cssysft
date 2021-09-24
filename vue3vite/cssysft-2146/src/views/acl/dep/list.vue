@@ -78,18 +78,21 @@ const refDialogMu = ref(null);
 const refDepForm = ref(null);
 const refZwxListMu = ref(null);
 
+let searchLoading = ref(false);
 let search = reactive({});
 const form = ref({formList: []});
 let multipleSelection = ref([]);
 
-const {
-  searchRow, searchLoading, onAdd, onEdit, onDelete, onDepNameChange
-} = useSearch(search, form, multipleSelection, refDialogMu, refDepForm);
 
 const {
   tableColumn, total, currentPage, pageSize, onSearch, onSelect, onCurrentChange,
   onHeaderEvent, onDomInputChange, onPageSelect, onPageCurrentChange, onPageSizeChange
-} = useList(search, form, multipleSelection, searchLoading);
+} = useList(search, form, multipleSelection, searchLoading, refZwxListMu);
+
+const {
+  searchRow, onAdd, onEdit, onDelete, onDepNameChange
+} = useSearch(search, form, multipleSelection, searchLoading, refDialogMu, refDepForm, onSearch);
+
 
 const onAfterSave = () => {
   onSearch();

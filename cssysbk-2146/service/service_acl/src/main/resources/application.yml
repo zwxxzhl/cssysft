@@ -10,11 +10,11 @@ spring:
   # mysql数据库连接
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    # url: jdbc:mysql://localhost:3306/acldb
-    url: jdbc:mysql://121.8.142.154:3306/dispatchs?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true
-    username: root
+    # url: jdbc:mysql://localhost:3306/acldb?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true
+    url: ENC(JCpxCkq4eCfdBYBHDKPim/Va/8K8r0S75hsvk0GgjZH5Hto29GvxU8XyRMjTwiKddaGIGtFWmMhQU5uiZOQribDY1J4ZT/fmAaFUToPBUs5yc0souhVIq2A9ALvClFr94DEwNbw2+B5vO2VnGW2ld39IRRfRanw86A0xb22ppxn8WMhMAVIekJPiTad29zHHbL6FrHishGtcI/1xDIYPlQ==)
+    username: ENC(MjTm0lO4+IFaHxrln39TOQ==)
     # localhost Mysql_123456
-    password: vscbqnHWMI8Z032t
+    password: ENC(4Q7edDWexFbWCFE+leDwmkbJ6bE/OiySMplLKADlszQ=)
 
   # redis连接
   redis:
@@ -59,3 +59,10 @@ camunda:
   bpm:
     database:
       schema-update: true
+
+# jasypt加密的密匙
+jasypt:
+  encryptor:
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator
+    password: PNG5egJcwiBrd+chupacabras=

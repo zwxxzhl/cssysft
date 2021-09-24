@@ -30,5 +30,12 @@ export default {
             method: "post",
             data: form
         })
+    },
+    remove(ids) {
+        return request({
+            url: `${api_name}/remove`,
+            method: "delete",
+            data: ids
+        })
     }
 }
