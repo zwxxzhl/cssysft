@@ -76,8 +76,8 @@ provide('comMethod', {
 let screenWidth = ref(0);
 const refDialogMu = ref(null);
 const refDepForm = ref(null);
-const refZwxListMu = ref(null);
 
+const refZwxListMu = ref(null);
 let searchLoading = ref(false);
 let search = reactive({});
 const form = ref({formList: []});

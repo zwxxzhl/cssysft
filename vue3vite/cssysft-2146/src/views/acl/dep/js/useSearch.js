@@ -22,7 +22,7 @@ export default function useSearch(search, form, multipleSelection, searchLoading
                 rowObj: {colStyle: {flex: '0 0 89px', margin: '0 5px 5px 15px'}},
                 domObj: {
                     dom: 'button', label: '搜索', click: 'search-click', type: comCfg.elButton.search,
-                    icon: comCfg.elButton.searchIcon, size: comCfg.elButton.size
+                    icon: comCfg.elButton.searchIcon, size: comCfg.elButton.size, loading: searchLoading
                 }
             },
             {
