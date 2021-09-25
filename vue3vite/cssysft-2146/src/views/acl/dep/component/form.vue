@@ -29,7 +29,7 @@ import comCfg from "../../../../components/base-com/com-config/com-config.js";
 import enums from "../../../../utils/enums.js";
 
 import useForm from "../js/useForm.js";
-import useDialog from "../../../../components/DialogCom/js/useDialog.js";
+import useDialog from "../../../../components/DialogCom/js/useDialogMu.js";
 
 import {
   getCurrentInstance, onMounted
