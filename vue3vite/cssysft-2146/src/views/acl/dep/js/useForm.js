@@ -3,7 +3,7 @@ import enums from "../../../../utils/enums";
 import depApi from "../../../../api/acl/dep";
 
 export default function useForm(dialogData, openType, dialogClose, emit) {
-  const globalProperties = getCurrentInstance().appContext.config.globalProperties;
+  const gp = getCurrentInstance().appContext.config.globalProperties;
 
   const refFormMu = ref(null);
   const form = ref({});
@@ -26,6 +26,7 @@ export default function useForm(dialogData, openType, dialogClose, emit) {
       domObj: {model: 'sequence', change: 'dep-no-change', dom: 'input', type: 'text'},
     }]
   ]);
+
   const rules = ref({
     depName: [{required: true, trigger: 'blur', message: '名称必须输入'}],
     depNo: [{required: true, trigger: 'blur', message: '编码必须输入'}]
@@ -49,7 +50,7 @@ export default function useForm(dialogData, openType, dialogClose, emit) {
         emit('after-save');
         dialogClose();
       } else {
-        globalProperties.$message.error(res.message);
+        gp.$message.error(res.message);
       }
       loading.value = false;
     })
@@ -62,7 +63,7 @@ export default function useForm(dialogData, openType, dialogClose, emit) {
         emit('after-save');
         dialogClose();
       } else {
-        globalProperties.$message.error(res.message);
+        gp.$message.error(res.message);
       }
       loading.value = false;
     })

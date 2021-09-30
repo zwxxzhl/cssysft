@@ -1,10 +1,7 @@
-import {getCurrentInstance, reactive, ref} from 'vue'
+import {reactive} from 'vue'
 import comCfg from "../../../../components/base-com/com-config/com-config";
-import enums from "../../../../utils/enums";
-import depApi from "../../../../api/acl/dep";
 
-export default function useSearch(search, form, multipleSelection, searchLoading, refDialogMu, refDepForm, onSearch) {
-    const gp = getCurrentInstance().appContext.config.globalProperties;
+export default function useSearch(searchLoading, onSearch) {
 
     const searchRow = reactive([
         [
@@ -49,38 +46,8 @@ export default function useSearch(search, form, multipleSelection, searchLoading
         ]
     ]);
 
-
-    const onAdd = () => {
-        refDialogMu.value.open(null, refDepForm.value, enums.formType.add);
-    }
-
-    const onEdit = (row) => {
-        if (row || multipleSelection.value.length === 1) {
-            let data = (row || multipleSelection.value.length === 1 && multipleSelection.value[0])
-            refDialogMu.value.open(data, refDepForm.value, enums.formType.edit);
-        } else {
-            gp.$message.warning("请选择单行");
-        }
-    }
-
-    const onDelete = (row) => {
-        let ids = [];
-        if (row || multipleSelection.value.length > 0) {
-            ids.push(row.id);
-        } else if (multipleSelection.value.length > 0) {
-            ids = multipleSelection.value.map(m => m.id);
-        } else {
-            gp.$message.warning("请选择行");
-            return;
-        }
-
-        depApi.remove(ids).then(res => {
-            if (res.success) {
-                onSearch();
-            } else {
-                gp.$message.error(res.message);
-            }
-        })
+    const onAfterFormSave = () => {
+        onSearch();
     }
 
     const onDepNameChange = (val) => {
@@ -90,9 +57,7 @@ export default function useSearch(search, form, multipleSelection, searchLoading
 
     return {
         searchRow,
-        onAdd,
-        onEdit,
-        onDelete,
+        onAfterFormSave,
         onDepNameChange
     }
 }

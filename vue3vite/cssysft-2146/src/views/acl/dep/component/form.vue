@@ -7,6 +7,10 @@
       :rules="rules">
     </zwx-form-mu>
 
+    <el-affix position="bottom" :offset="20">
+      <el-button type="primary">Offset bottom 20px</el-button>
+    </el-affix>
+
     <el-row class="dialog-bottom" type="flex" justify="center">
       <el-col :span="4">
         <el-button :size="comCfg.buttonSize" :type="comCfg.elButton.close" :icon="comCfg.elButton.closeIcon"
@@ -25,17 +29,17 @@
 <script setup>
 import ZwxFormMu from "../../../../components/base-com/com-parts/zwx-form-mu.vue";
 
-import comCfg from "../../../../components/base-com/com-config/com-config.js";
-import enums from "../../../../utils/enums.js";
+import comCfg from "../../../../components/base-com/com-config/com-config";
+import enums from "../../../../utils/enums";
 
-import useForm from "../js/useForm.js";
-import useDialog from "../../../../components/DialogCom/js/useDialogMu.js";
+import useForm from "../js/useForm";
+import useDialog from "../../../../components/DialogCom/js/useDialogMu";
 
 import {
   getCurrentInstance, onMounted
 } from "vue";
 
-const globalProperties = getCurrentInstance().appContext.config.globalProperties;
+const gp = getCurrentInstance().appContext.config.globalProperties;
 
 const emit = defineEmits(['after-save']);
 

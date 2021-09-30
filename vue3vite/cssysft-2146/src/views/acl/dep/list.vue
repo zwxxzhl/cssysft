@@ -2,6 +2,7 @@
   <div class="app-container">
 
     <zwx-form-mu
+      ref="refZwxFormMu"
       :form="search"
       :form-row="searchRow"
       @dep-name-change="onDepNameChange"
@@ -44,7 +45,7 @@
 
     <dialog-mu ref="refDialogMu" title="部门表单" width="50%" top="10vh" :heightPercent="0.6" :footer="false">
       <template #content>
-        <dep-form ref="refDepForm" @after-save="onAfterSave"></dep-form>
+        <dep-form ref="refBusForm" @after-save="onAfterFormSave"></dep-form>
       </template>
     </dialog-mu>
 
@@ -55,48 +56,41 @@
 import DialogMu from "../../../components/DialogCom/dialog-mu.vue";
 import ZwxListMu from "../../../components/base-com/com-parts/zwx-list-mu.vue";
 import ZwxFormMu from "../../../components/base-com/com-parts/zwx-form-mu.vue";
-import ZwxColsMu from "../../../components/base-com/com-parts/zwx-cols-mu.vue";
 import DepForm from "./component/form.vue";
 
-import comCfg from "../../../components/base-com/com-config/com-config.js";
-import comUtils from "../../../utils/comUtils.js";
+import comCfg from "../../../components/base-com/com-config/com-config";
+import comUtils from "../../../utils/comUtils";
+import depApi from "../../../api/acl/dep";
 
-import {ref, onMounted, reactive, getCurrentInstance, provide} from "vue";
+import useSearch from './js/useSearch';
+import useList from './js/useList';
+import useZwxListMu from "../../../components/base-com/com-parts/composables/useZwxListMu";
 
-import useSearch from './js/useSearch.js'
-import useList from './js/useList.js'
-
+import {ref, provide, onMounted, getCurrentInstance} from "vue";
 const gp = getCurrentInstance().appContext.config.globalProperties;
 
-let {dateYMDHmsFormat} = comUtils
+let {dateYMDHmsFormat} = comUtils;
 provide('comMethod', {
   dateYMDHmsFormat
 });
 
 let screenWidth = ref(0);
-const refDialogMu = ref(null);
-const refDepForm = ref(null);
 
-const refZwxListMu = ref(null);
-let searchLoading = ref(false);
-let search = reactive({});
-const form = ref({formList: []});
-let multipleSelection = ref([]);
+const {
+  refDialogMu, refBusForm, refZwxListMu, refZwxFormMu, search, form,
+  searchLoading, total, currentPage, pageSize, multipleSelection,
+  onAdd, onEdit, onDelete,
+  onSearch, onPageCurrentChange, onPageSizeChange
+} = useZwxListMu(depApi);
 
 
 const {
-  tableColumn, total, currentPage, pageSize, onSearch, onSelect, onCurrentChange,
-  onHeaderEvent, onDomInputChange, onPageSelect, onPageCurrentChange, onPageSizeChange
-} = useList(search, form, multipleSelection, searchLoading, refZwxListMu);
+  tableColumn, onSelect, onCurrentChange, onHeaderEvent, onDomInputChange, onPageSelect,
+} = useList(multipleSelection);
 
 const {
-  searchRow, onAdd, onEdit, onDelete, onDepNameChange
-} = useSearch(search, form, multipleSelection, searchLoading, refDialogMu, refDepForm, onSearch);
-
-
-const onAfterSave = () => {
-  onSearch();
-}
+  searchRow, onAfterFormSave, onDepNameChange
+} = useSearch(searchLoading, onSearch);
 
 onMounted(() => {
   onSearch();
@@ -107,7 +101,7 @@ onMounted(() => {
       console.log(screenWidth);
     })()
   }
-})
+});
 
 </script>
 
