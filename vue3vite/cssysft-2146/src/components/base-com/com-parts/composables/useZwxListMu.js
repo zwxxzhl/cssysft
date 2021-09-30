@@ -5,7 +5,6 @@ export default function useZwxListMu(api) {
     const gp = getCurrentInstance().appContext.config.globalProperties;
 
     const refDialogMu = ref(null);
-    let refBusForm = ref(null);
     let refZwxListMu = ref(null);
     let refZwxFormMu = ref(null);
 
@@ -20,13 +19,13 @@ export default function useZwxListMu(api) {
     let multipleSelection = ref([]);
 
     const onAdd = () => {
-        refDialogMu.value.open(null, refBusForm.value, enums.formType.add);
+        refDialogMu.value.open(null, enums.formType.add);
     }
 
     const onEdit = (row) => {
         if (row || multipleSelection.value.length === 1) {
             let data = (row || multipleSelection.value.length === 1 && multipleSelection.value[0])
-            refDialogMu.value.open(data, refBusForm.value, enums.formType.edit);
+            refDialogMu.value.open(data, enums.formType.edit);
         } else {
             gp.$message.warning("请选择单行");
         }
@@ -93,7 +92,6 @@ export default function useZwxListMu(api) {
 
     return {
         refDialogMu,
-        refBusForm,
         refZwxListMu,
         refZwxFormMu,
         search,

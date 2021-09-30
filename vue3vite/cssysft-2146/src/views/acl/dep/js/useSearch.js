@@ -46,7 +46,7 @@ export default function useSearch(searchLoading, onSearch) {
         ]
     ]);
 
-    const onAfterFormSave = () => {
+    const onAfterFormSave = () => {debugger
         onSearch();
     }
 

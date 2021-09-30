@@ -43,17 +43,17 @@
 
     </zwx-list-mu>
 
-    <dialog-mu ref="refDialogMu" title="部门表单" width="50%" top="10vh" :heightPercent="0.6" :footer="false">
-      <template #content>
-        <dep-form ref="refBusForm" @after-save="onAfterFormSave"></dep-form>
-      </template>
-    </dialog-mu>
+    <zwx-dialog-mu
+      ref="refDialogMu"
+      :currentComponent="DepForm" @after-save="onAfterFormSave"
+      title="部门表单" width="50%" top="10vh" :height-pct="0.6">
+    </zwx-dialog-mu>
 
   </div>
 </template>
 
 <script setup>
-import DialogMu from "../../../components/DialogCom/dialog-mu.vue";
+import ZwxDialogMu from "../../../components/base-com/com-parts/zwx-dialog-mu.vue";
 import ZwxListMu from "../../../components/base-com/com-parts/zwx-list-mu.vue";
 import ZwxFormMu from "../../../components/base-com/com-parts/zwx-form-mu.vue";
 import DepForm from "./component/form.vue";
