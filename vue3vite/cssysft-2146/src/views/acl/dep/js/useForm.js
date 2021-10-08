@@ -43,9 +43,6 @@ export default function useForm(emit) {
     dialogOpenType = openType;
     dialogClose = close;
 
-    emit('after-save');
-    console.log('发送了事件 after-save');
-
     if (enums.formType.add !== dialogOpenType.value) {
       depApi.select({id: dialogData.value.id}).then(res => {
         form.value = res.data.items[0];

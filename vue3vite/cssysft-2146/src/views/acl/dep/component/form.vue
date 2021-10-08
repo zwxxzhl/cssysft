@@ -7,11 +7,12 @@
       :rules="rules">
     </zwx-form-mu>
 
-    <el-affix position="bottom" :offset="120">
+    <el-affix position="bottom" :offset="-400">
       <el-button type="primary">Offset bottom 20px</el-button>
     </el-affix>
 
-    <el-row class="dialog-bottom" type="flex" justify="center">
+    <!--todo 固定按钮间隔；部门多级处理-->
+    <!--<el-row class="dialog-bottom" type="flex" justify="center">
       <el-col :span="4">
         <el-button
           :size="comCfg.buttonSize"
@@ -31,7 +32,7 @@
           保存
         </el-button>
       </el-col>
-    </el-row>
+    </el-row>-->
   </div>
 </template>
 

@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+    ref="refElDialog"
     v-model="visible"
     v-bind="$attrs"
     @opened="opened">
@@ -7,8 +8,8 @@
       <slot name="title"></slot>
     </template>
 
-    <div ref="refDialogContentDiv" class="dialog-content-layout">
-      <component :is="currentComponent" ref="refDialogContent" v-bind="$attrs"></component>
+    <div ref="refContent" class="dialog-content-layout">
+      <slot></slot>
     </div>
 
     <template #footer>
@@ -18,14 +19,17 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {defineComponent, ref} from "vue";
 import enums from "../../../utils/enums";
 
+defineComponent({
+  inheritAttrs: false
+});
+
 const props = defineProps({
-  currentComponent: {
+  pageVm: {
     type: Object,
-    required: false,
-    default: () => ({})
+    required: true
   },
   heightPct: {
     type: Number,
@@ -37,32 +41,33 @@ const props = defineProps({
 let emit = defineEmits(['opened']);
 
 const visible = ref(false);
-const refDialogContentDiv = ref(null);
-const refDialogContent = ref(null);
+const refElDialog = ref(null);
+const refContent = ref(null);
 
-let dialogHeight = ref(0);
+let height = ref(0);
 let openType = ref(enums.formType.add);
-let dialogData = ref(null);
+let data = ref(null);
 
 const close = () => {
   visible.value = false;
 }
 
 const open = (row, type) => {
-  dialogHeight.value = parent.innerHeight * props.heightPct;
+  height.value = parent.innerHeight * props.heightPct;
   visible.value = true;
 
   openType.value = type;
-  dialogData.value = row;
+  data.value = row;
 }
 
 const opened = () => {
-  refDialogContentDiv.value.style.height = dialogHeight.value + "px";
-  refDialogContent.value.initData(dialogData, openType, close);
+  refContent.value.style.height = height.value + "px";
+  props.pageVm.initData(data, openType, close);
   emit('opened');
 }
 
 defineExpose({
+  refElDialog,
   open,
   close
 });

@@ -7,8 +7,8 @@
       :form-row="searchRow"
       @dep-name-change="onDepNameChange"
       @search-click="onSearch()"
-      @add-click="onAdd"
-      @edit-click="onEdit()"
+      @add-click="onAdd(refDialogMu)"
+      @edit-click="onEdit(null, refDialogMu)"
       @delete-click="onDelete()">
     </zwx-form-mu>
 
@@ -34,19 +34,19 @@
 
       <template #operation="scope">
         <el-tooltip v-if="hasPerm('dep.update')" effect="dark" content="编辑" placement="left-start">
-          <i class="el-icon-edit icon-layout-mini color-orange" @click="onEdit(scope.row)"></i>
+          <i class="el-icon-edit icon-layout-mini color-orange" @click="onEdit(scope.row, refDialogMu)"></i>
         </el-tooltip>
         <el-tooltip v-if="hasPerm('dep.remove')" effect="dark" content="删除" placement="bottom-end">
           <i class="el-icon-delete icon-layout-mini color-gray" @click="onDelete(scope.row)"></i>
         </el-tooltip>
       </template>
-
     </zwx-list-mu>
 
     <zwx-dialog-mu
-      ref="refDialogMu"
-      :currentComponent="DepForm" @after-save="onAfterFormSave"
-      title="部门表单" width="50%" top="10vh" :height-pct="0.6">
+      ref="refDialogMu" title="部门表单"
+      width="50%" top="10vh" :height-pct="0.6"
+      :page-vm="refDepForm">
+      <dep-form ref="refDepForm" @after-save="onAfterFormSave"></dep-form>
     </zwx-dialog-mu>
 
   </div>
@@ -75,9 +75,11 @@ provide('comMethod', {
 });
 
 let screenWidth = ref(0);
+let refDialogMu = ref(null);
+let refDepForm = ref({});
 
 const {
-  refDialogMu, refBusForm, refZwxListMu, refZwxFormMu, search, form,
+  refZwxListMu, refZwxFormMu, search, form,
   searchLoading, total, currentPage, pageSize, multipleSelection,
   onAdd, onEdit, onDelete,
   onSearch, onPageCurrentChange, onPageSizeChange

@@ -4,7 +4,6 @@ import enums from "../../../../utils/enums";
 export default function useZwxListMu(api) {
     const gp = getCurrentInstance().appContext.config.globalProperties;
 
-    const refDialogMu = ref(null);
     let refZwxListMu = ref(null);
     let refZwxFormMu = ref(null);
 
@@ -18,14 +17,14 @@ export default function useZwxListMu(api) {
 
     let multipleSelection = ref([]);
 
-    const onAdd = () => {
-        refDialogMu.value.open(null, enums.formType.add);
+    const onAdd = (refDialogMu) => {
+        refDialogMu.open(null, enums.formType.add);
     }
 
-    const onEdit = (row) => {
+    const onEdit = (row, refDialogMu) => {
         if (row || multipleSelection.value.length === 1) {
             let data = (row || multipleSelection.value.length === 1 && multipleSelection.value[0])
-            refDialogMu.value.open(data, enums.formType.edit);
+            refDialogMu.open(data, enums.formType.edit);
         } else {
             gp.$message.warning("请选择单行");
         }
@@ -91,7 +90,6 @@ export default function useZwxListMu(api) {
     }
 
     return {
-        refDialogMu,
         refZwxListMu,
         refZwxFormMu,
         search,
