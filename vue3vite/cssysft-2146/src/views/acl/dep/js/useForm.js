@@ -1,6 +1,7 @@
 import {getCurrentInstance, reactive, ref} from "vue";
 import enums from "../../../../utils/enums";
 import depApi from "../../../../api/acl/dep";
+import comCfg from "../../../../components/base-com/com-config/com-config";
 
 export default function useForm(emit) {
   const gp = getCurrentInstance().appContext.config.globalProperties;
@@ -34,6 +35,25 @@ export default function useForm(emit) {
     depName: [{required: true, trigger: 'blur', message: '名称必须输入'}],
     depNo: [{required: true, trigger: 'blur', message: '编码必须输入'}]
   });
+
+  const colList = reactive([
+    [
+      {
+        rowObj: {span: 12, colStyle: {flex: '0 0 89px', margin: '0 5px'}},
+        domObj: {
+          dom: 'button', label: '关闭', click: 'close-click', type: comCfg.elButton.close,
+          icon: comCfg.elButton.closeIcon, size: comCfg.elButton.size
+        }
+      },
+      {
+        rowObj: {span: 12, colStyle: {flex: '0 0 89px', margin: '0 5px'}},
+        domObj: {
+          dom: 'button', label: '保存', click: 'save-click', type: comCfg.elButton.confirm,
+          icon: comCfg.elButton.confirmIcon, size: comCfg.elButton.size, loading: loading
+        }
+      }
+    ]
+  ]);
 
   const initData = (dialogData, openType, close) => {
     loading.value = false;
@@ -97,6 +117,7 @@ export default function useForm(emit) {
     form,
     formRow,
     rules,
+    colList,
     loading,
     initData,
     onSaveOrUpdate,

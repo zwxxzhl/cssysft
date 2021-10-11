@@ -13,7 +13,7 @@
 
           <el-col :span="item.rowObj.span || 2" :style="item.rowObj.colStyle" v-else-if="'slot' === item.domObj.dom">
 
-            <slot :name="item.domObj.slotName" v-bind="this"></slot>
+            <slot :name="item.domObj.slotName"></slot>
 
           </el-col>
 
