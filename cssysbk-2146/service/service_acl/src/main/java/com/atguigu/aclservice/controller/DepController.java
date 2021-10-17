@@ -4,19 +4,26 @@ import com.atguigu.aclservice.entity.Dep;
 import com.atguigu.aclservice.entity.User;
 import com.atguigu.aclservice.service.IDepService;
 import com.atguigu.aclservice.service.UserService;
+import com.atguigu.aclservice.util.AuxProUtil;
 import com.atguigu.utils.utils.Helpers;
 import com.atguigu.utils.utils.R;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -40,7 +47,7 @@ public class DepController {
     @PostMapping("save")
     public R save(@RequestBody Dep dep) {
         QueryWrapper<Dep> wrapper = new QueryWrapper<>();
-        if(Helpers.isNotBlank(dep.getDepNo())) {
+        if (Helpers.isNotBlank(dep.getDepNo())) {
             wrapper.eq("dep_no", dep.getDepNo());
         }
         List<Dep> list = depService.list(wrapper);
@@ -62,7 +69,7 @@ public class DepController {
     @PutMapping("update")
     public R update(@RequestBody Dep dep) {
         QueryWrapper<Dep> wrapper = new QueryWrapper<>();
-        if(Helpers.isNotBlank(dep.getDepNo())) {
+        if (Helpers.isNotBlank(dep.getDepNo())) {
             wrapper.eq("dep_no", dep.getDepNo());
         }
         List<Dep> list = depService.list(wrapper);
@@ -115,15 +122,43 @@ public class DepController {
         return R.ok().data(R.ITEMS, list);
     }
 
+    @ApiOperation(value = "获取部门(树形数据)")
+    @GetMapping("/selectTree")
+    public R selectTree(Dep dep) {
+        List<Dep> list = depService.list(getQueryWrapper(dep));
+
+        Type type = new TypeToken<List<Map<String, Object>>>() {}.getType();
+        Gson gson = AuxProUtil.gsonBuilder(type);
+        List<Map<String, Object>> allList = gson.fromJson(gson.toJson(list), type);
+
+        List<Map<String, Object>> treeList = allList.stream().filter(f -> Objects.equals(f.get("pid"), "0"))
+                .peek(m -> {
+                    List<Map<String, Object>> children = getChildren(m, allList);
+                    m.put("children", children);
+                    m.put("leaf", children.size() > 0);
+                }).collect(Collectors.toList());
+
+        return R.ok().data(R.ITEMS, treeList);
+    }
+
+    private List<Map<String, Object>> getChildren(Map<String, Object> m, List<Map<String, Object>> allList) {
+        return allList.stream().filter(f -> Objects.equals(m.get("id"), f.get("pid")))
+                .peek(p -> {
+                    List<Map<String, Object>> children = getChildren(p, allList);
+                    p.put("children", children);
+                    p.put("leaf", children.size() > 0);
+                }).collect(Collectors.toList());
+    }
+
     private QueryWrapper<Dep> getQueryWrapper(Dep dep) {
         QueryWrapper<Dep> wrapper = new QueryWrapper<>();
-        if(Helpers.isNotBlank(dep.getId())) {
+        if (Helpers.isNotBlank(dep.getId())) {
             wrapper.eq("id", dep.getId());
         }
-        if(Helpers.isNotBlank(dep.getDepName())) {
+        if (Helpers.isNotBlank(dep.getDepName())) {
             wrapper.like("dep_name", dep.getDepName());
         }
-        if(Helpers.isNotBlank(dep.getDepNo())) {
+        if (Helpers.isNotBlank(dep.getDepNo())) {
             wrapper.eq("dep_no", dep.getDepNo());
         }
         return wrapper;

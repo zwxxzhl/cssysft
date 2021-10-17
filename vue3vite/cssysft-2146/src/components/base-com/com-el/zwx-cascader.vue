@@ -3,9 +3,10 @@
   <el-cascader
     v-model="form[config.model]"
     :class="config.class"
+    :style="config.style"
     :size="config.size"
     :options="config.options"
-    :props="{ checkStrictly: false, value: config.value, label: config.label }"
+    :props="config.props"
     :clearable="config.clearable"
     :filterable="config.filterable"
     :placeholder="config.placeholder"

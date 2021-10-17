@@ -13,7 +13,73 @@ export default function useForm(emit) {
   let dialogOpenType = ref(enums.formType.add);
   let dialogClose = null;
 
+  let options = ref([]);
+  const depTree = () => {
+    depApi.selectTree({}).then(res => {
+      options.value = res.data.items;
+    })
+  }
+  depTree();
+
+  let options2 =
+
+    [
+      {
+        value: 'guide',
+        label: 'Guide',
+        children: [
+          {
+            value: 'disciplines',
+            label: 'Disciplines',
+            children: [
+              {
+                value: 'consistency',
+                label: 'Consistency',
+              },
+              {
+                value: 'feedback',
+                label: 'Feedback',
+              },
+              {
+                value: 'efficiency',
+                label: 'Efficiency',
+              },
+              {
+                value: 'controllability',
+                label: 'Controllability',
+              },
+            ],
+          },
+          {
+            value: 'navigation',
+            label: 'Navigation',
+            children: [
+              {
+                value: 'side nav',
+                label: 'Side Navigation',
+              },
+              {
+                value: 'top nav',
+                label: 'Top Navigation',
+              },
+            ],
+          },
+        ],
+      }
+    ]
+
   const formRow = reactive([
+    [{
+      rowObj: {span: 24},
+      formItemObj: {prop: 'depName', label: '部门名称：'},
+      domObj: {
+        model: 'pid', dom: 'cascader', options: options,
+        style: {width: '100%'},
+        props: {
+          expandTrigger: 'hover', checkStrictly: true, value: 'id', label: 'depName'
+        }
+      },
+    }],
     [{
       rowObj: {span: 24},
       formItemObj: {prop: 'depName', label: '部门名称：'},
@@ -39,14 +105,14 @@ export default function useForm(emit) {
   const colList = reactive([
     [
       {
-        rowObj: {span: 12, colStyle: {flex: '0 0 89px', margin: '0 5px'}},
+        rowObj: {span: 6, colStyle: {flex: '0 0 89px', margin: '0 10px'}},
         domObj: {
           dom: 'button', label: '关闭', click: 'close-click', type: comCfg.elButton.close,
           icon: comCfg.elButton.closeIcon, size: comCfg.elButton.size
         }
       },
       {
-        rowObj: {span: 12, colStyle: {flex: '0 0 89px', margin: '0 5px'}},
+        rowObj: {span: 6, colStyle: {flex: '0 0 89px', margin: '0 10px'}},
         domObj: {
           dom: 'button', label: '保存', click: 'save-click', type: comCfg.elButton.confirm,
           icon: comCfg.elButton.confirmIcon, size: comCfg.elButton.size, loading: loading

@@ -47,6 +47,13 @@
       width="50%" top="10vh" :height-pct="0.6"
       :page-vm="refDepForm">
       <dep-form ref="refDepForm" @after-save="onAfterFormSave"></dep-form>
+      <template #footer>
+        <zwx-cols-mu
+          type="flex" justify="center" :col-list="refDepForm.colList"
+          @close-click="refDepForm.onPageClose"
+          @save-click="refDepForm.onSaveOrUpdate">
+        </zwx-cols-mu>
+      </template>
     </zwx-dialog-mu>
 
   </div>
@@ -57,6 +64,7 @@ import ZwxDialogMu from "../../../components/base-com/com-parts/zwx-dialog-mu.vu
 import ZwxListMu from "../../../components/base-com/com-parts/zwx-list-mu.vue";
 import ZwxFormMu from "../../../components/base-com/com-parts/zwx-form-mu.vue";
 import DepForm from "./component/form.vue";
+import ZwxColsMu from "../../../components/base-com/com-parts/zwx-cols-mu.vue";
 
 import comCfg from "../../../components/base-com/com-config/com-config";
 import comUtils from "../../../utils/comUtils";

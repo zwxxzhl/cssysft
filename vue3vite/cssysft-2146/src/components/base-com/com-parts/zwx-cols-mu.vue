@@ -1,7 +1,7 @@
 <template>
   <div>
     <template v-for="(row, idx) in colList" :key="idx">
-      <el-row>
+      <el-row v-bind="$attrs">
 
         <template v-for="(item, index) in row" :key="index">
 
@@ -30,7 +30,8 @@ import ZwxButton from '../com-el/zwx-button.vue';
 const props = defineProps({
   colList: {
     type: Array,
-    required: true
+    required: false,
+    default: () => []
   }
 });
 

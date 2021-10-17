@@ -8,7 +8,7 @@
       <slot name="title"></slot>
     </template>
 
-    <div ref="refContent" class="dialog-content-layout">
+    <div ref="refContent">
       <slot></slot>
     </div>
 
@@ -79,9 +79,5 @@ defineExpose({
   color: #606266;
   font-size: 14px;
   word-break: break-all;
-}
-
-.dialog-content-layout {
-  position: relative;
 }
 </style>

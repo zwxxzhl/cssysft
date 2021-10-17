@@ -17,6 +17,13 @@ export default {
             params: params
         })
     },
+    selectTree(params) {
+        return request({
+            url: `${api_name}/selectTree`,
+            method: "get",
+            params: params
+        })
+    },
     update(form) {
         return request({
             url: `${api_name}/update`,
