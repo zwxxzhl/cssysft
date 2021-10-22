@@ -46,6 +46,11 @@ public class Dep implements Serializable {
     private String pid;
 
     /**
+     * 部门层级关系
+     */
+    private String relation;
+
+    /**
      * 序号
      */
     private Integer sequence;

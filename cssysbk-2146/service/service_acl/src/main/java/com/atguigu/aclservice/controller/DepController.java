@@ -135,7 +135,7 @@ public class DepController {
                 .peek(m -> {
                     List<Map<String, Object>> children = getChildren(m, allList);
                     m.put("children", children);
-                    m.put("leaf", children.size() > 0);
+                    m.put("leaf", children.size() == 0);
                 }).collect(Collectors.toList());
 
         return R.ok().data(R.ITEMS, treeList);
@@ -146,7 +146,7 @@ public class DepController {
                 .peek(p -> {
                     List<Map<String, Object>> children = getChildren(p, allList);
                     p.put("children", children);
-                    p.put("leaf", children.size() > 0);
+                    p.put("leaf", children.size() == 0);
                 }).collect(Collectors.toList());
     }
 
