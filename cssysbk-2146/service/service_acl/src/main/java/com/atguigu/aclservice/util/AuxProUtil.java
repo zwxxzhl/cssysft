@@ -108,6 +108,15 @@ public class AuxProUtil {
     }
 
     /**
+     * 清除线程
+     */
+    public static void removeThread(ThreadLocal<?> ...tls) {
+        for (ThreadLocal<?> tl : tls) {
+            tl.remove();
+        }
+    }
+
+    /**
      * 通用 QueryWrapper 查询参数初始化
      */
     public static <E> QueryWrapper<E> initQueryWrapper(E entity, List<String> exclude, Consumer<QueryWrapper<E>> consumer) {

@@ -1,11 +1,11 @@
 package com.atguigu.aclservice.controller.camunda;
 
 import com.alibaba.fastjson.JSONObject;
-import com.atguigu.aclservice.entity.BusTaskForm;
-import com.atguigu.aclservice.entity.ProcinstSub;
+import com.atguigu.aclservice.entity.bus.BusTaskForm;
+import com.atguigu.aclservice.entity.bus.ProcinstSub;
 import com.atguigu.aclservice.entity.sys.User;
-import com.atguigu.aclservice.service.IBusTaskFormService;
-import com.atguigu.aclservice.service.IProcinstSubService;
+import com.atguigu.aclservice.service.bus.IBusTaskFormService;
+import com.atguigu.aclservice.service.bus.IProcinstSubService;
 import com.atguigu.aclservice.service.sys.UserService;
 import com.atguigu.utils.utils.R;
 import io.swagger.annotations.ApiParam;

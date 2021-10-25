@@ -1,0 +1,44 @@
+<template>
+  <div>
+    <zwx-form-mu
+      ref="refFormMu"
+      :form="form"
+      :form-row="formRow"
+      :rules="rules">
+    </zwx-form-mu>
+  </div>
+</template>
+
+<script setup>
+import ZwxFormMu from "../../../../components/base-com/com-parts/zwx-form-mu.vue";
+import ZwxColsMu from "../../../../components/base-com/com-parts/zwx-cols-mu.vue";
+
+import comCfg from "../../../../components/base-com/com-config/com-config";
+import enums from "../../../../utils/enums";
+
+import useForm from "../js/useForm";
+
+import {
+  getCurrentInstance, onMounted
+} from "vue";
+
+const gp = getCurrentInstance().appContext.config.globalProperties;
+const emit = defineEmits(['after-save']);
+
+const {
+  refFormMu, form, formRow, rules, colList, loading, initData, onSaveOrUpdate,
+  dialogOpenType, onPageClose
+} = useForm(emit);
+
+onMounted(() => {
+
+});
+
+defineExpose({
+  initData, colList, onSaveOrUpdate, onPageClose
+});
+</script>
+
+<style scoped>
+
+</style>

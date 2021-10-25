@@ -33,17 +33,18 @@ import java.util.Optional;
 @RequestMapping("/admin/acl/dict")
 public class DictController extends BaseController<Dict,  IDictService, User, UserService> {
 
-    @Autowired
-    IDictService dictService;
+    private final IDictService dictService;
+    private final UserService userService;
 
     @Autowired
-    private UserService userService;
-
-    public DictController(IDictService entityService, UserService userService) {
-        super(entityService, userService);
+    public DictController(IDictService dictService, UserService userService) {
+        super.entityService.set(dictService);
+        super.userService.set(userService);
+        this.dictService = dictService;
+        this.userService = userService;
     }
 
-    @ApiOperation(value = "新增字典")
+    /*@ApiOperation(value = "新增字典")
     @PostMapping("save")
     public R save(@RequestBody Dict dict) {
         QueryWrapper<Dict> wrapper = new QueryWrapper<>();
@@ -148,6 +149,6 @@ public class DictController extends BaseController<Dict,  IDictService, User, Us
             wrapper.eq("code", dict.getCode());
         }
         return wrapper;
-    }
+    }*/
 }
 
