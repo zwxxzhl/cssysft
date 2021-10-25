@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.InvocationTargetException;
@@ -18,19 +20,16 @@ import java.util.Optional;
 
 public abstract class BaseController<E, ES extends IService<E>, U, US extends IService<U>> {
 
-    private final ES entityService;
-    
-    private final US userService;
-
-    public BaseController(ES entityService, US userService) {
-        this.entityService = entityService;
-        this.userService = userService;
+    public ImmutablePair<ES, US> initService(ES entityService, US userService) {
+        return ImmutablePair.of(entityService, userService);
     }
 
     @ApiOperation(value = "新增")
     @PostMapping("save")
     public R save(@RequestBody E entity) {
         try {
+            // initService(entityService, userService);
+
             QueryWrapper<E> wrapper = new QueryWrapper<>();
             String code = (String) AuxProUtil.getValue(entity, "code");
             if (Helpers.isNotBlank(code)) {
