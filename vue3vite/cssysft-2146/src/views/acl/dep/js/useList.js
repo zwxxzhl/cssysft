@@ -19,7 +19,7 @@ export default function useList(multipleSelection) {
             columnObj: {type: 'index', label: '序号'}
         },
         {
-            columnObj: {prop: 'sequence', label: '顺序格式化', formatter: sequenceFormatter}
+            columnObj: {prop: 'sequence', label: '部门类型', formatter: sequenceFormatter}
         },
         {
             columnObj: {prop: 'depName', label: '部门', headerAk: true, headerEvent: 'header-event'}

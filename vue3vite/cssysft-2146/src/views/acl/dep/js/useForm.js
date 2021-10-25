@@ -24,13 +24,22 @@ export default function useForm(emit) {
   const formRow = reactive([
     [{
       rowObj: {span: 24},
-      formItemObj: {label: '层级：'},
+      formItemObj: {label: '部门层级：'},
       domObj: {
         model: 'relations', dom: 'cascader', options: options, clearable: true,
         style: {width: '100%'},
         props: {
           expandTrigger: 'hover', checkStrictly: true, value: 'id', label: 'depName'
         }
+      },
+    }],
+    [{
+      rowObj: {span: 24},
+      formItemObj: {prop: 'type', label: '部门类型：'},
+      domObj: {
+        model: 'type', dom: 'select', options: [{id: '1', code: '1', name: '行政部门'}, {id: '2', code: '2', name: '业务部门'}],
+        option: {key: 'id', label: 'name', value: 'code'}, clearable: true,
+        style: {width: '100%'}
       },
     }],
     [{
@@ -51,6 +60,7 @@ export default function useForm(emit) {
   ]);
 
   const rules = ref({
+    type: [{required: true, trigger: 'change', message: '类型必须输入'}],
     depName: [{required: true, trigger: 'blur', message: '名称必须输入'}],
     depNo: [{required: true, trigger: 'blur', message: '编码必须输入'}]
   });
@@ -85,54 +95,60 @@ export default function useForm(emit) {
     if (enums.formType.add !== dialogOpenType.value) {
       depApi.select({id: dialogData.value.id}).then(res => {
         form.value = res.data.items[0];
+        if (form.value.relation) {
+          form.value.relations = form.value.relation.split(',');
+        }
       })
     }
   }
 
   const updateForm = () => {
     loading.value = true;
-    console.log("更新数据");
-    debugger
+
     if (form.value.relations) {
       form.value.pid = form.value.relations[form.value.relations.length - 1];
+      if (form.value.pid === form.value.id) {
+        gp.$message.error('不允许把自己做为父级');
+        loading.value = false;
+        return;
+      }
       form.value.relation = form.value.relations.join(",");
     } else {
-      form.value.pid = null;
+      form.value.pid = '0';
       form.value.relation = null;
     }
-    console.log(form.value);
-    // depApi.update(form.value).then(res => {
-    //   if (res.success) {
-    //     emit('after-save');
-    //     dialogClose();
-    //   } else {
-    //     gp.$message.error(res.message);
-    //   }
-    //   loading.value = false;
-    // })
+
+    depApi.update(form.value).then(res => {
+      if (res.success) {
+        emit('after-save');
+        dialogClose();
+      } else {
+        gp.$message.error(res.message);
+      }
+      loading.value = false;
+    })
   }
 
   const saveForm = () => {
     loading.value = true;
-    console.log("保存数据");
-    debugger
+
     if (form.value.relations) {
       form.value.pid = form.value.relations[form.value.relations.length - 1];
       form.value.relation = form.value.relations.join(",");
     } else {
-      form.value.pid = null;
+      form.value.pid = '0';
       form.value.relation = null;
     }
-    console.log(form.value);
-    // depApi.save(form.value).then(res => {
-    //   if (res.success) {
-    //     emit('after-save');
-    //     dialogClose();
-    //   } else {
-    //     gp.$message.error(res.message);
-    //   }
-    //   loading.value = false;
-    // })
+
+    depApi.save(form.value).then(res => {
+      if (res.success) {
+        emit('after-save');
+        dialogClose();
+      } else {
+        gp.$message.error(res.message);
+      }
+      loading.value = false;
+    })
   }
 
   const onSaveOrUpdate = () => {
