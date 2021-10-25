@@ -1,6 +1,6 @@
 package com.atguigu.aclservice.helper;
 
-import com.atguigu.aclservice.entity.Permission;
+import com.atguigu.aclservice.entity.sys.Permission;
 
 import java.util.ArrayList;
 import java.util.List;

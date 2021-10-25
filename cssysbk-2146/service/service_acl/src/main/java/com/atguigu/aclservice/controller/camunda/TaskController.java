@@ -2,9 +2,9 @@ package com.atguigu.aclservice.controller.camunda;
 
 import com.alibaba.fastjson.JSONObject;
 import com.atguigu.aclservice.entity.BusTaskForm;
-import com.atguigu.aclservice.entity.User;
+import com.atguigu.aclservice.entity.sys.User;
 import com.atguigu.aclservice.service.IBusTaskFormService;
-import com.atguigu.aclservice.service.UserService;
+import com.atguigu.aclservice.service.sys.UserService;
 import com.atguigu.utils.utils.R;
 import io.swagger.annotations.ApiParam;
 import org.camunda.bpm.engine.HistoryService;
