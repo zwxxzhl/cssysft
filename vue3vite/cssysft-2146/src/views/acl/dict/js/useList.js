@@ -9,10 +9,10 @@ export default function useList(multipleSelection) {
             columnObj: {type: 'index', label: '序号'}
         },
         {
-            columnObj: {prop: 'depName', label: '部门', headerAk: true, headerEvent: 'header-event'}
+            columnObj: {prop: 'name', label: '名称', headerAk: true, headerEvent: 'header-event'}
         },
         {
-            columnObj: {prop: 'depNo', label: '编码'}
+            columnObj: {prop: 'code', label: '编码'}
         },
         {
             columnObj: {prop: 'sequence', label: '顺序'}

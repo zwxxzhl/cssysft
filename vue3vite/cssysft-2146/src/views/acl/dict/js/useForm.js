@@ -1,6 +1,6 @@
 import {getCurrentInstance, reactive, ref} from "vue";
 import enums from "../../../../utils/enums";
-import depApi from "../../../../api/acl/dep";
+import dictApi from "../../../../api/acl/dict";
 import comCfg from "../../../../components/base-com/com-config/com-config";
 
 export default function useForm(emit) {
@@ -13,44 +13,16 @@ export default function useForm(emit) {
   let dialogOpenType = ref(enums.formType.add);
   let dialogClose = null;
 
-  let options = ref([]);
-  const depTree = () => {
-    depApi.selectTree({}).then(res => {
-      options.value = res.data.items;
-    })
-  }
-  depTree();
-
   const formRow = reactive([
     [{
       rowObj: {span: 24},
-      formItemObj: {label: '部门层级：'},
-      domObj: {
-        model: 'relations', dom: 'cascader', options: options, clearable: true,
-        style: {width: '100%'},
-        props: {
-          expandTrigger: 'hover', checkStrictly: true, value: 'id', label: 'depName'
-        }
-      },
+      formItemObj: {prop: 'name', label: '名称：'},
+      domObj: {model: 'name', dom: 'input', type: 'text'},
     }],
     [{
       rowObj: {span: 24},
-      formItemObj: {prop: 'type', label: '部门类型：'},
-      domObj: {
-        model: 'type', dom: 'select', options: [{id: '1', code: '1', name: '行政部门'}, {id: '2', code: '2', name: '业务部门'}],
-        option: {key: 'id', label: 'name', value: 'code'}, clearable: true,
-        style: {width: '100%'}
-      },
-    }],
-    [{
-      rowObj: {span: 24},
-      formItemObj: {prop: 'depName', label: '部门名称：'},
-      domObj: {model: 'depName', dom: 'input', type: 'text'},
-    }],
-    [{
-      rowObj: {span: 24},
-      formItemObj: {prop: 'depNo', label: '部门编码：'},
-      domObj: {model: 'depNo', change: 'dep-no-change', dom: 'input', type: 'text'},
+      formItemObj: {prop: 'code', label: '编码：'},
+      domObj: {model: 'code', change: 'dep-no-change', dom: 'input', type: 'text'},
     }],
     [{
       rowObj: {span: 24},
@@ -60,9 +32,8 @@ export default function useForm(emit) {
   ]);
 
   const rules = ref({
-    type: [{required: true, trigger: 'change', message: '类型必须输入'}],
-    depName: [{required: true, trigger: 'blur', message: '名称必须输入'}],
-    depNo: [{required: true, trigger: 'blur', message: '编码必须输入'}]
+    name: [{required: true, trigger: 'blur', message: '名称必须输入'}],
+    code: [{required: true, trigger: 'blur', message: '编码必须输入'}]
   });
 
   const colList = reactive([
@@ -93,32 +64,15 @@ export default function useForm(emit) {
     dialogClose = close;
 
     if (enums.formType.add !== dialogOpenType.value) {
-      depApi.select({id: dialogData.value.id}).then(res => {
+      dictApi.select({id: dialogData.value.id}).then(res => {
         form.value = res.data.items[0];
-        if (form.value.relation) {
-          form.value.relations = form.value.relation.split(',');
-        }
       })
     }
   }
 
   const updateForm = () => {
     loading.value = true;
-
-    if (form.value.relations) {
-      form.value.pid = form.value.relations[form.value.relations.length - 1];
-      if (form.value.pid === form.value.id) {
-        gp.$message.error('不允许把自己做为父级');
-        loading.value = false;
-        return;
-      }
-      form.value.relation = form.value.relations.join(",");
-    } else {
-      form.value.pid = '0';
-      form.value.relation = null;
-    }
-
-    depApi.update(form.value).then(res => {
+    dictApi.update(form.value).then(res => {debugger
       if (res.success) {
         emit('after-save');
         dialogClose();
@@ -126,21 +80,14 @@ export default function useForm(emit) {
         gp.$message.error(res.message);
       }
       loading.value = false;
+    }).catch(err => {
+      debugger
     })
   }
 
   const saveForm = () => {
     loading.value = true;
-
-    if (form.value.relations) {
-      form.value.pid = form.value.relations[form.value.relations.length - 1];
-      form.value.relation = form.value.relations.join(",");
-    } else {
-      form.value.pid = '0';
-      form.value.relation = null;
-    }
-
-    depApi.save(form.value).then(res => {
+    dictApi.save(form.value).then(res => {
       if (res.success) {
         emit('after-save');
         dialogClose();

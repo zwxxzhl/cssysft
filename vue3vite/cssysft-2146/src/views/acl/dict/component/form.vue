@@ -11,10 +11,6 @@
 
 <script setup>
 import ZwxFormMu from "../../../../components/base-com/com-parts/zwx-form-mu.vue";
-import ZwxColsMu from "../../../../components/base-com/com-parts/zwx-cols-mu.vue";
-
-import comCfg from "../../../../components/base-com/com-config/com-config";
-import enums from "../../../../utils/enums";
 
 import useForm from "../js/useForm";
 

@@ -31,17 +31,11 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/admin/acl/dict")
-public class DictController extends BaseController<Dict,  IDictService, User, UserService> {
+public class DictController extends BaseController<Dict, IDictService> {
 
-    private final IDictService dictService;
-    private final UserService userService;
-
-    @Autowired
-    public DictController(IDictService dictService, UserService userService) {
-        super.entityService.set(dictService);
-        super.userService.set(userService);
-        this.dictService = dictService;
-        this.userService = userService;
+    public DictController() {
+        super.uniValid = true;
+        super.uniProp = "code";
     }
 
     /*@ApiOperation(value = "新增字典")

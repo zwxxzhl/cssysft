@@ -1,13 +1,16 @@
 package com.atguigu.aclservice.util;
 
+import com.atguigu.aclservice.service.sys.UserService;
 import com.atguigu.utils.utils.Helpers;
 import com.atguigu.utils.utils.R;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.InvocationTargetException;
@@ -16,29 +19,34 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class BaseController<E, ES extends IService<E>, U, US extends IService<U>> {
+public abstract class BaseController<E, S extends IService<E>> {
 
-    protected final ThreadLocal<ES> entityService = new ThreadLocal<>();
-    protected final ThreadLocal<US> userService = new ThreadLocal<>();
+    protected boolean uniValid = false;
+    protected String uniProp = "";
+
+    @Autowired(required = false)
+    protected S entityService;
+    @Autowired
+    protected UserService userService;
 
     @ApiOperation(value = "新增")
     @PostMapping("save")
     public R save(@RequestBody E entity) {
         try {
-            QueryWrapper<E> wrapper = new QueryWrapper<>();
-            String code = (String) AuxProUtil.getValue(entity, "code");
-            if (Helpers.isNotBlank(code)) {
-                wrapper.eq("code", code);
-            }
-            List<E> list = entityService.get().list(wrapper);
-            if (list.size() > 0) {
-                return R.ok().success(false).message("编码已存在");
+            if (uniValid) {
+                QueryWrapper<E> wrapper = new QueryWrapper<>();
+                String code = (String) AuxProUtil.getValue(entity, uniProp);
+                if (Helpers.isNotBlank(code)) {
+                    wrapper.eq(uniProp, code);
+                }
+                List<E> list = entityService.list(wrapper);
+                if (list.size() > 0) {
+                    return R.ok().success(false).message("唯一校验失败");
+                }
             }
 
-            AuxProUtil.bindEntityCreate(entity, AuxProUtil.getLoginUser(userService.get()));
-            entityService.get().save(entity);
-
-            AuxProUtil.removeThread(entityService, userService);
+            AuxProUtil.bindEntityCreate(entity, AuxProUtil.getLoginUser(userService));
+            entityService.save(entity);
         } catch (InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
             throw new RuntimeException("反射出错");
@@ -51,23 +59,24 @@ public abstract class BaseController<E, ES extends IService<E>, U, US extends IS
     @PutMapping("update")
     public R update(@RequestBody E entity) {
         try {
-            QueryWrapper<E> wrapper = new QueryWrapper<>();
-            String code = (String) AuxProUtil.getValue(entity, "code");
-            String id = (String) AuxProUtil.getValue(entity, "id");
-            if (Helpers.isNotBlank(code)) {
-                wrapper.eq("code", code);
+            if (uniValid) {
+                QueryWrapper<E> wrapper = new QueryWrapper<>();
+                String code = (String) AuxProUtil.getValue(entity, uniProp);
+                String pk = entity.getClass().getAnnotation(TableId.class).value();
+                String id = (String) AuxProUtil.getValue(entity, pk);
+                if (Helpers.isNotBlank(code)) {
+                    wrapper.eq(uniProp, code);
+                }
+                List<E> list = entityService.list(wrapper);
+
+                String idQ = (String) AuxProUtil.getValue(list.get(0), pk);
+                if (list.size() > 2 || (list.size() == 1 && !idQ.equals(id))) {
+                    return R.ok().success(false).message("唯一校验失败");
+                }
             }
-            List<E> list = entityService.get().list(wrapper);
 
-            String idQ = (String) AuxProUtil.getValue(list.get(0), "id");
-            if (list.size() > 2 || (list.size() == 1 && !idQ.equals(id))) {
-                return R.ok().success(false).message("编码已存在");
-            }
-
-            AuxProUtil.bindEntityUpdate(entity, AuxProUtil.getLoginUser(userService.get()));
-            entityService.get().updateById(entity);
-
-            AuxProUtil.removeThread(entityService, userService);
+            AuxProUtil.bindEntityUpdate(entity, AuxProUtil.getLoginUser(userService));
+            entityService.updateById(entity);
         } catch (InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
             throw new RuntimeException("反射出错");
@@ -79,9 +88,7 @@ public abstract class BaseController<E, ES extends IService<E>, U, US extends IS
     @DeleteMapping("remove")
     public R remove(@RequestBody List<String> ids) {
         if (Optional.ofNullable(ids).isPresent() && ids.size() > 0) {
-            entityService.get().removeByIds(ids);
-
-            AuxProUtil.removeThread(entityService);
+            entityService.removeByIds(ids);
         } else {
             return R.error().message("未传入删除参数");
         }
@@ -92,7 +99,7 @@ public abstract class BaseController<E, ES extends IService<E>, U, US extends IS
     @DeleteMapping("remove/logic")
     public R removeLogic(@RequestBody List<String> ids) {
         if (Optional.ofNullable(ids).isPresent() && ids.size() > 0) {
-            Collection<E> dicts = entityService.get().listByIds(ids);
+            Collection<E> dicts = entityService.listByIds(ids);
             for (E item : dicts) {
                 try {
                     AuxProUtil.setValue(item, "isDeleted", true);
@@ -101,9 +108,7 @@ public abstract class BaseController<E, ES extends IService<E>, U, US extends IS
                     throw new RuntimeException("反射出错");
                 }
             }
-            entityService.get().updateBatchById(dicts);
-
-            AuxProUtil.removeThread(entityService);
+            entityService.updateBatchById(dicts);
         } else {
             return R.error().message("未传入删除参数");
         }
@@ -123,18 +128,15 @@ public abstract class BaseController<E, ES extends IService<E>, U, US extends IS
                     E entity) {
 
         Page<E> pageParam = new Page<>(page, limit);
-        IPage<E> pageModel = entityService.get().page(pageParam, AuxProUtil.initQueryWrapper(entity, Collections.emptyList(), (wrapper) -> {}));
+        IPage<E> pageModel = entityService.page(pageParam, AuxProUtil.initQueryWrapper(entity, Collections.emptyList(), (wrapper) -> {}));
 
-        AuxProUtil.removeThread(entityService);
         return R.ok().data("items", pageModel.getRecords()).data("total", pageModel.getTotal());
     }
 
     @ApiOperation(value = "列表(不分页)")
     @GetMapping("/select")
     public R select(E entity) {
-        List<E> list = entityService.get().list(AuxProUtil.initQueryWrapper(entity, Collections.emptyList(), (wrapper) -> {}));
-
-        AuxProUtil.removeThread(entityService);
+        List<E> list = entityService.list(AuxProUtil.initQueryWrapper(entity, Collections.emptyList(), (wrapper) -> {}));
         return R.ok().data(R.ITEMS, list);
     }
 

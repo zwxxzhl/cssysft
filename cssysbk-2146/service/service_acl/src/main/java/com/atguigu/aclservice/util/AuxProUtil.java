@@ -88,7 +88,7 @@ public class AuxProUtil {
     public static <U> void bindEntityCreate(Object o, U user) {
         try {
             AuxProUtil.setValue(o, "gmtCreateUser", AuxProUtil.getValue(user, "id"));
-            AuxProUtil.setValue(o, "gmtCreateUser", AuxProUtil.getValue(user, "id"));
+            AuxProUtil.setValue(o, "gmtUpdateUser", AuxProUtil.getValue(user, "id"));
         } catch (InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
             throw new RuntimeException("反射出错");
