@@ -72,7 +72,7 @@ export default function useForm(emit) {
 
   const updateForm = () => {
     loading.value = true;
-    dictApi.update(form.value).then(res => {debugger
+    dictApi.update(form.value).then(res => {
       if (res.success) {
         emit('after-save');
         dialogClose();
@@ -80,8 +80,6 @@ export default function useForm(emit) {
         gp.$message.error(res.message);
       }
       loading.value = false;
-    }).catch(err => {
-      debugger
     })
   }
 
@@ -110,6 +108,10 @@ export default function useForm(emit) {
     })
   }
 
+  const onAfterFormSave = (callback) => {
+    callback();
+  }
+
   const onPageClose = () => {
     dialogClose();
   }
@@ -121,9 +123,10 @@ export default function useForm(emit) {
     rules,
     colList,
     loading,
+    dialogOpenType,
     initData,
     onSaveOrUpdate,
-    dialogOpenType,
+    onAfterFormSave,
     onPageClose
-  }
+  };
 }

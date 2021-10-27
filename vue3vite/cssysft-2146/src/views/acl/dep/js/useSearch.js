@@ -1,9 +1,9 @@
-import {reactive} from 'vue'
+import {ref} from 'vue'
 import comCfg from "../../../../components/base-com/com-config/com-config";
 
-export default function useSearch(searchLoading, onSearch) {
+export default function useSearch(searchRow, searchLoading, onSearch) {
 
-    const searchRow = reactive([
+    searchRow.value = ref([
         [
             {
                 rowObj: {colStyle: {flex: '0 0 100px', margin: '0 5px 5px 0px'}},
@@ -46,10 +46,6 @@ export default function useSearch(searchLoading, onSearch) {
         ]
     ]);
 
-    const onAfterFormSave = () => {
-        onSearch();
-    }
-
     const onDepNameChange = (val) => {
         console.log("搜索条件 DepName 改变")
         console.log(val);
@@ -57,7 +53,6 @@ export default function useSearch(searchLoading, onSearch) {
 
     return {
         searchRow,
-        onAfterFormSave,
         onDepNameChange
-    }
+    };
 }

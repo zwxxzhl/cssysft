@@ -34,6 +34,7 @@ import java.util.Optional;
 public class DictController extends BaseController<Dict, IDictService> {
 
     public DictController() {
+        super.pk = "id";
         super.uniValid = true;
         super.uniProp = "code";
     }

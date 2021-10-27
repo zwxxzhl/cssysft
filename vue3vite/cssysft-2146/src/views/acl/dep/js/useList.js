@@ -1,6 +1,6 @@
-import {reactive} from "vue";
+import {ref} from "vue";
 
-export default function useList(multipleSelection) {
+export default function useList(tableColumn, multipleSelection) {
 
     const sequenceFormatter = (row, column) => {
         let data = row[column.property];
@@ -11,7 +11,7 @@ export default function useList(multipleSelection) {
         }
     }
 
-    let tableColumn = reactive([
+    tableColumn.value = ref([
         {
             columnObj: {type: 'selection'}
         },
@@ -44,14 +44,6 @@ export default function useList(multipleSelection) {
         console.log('当前选择row改变');
     }
 
-    const onSelect = (selection, row) => {
-        multipleSelection.value = selection;
-    }
-
-    const onSelectionChange = (val) => {
-        multipleSelection.value = val;
-    }
-
     const onPageSelect = (val) => {
         console.log("pagination 中 onPageSelect 事件");
         console.log(val);
@@ -71,11 +63,9 @@ export default function useList(multipleSelection) {
 
     return {
         tableColumn,
-        onSelect,
         onCurrentChange,
-        onSelectionChange,
         onHeaderEvent,
         onDomInputChange,
         onPageSelect
-    }
+    };
 }

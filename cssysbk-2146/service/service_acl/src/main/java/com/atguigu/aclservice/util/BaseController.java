@@ -3,7 +3,6 @@ package com.atguigu.aclservice.util;
 import com.atguigu.aclservice.service.sys.UserService;
 import com.atguigu.utils.utils.Helpers;
 import com.atguigu.utils.utils.R;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -19,10 +18,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * 通用Controller
+ */
 public abstract class BaseController<E, S extends IService<E>> {
 
+    protected String pk;
     protected boolean uniValid = false;
-    protected String uniProp = "";
+    protected String uniProp;
 
     @Autowired(required = false)
     protected S entityService;
@@ -44,12 +47,11 @@ public abstract class BaseController<E, S extends IService<E>> {
                     return R.ok().success(false).message("唯一校验失败");
                 }
             }
-
             AuxProUtil.bindEntityCreate(entity, AuxProUtil.getLoginUser(userService));
             entityService.save(entity);
-        } catch (InvocationTargetException | IllegalAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("反射出错");
+            throw new RuntimeException("新增出错");
         }
 
         return R.ok();
@@ -62,24 +64,21 @@ public abstract class BaseController<E, S extends IService<E>> {
             if (uniValid) {
                 QueryWrapper<E> wrapper = new QueryWrapper<>();
                 String code = (String) AuxProUtil.getValue(entity, uniProp);
-                String pk = entity.getClass().getAnnotation(TableId.class).value();
                 String id = (String) AuxProUtil.getValue(entity, pk);
                 if (Helpers.isNotBlank(code)) {
                     wrapper.eq(uniProp, code);
                 }
                 List<E> list = entityService.list(wrapper);
 
-                String idQ = (String) AuxProUtil.getValue(list.get(0), pk);
-                if (list.size() > 2 || (list.size() == 1 && !idQ.equals(id))) {
+                if (list.size() > 2 || (list.size() == 1 && !AuxProUtil.getValue(list.get(0), pk).equals(id))) {
                     return R.ok().success(false).message("唯一校验失败");
                 }
             }
-
             AuxProUtil.bindEntityUpdate(entity, AuxProUtil.getLoginUser(userService));
             entityService.updateById(entity);
-        } catch (InvocationTargetException | IllegalAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("反射出错");
+            throw new RuntimeException("更新出错");
         }
         return R.ok();
     }
@@ -105,7 +104,7 @@ public abstract class BaseController<E, S extends IService<E>> {
                     AuxProUtil.setValue(item, "isDeleted", true);
                 } catch (InvocationTargetException | IllegalAccessException e) {
                     e.printStackTrace();
-                    throw new RuntimeException("反射出错");
+                    throw new RuntimeException("删除出错");
                 }
             }
             entityService.updateBatchById(dicts);
@@ -118,18 +117,11 @@ public abstract class BaseController<E, S extends IService<E>> {
     @ApiOperation(value = "列表(分页)")
     @GetMapping("{page}/{limit}")
     public R index(
-            @ApiParam(name = "page", value = "当前页码", required = true)
-            @PathVariable Long page,
+            @ApiParam(name = "page", value = "当前页码", required = true) @PathVariable Long page,
+            @ApiParam(name = "limit", value = "每页记录数", required = true) @PathVariable Long limit,
+            @ApiParam(name = "courseQuery", value = "查询对象") E entity) {
 
-            @ApiParam(name = "limit", value = "每页记录数", required = true)
-            @PathVariable Long limit,
-
-            @ApiParam(name = "courseQuery", value = "查询对象")
-                    E entity) {
-
-        Page<E> pageParam = new Page<>(page, limit);
-        IPage<E> pageModel = entityService.page(pageParam, AuxProUtil.initQueryWrapper(entity, Collections.emptyList(), (wrapper) -> {}));
-
+        IPage<E> pageModel = entityService.page(new Page<>(page, limit), AuxProUtil.initQueryWrapper(entity, Collections.emptyList(), (wrapper) -> {}));
         return R.ok().data("items", pageModel.getRecords()).data("total", pageModel.getTotal());
     }
 

@@ -1,12 +1,12 @@
 package com.atguigu.aclservice.entity.sys;
 
 import com.baomidou.mybatisplus.annotation.*;
-
-import java.util.Date;
-import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -36,10 +36,10 @@ public class Role implements Serializable {
     private Boolean isDeleted;
 
     @TableField(fill = FieldFill.INSERT)
-    private Date gmtCreate;
+    private LocalDateTime gmtCreate;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    private Date gmtModified;
+    private LocalDateTime gmtModified;
 
 
 }

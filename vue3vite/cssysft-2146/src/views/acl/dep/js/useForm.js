@@ -163,6 +163,10 @@ export default function useForm(emit) {
     })
   }
 
+  const onAfterFormSave = (callback) => {
+    callback();
+  }
+
   const onPageClose = () => {
     dialogClose();
   }
@@ -174,9 +178,10 @@ export default function useForm(emit) {
     rules,
     colList,
     loading,
+    dialogOpenType,
     initData,
     onSaveOrUpdate,
-    dialogOpenType,
+    onAfterFormSave,
     onPageClose
   }
 }

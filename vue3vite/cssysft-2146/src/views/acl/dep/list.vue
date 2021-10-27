@@ -87,20 +87,20 @@ let refDialogMu = ref(null);
 let refDepForm = ref({});
 
 const {
-  refZwxListMu, refZwxFormMu, search, form,
+  refZwxListMu, refZwxFormMu, search, form, searchRow, tableColumn,
   searchLoading, total, currentPage, pageSize, multipleSelection,
-  onAdd, onEdit, onDelete,
+  onAdd, onEdit, onDelete, onSelect, onSelectionChange,
   onSearch, onPageCurrentChange, onPageSizeChange
 } = useZwxListMu(depApi);
 
 
 const {
-  tableColumn, onSelect, onCurrentChange, onHeaderEvent, onDomInputChange, onPageSelect,
-} = useList(multipleSelection);
+  onCurrentChange, onHeaderEvent, onDomInputChange, onPageSelect,
+} = useList(tableColumn, multipleSelection);
 
 const {
-  searchRow, onAfterFormSave, onDepNameChange
-} = useSearch(searchLoading, onSearch);
+  onDepNameChange
+} = useSearch(searchRow, searchLoading, onSearch);
 
 onMounted(() => {
   onSearch();

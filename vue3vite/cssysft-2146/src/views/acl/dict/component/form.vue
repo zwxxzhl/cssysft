@@ -23,7 +23,7 @@ const emit = defineEmits(['after-save']);
 
 const {
   refFormMu, form, formRow, rules, colList, loading, initData, onSaveOrUpdate,
-  dialogOpenType, onPageClose
+  dialogOpenType, onAfterFormSave, onPageClose
 } = useForm(emit);
 
 onMounted(() => {
@@ -31,7 +31,7 @@ onMounted(() => {
 });
 
 defineExpose({
-  initData, colList, onSaveOrUpdate, onPageClose
+  initData, colList, onSaveOrUpdate, onAfterFormSave, onPageClose
 });
 </script>
 

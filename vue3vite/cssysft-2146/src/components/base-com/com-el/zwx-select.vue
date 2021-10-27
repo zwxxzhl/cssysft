@@ -14,13 +14,7 @@
     <el-option
       v-for="item in config.options"
       :key="item[config.option.key]"
-      :label="!config.option.labelExpr && item[config.option.label]
-              || config.option.labelExpr === 'label' && item[config.option.label]
-              || config.option.labelExpr === 'value' && item[config.option.value]
-              || config.option.labelExpr === 'label(value)' && (item[config.option.label] + '(' + item[config.option.value] + ')' )
-              || config.option.labelExpr === 'value(label)' && (item[config.option.value] + '(' + item[config.option.label] + ')' )
-              || config.option.labelExpr === 'func' && (item[config.option.func])
-              || (item[config.option.key] + '(' + item[config.option.label] + ')' )"
+      :label="config.option.labelFunc && item[config.option.labelFunc] || item[config.option.label]"
       :value="item[config.option.value]">
     </el-option>
 

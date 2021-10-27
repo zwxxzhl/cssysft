@@ -1,14 +1,18 @@
 package com.atguigu.aclservice.util;
 
 import com.atguigu.aclservice.config.gson.GsonTypeAdapter;
+import com.atguigu.utils.utils.Helpers;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.StringUtils;
 
 import java.beans.PropertyDescriptor;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -29,6 +33,29 @@ public class AuxProUtil {
                 .setDateFormat("yyyy-MM-dd HH:mm:ss")
                 .registerTypeAdapter(type, new GsonTypeAdapter())
                 .create();
+    }
+
+    /**
+     * 获取类注解
+     */
+    public static <T, A extends Annotation> A getClassAnnotation(Class<T> clazzT, Class<A> clazzA) {
+        if (clazzT.isAnnotationPresent(clazzA)) {
+            return clazzT.getAnnotation(clazzA);
+        }
+        return null;
+    }
+
+    /**
+     * 获取类属性注解
+     */
+    public static <T, A extends Annotation> A getPropAnnotation(Class<T> clazzT, Class<A> clazzA) {
+        Field[] fields = clazzT.getDeclaredFields();
+        for(Field field: fields){
+            if(field.isAnnotationPresent(clazzA)){
+                return field.getAnnotation(clazzA);
+            }
+        }
+        return null;
     }
 
     /**
@@ -91,7 +118,7 @@ public class AuxProUtil {
             AuxProUtil.setValue(o, "gmtUpdateUser", AuxProUtil.getValue(user, "id"));
         } catch (InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
-            throw new RuntimeException("反射出错");
+            throw new RuntimeException("新增绑定user出错");
         }
     }
 
@@ -103,7 +130,7 @@ public class AuxProUtil {
             AuxProUtil.setValue(o, "gmtUpdateUser", AuxProUtil.getValue(user, "id"));
         } catch (InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
-            throw new RuntimeException("反射出错");
+            throw new RuntimeException("更新绑定user出错");
         }
     }
 
@@ -121,24 +148,20 @@ public class AuxProUtil {
      */
     public static <E> QueryWrapper<E> initQueryWrapper(E entity, List<String> exclude, Consumer<QueryWrapper<E>> consumer) {
         QueryWrapper<E> wrapper = new QueryWrapper<>();
-
-        List<String> entityProps = getEntityProps(entity.getClass(), Collections.emptyList());
-        for (String prop : entityProps) {
-            if (!exclude.contains(prop)) {
-                Object value;
-                try {
-                    value = getValue(entity, prop);
-                } catch (InvocationTargetException | IllegalAccessException e) {
-                    e.printStackTrace();
-                    throw new RuntimeException("反射出错");
-                }
-
-                if (Optional.ofNullable(value).isPresent()) {
-                    wrapper.eq(prop, value);
+        try {
+            List<String> entityProps = getEntityProps(entity.getClass(), Collections.emptyList());
+            for (String prop : entityProps) {
+                if (!exclude.contains(prop)) {
+                    Object value = getValue(entity, prop);
+                    if (Optional.ofNullable(value).isPresent() && !StringUtils.isEmpty(value)) {
+                        wrapper.eq(prop, value);
+                    }
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("查询参数包装出错");
         }
-
         consumer.accept(wrapper);
         return wrapper;
     }

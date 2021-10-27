@@ -33,7 +33,7 @@ export default {
   },
   remove(ids) {
     return request({
-      url: `${api_name}/remove`,
+      url: `${api_name}/remove/logic`,
       method: "delete",
       data: ids
     })
