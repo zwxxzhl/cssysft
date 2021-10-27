@@ -22,8 +22,8 @@ const gp = getCurrentInstance().appContext.config.globalProperties;
 const emit = defineEmits(['after-save']);
 
 const {
-  refFormMu, form, formRow, rules, colList, loading, initData, onSaveOrUpdate,
-  dialogOpenType, onAfterFormSave, onPageClose
+  refFormMu, form, formRow, rules, colList, loading, dialogOpenType,
+  initData, onSaveOrUpdate, onAfterFormSave, onPageClose
 } = useForm(emit);
 
 onMounted(() => {

@@ -85,27 +85,24 @@ export default function useZwxListMu(api) {
     for (const items of searchRow.value) {
       for (const item of items) {
         if (item.searchObj) {
-          if (item.searchObj.exp && !item.searchObj.relation) {
-            // 使用配置表达式
-            searchCopy[item.searchObj.exp + search[item.domObj.model]] = searchCopy[item.domObj.model];
-            delete searchCopy[item.domObj.model];
-          } else if (item.searchObj.exp && item.searchObj.relation) {
-            // 范围表达式
-            if ('pre' === item.searchObj.relation) {
-              searchCopy[item.searchObj.exp + search[item.searchObj.prop]] = searchCopy[item.domObj.model];
-              delete searchCopy[item.domObj.model];
-            } else if ('suf' === item.searchObj.relation) {
-              searchCopy[item.searchObj.exp + search[item.searchObj.prop]] = searchCopy[item.searchObj.exp + search[item.searchObj.prop]] + '__' + searchCopy[item.domObj.model];
-              delete searchCopy[item.domObj.model];
+          if (item.searchObj.exp) {
+            // 配置
+            if (searchCopy[item.domObj.model]) {
+              searchCopy[item.searchObj.exp + item.domObj.model] = searchCopy[item.domObj.model];
             }
+            delete searchCopy[item.domObj.model];
           } else {
             // 默认
-            searchCopy[enums.exp.eq + search[item.domObj.model]] = searchCopy[item.domObj.model];
+            if (searchCopy[item.domObj.model]) {
+              searchCopy[enums.exp.eq + item.domObj.model] = searchCopy[item.domObj.model];
+            }
             delete searchCopy[item.domObj.model];
           }
         } else {
           // 默认
-          searchCopy[enums.exp.eq + search[item.domObj.model]] = searchCopy[item.domObj.model];
+          if (searchCopy[item.domObj.model]) {
+            searchCopy[enums.exp.eq + item.domObj.model] = searchCopy[item.domObj.model];
+          }
           delete searchCopy[item.domObj.model];
         }
       }

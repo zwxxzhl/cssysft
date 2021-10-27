@@ -24,6 +24,9 @@ export default {
     like: 'like__',
     notLike: 'notLike__',
     likeLeft: 'likeLeft__',
-    likeRight: 'likeRight__'
+    likeRight: 'likeRight__',
+    // 范围表达式使用
+    pre: 'pre_',
+    suf: 'suf_'
   }
 }

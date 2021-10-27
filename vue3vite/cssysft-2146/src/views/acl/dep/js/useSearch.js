@@ -1,9 +1,8 @@
-import {ref} from 'vue'
 import comCfg from "../../../../components/base-com/com-config/com-config";
 
 export default function useSearch(searchRow, searchLoading, onSearch) {
 
-    searchRow.value = ref([
+    searchRow.value = [
         [
             {
                 rowObj: {colStyle: {flex: '0 0 100px', margin: '0 5px 5px 0px'}},
@@ -44,7 +43,7 @@ export default function useSearch(searchRow, searchLoading, onSearch) {
                 }
             }
         ]
-    ]);
+    ];
 
     const onDepNameChange = (val) => {
         console.log("搜索条件 DepName 改变")
@@ -52,7 +51,6 @@ export default function useSearch(searchRow, searchLoading, onSearch) {
     }
 
     return {
-        searchRow,
         onDepNameChange
     };
 }

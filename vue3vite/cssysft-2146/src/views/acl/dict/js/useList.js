@@ -1,8 +1,6 @@
-import {ref} from "vue";
-
 export default function useList(tableColumn, multipleSelection) {
 
-    tableColumn.value = ref([
+    tableColumn.value = [
         {
             columnObj: {type: 'selection'}
         },
@@ -21,7 +19,7 @@ export default function useList(tableColumn, multipleSelection) {
         {
             columnObj: {label: '操作', rowSlot: true, rowSlotName: 'operation', fixed: 'right'}
         }
-    ]);
+    ];
 
     return {};
 }

@@ -163,8 +163,8 @@ export default function useForm(emit) {
     })
   }
 
-  const onAfterFormSave = (callback) => {
-    callback();
+  const onAfterFormSave = (call) => {
+    call();
   }
 
   const onPageClose = () => {

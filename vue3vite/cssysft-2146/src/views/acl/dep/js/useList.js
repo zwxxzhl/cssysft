@@ -1,5 +1,3 @@
-import {ref} from "vue";
-
 export default function useList(tableColumn, multipleSelection) {
 
     const sequenceFormatter = (row, column) => {
@@ -11,7 +9,7 @@ export default function useList(tableColumn, multipleSelection) {
         }
     }
 
-    tableColumn.value = ref([
+    tableColumn.value = [
         {
             columnObj: {type: 'selection'}
         },
@@ -38,7 +36,7 @@ export default function useList(tableColumn, multipleSelection) {
         {
             columnObj: {label: '操作', rowSlot: true, rowSlotName: 'operation', fixed: 'right'}
         }
-    ]);
+    ];
 
     const onCurrentChange = (val) => {
         console.log('当前选择row改变');
@@ -62,7 +60,6 @@ export default function useList(tableColumn, multipleSelection) {
     }
 
     return {
-        tableColumn,
         onCurrentChange,
         onHeaderEvent,
         onDomInputChange,

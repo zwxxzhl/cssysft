@@ -1,7 +1,6 @@
 package com.atguigu.aclservice.util;
 
 import com.atguigu.aclservice.service.sys.UserService;
-import com.atguigu.utils.utils.Helpers;
 import com.atguigu.utils.utils.R;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -10,12 +9,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -23,9 +23,11 @@ import java.util.Optional;
  */
 public abstract class BaseController<E, S extends IService<E>> {
 
-    protected String pk;
-    protected boolean uniValid = false;
-    protected String uniProp;
+    protected String PK;
+    protected boolean UNI_VALID = false;
+    protected String UNI_PROP;
+    protected boolean LOGIC_DELETE = true;
+    protected String DELETE_PROP;
 
     @Autowired(required = false)
     protected S entityService;
@@ -36,11 +38,14 @@ public abstract class BaseController<E, S extends IService<E>> {
     @PostMapping("save")
     public R save(@RequestBody E entity) {
         try {
-            if (uniValid) {
+            if (UNI_VALID) {
                 QueryWrapper<E> wrapper = new QueryWrapper<>();
-                String code = (String) AuxProUtil.getValue(entity, uniProp);
-                if (Helpers.isNotBlank(code)) {
-                    wrapper.eq(uniProp, code);
+                String code = (String) AuxProUtil.getValue(entity, UNI_PROP);
+                if (!StringUtils.isEmpty(code)) {
+                    wrapper.eq(UNI_PROP, code);
+                }
+                if (LOGIC_DELETE) {
+                    wrapper.eq(DELETE_PROP, false);
                 }
                 List<E> list = entityService.list(wrapper);
                 if (list.size() > 0) {
@@ -61,16 +66,19 @@ public abstract class BaseController<E, S extends IService<E>> {
     @PutMapping("update")
     public R update(@RequestBody E entity) {
         try {
-            if (uniValid) {
+            if (UNI_VALID) {
                 QueryWrapper<E> wrapper = new QueryWrapper<>();
-                String code = (String) AuxProUtil.getValue(entity, uniProp);
-                String id = (String) AuxProUtil.getValue(entity, pk);
-                if (Helpers.isNotBlank(code)) {
-                    wrapper.eq(uniProp, code);
+                String code = (String) AuxProUtil.getValue(entity, UNI_PROP);
+                String id = (String) AuxProUtil.getValue(entity, PK);
+                if (!StringUtils.isEmpty(code)) {
+                    wrapper.eq(UNI_PROP, code);
+                }
+                if (LOGIC_DELETE) {
+                    wrapper.eq(DELETE_PROP, false);
                 }
                 List<E> list = entityService.list(wrapper);
 
-                if (list.size() > 2 || (list.size() == 1 && !AuxProUtil.getValue(list.get(0), pk).equals(id))) {
+                if (list.size() > 2 || (list.size() == 1 && !AuxProUtil.getValue(list.get(0), PK).equals(id))) {
                     return R.ok().success(false).message("唯一校验失败");
                 }
             }
@@ -119,16 +127,16 @@ public abstract class BaseController<E, S extends IService<E>> {
     public R index(
             @ApiParam(name = "page", value = "当前页码", required = true) @PathVariable Long page,
             @ApiParam(name = "limit", value = "每页记录数", required = true) @PathVariable Long limit,
-            @ApiParam(name = "courseQuery", value = "查询对象") E entity) {
+            @ApiParam(name = "courseQuery", value = "查询对象") @RequestParam Map<String, Object> params) {
 
-        IPage<E> pageModel = entityService.page(new Page<>(page, limit), AuxProUtil.initQueryWrapper(entity, Collections.emptyList(), (wrapper) -> {}));
+        IPage<E> pageModel = entityService.page(new Page<>(page, limit), AuxProUtil.queryWrapper(new QueryWrapper<>(), params));
         return R.ok().data("items", pageModel.getRecords()).data("total", pageModel.getTotal());
     }
 
     @ApiOperation(value = "列表(不分页)")
     @GetMapping("/select")
-    public R select(E entity) {
-        List<E> list = entityService.list(AuxProUtil.initQueryWrapper(entity, Collections.emptyList(), (wrapper) -> {}));
+    public R select(@RequestParam Map<String, Object> params) {
+        List<E> list = entityService.list(AuxProUtil.queryWrapper(new QueryWrapper<>(), params));
         return R.ok().data(R.ITEMS, list);
     }
 

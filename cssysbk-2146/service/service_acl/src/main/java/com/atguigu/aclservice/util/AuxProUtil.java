@@ -1,7 +1,7 @@
 package com.atguigu.aclservice.util;
 
 import com.atguigu.aclservice.config.gson.GsonTypeAdapter;
-import com.atguigu.utils.utils.Helpers;
+import com.atguigu.aclservice.enums.ExpParamsEnum;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.google.gson.Gson;
@@ -16,10 +16,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Consumer;
+import java.util.Map;
+import java.util.Set;
 
 public class AuxProUtil {
 
@@ -146,23 +145,70 @@ public class AuxProUtil {
     /**
      * 通用 QueryWrapper 查询参数初始化
      */
-    public static <E> QueryWrapper<E> initQueryWrapper(E entity, List<String> exclude, Consumer<QueryWrapper<E>> consumer) {
-        QueryWrapper<E> wrapper = new QueryWrapper<>();
-        try {
-            List<String> entityProps = getEntityProps(entity.getClass(), Collections.emptyList());
-            for (String prop : entityProps) {
-                if (!exclude.contains(prop)) {
-                    Object value = getValue(entity, prop);
-                    if (Optional.ofNullable(value).isPresent() && !StringUtils.isEmpty(value)) {
-                        wrapper.eq(prop, value);
+    public static <E> QueryWrapper<E> queryWrapper(QueryWrapper<E> wrapper, Map<String, Object> params) {
+        Set<String> keys = params.keySet();
+        keys.forEach(k -> {
+            String[] s = k.split(ExpParamsEnum.JOIN.getCode());
+            if (ExpParamsEnum.BETWEEN.getCode().equals(s[0])) {
+                String[] s1 = s[1].split(ExpParamsEnum.MID_JOIN.getCode());
+                if (ExpParamsEnum.PRE.getCode().equals(s1[0])) {
+                    String sufKey = ExpParamsEnum.BETWEEN.getCode() + ExpParamsEnum.JOIN.getCode()
+                            + ExpParamsEnum.SUF.getCode() + ExpParamsEnum.MID_JOIN.getCode() + s1[1];
+                    if (!StringUtils.isEmpty(params.get(k)) && !StringUtils.isEmpty(params.get(sufKey))) {
+                        wrapper.between(s1[1], params.get(k), params.get(sufKey));
                     }
                 }
+            } else if (ExpParamsEnum.NOT_BETWEEN.getCode().equals(s[0])) {
+                String[] s1 = s[1].split(ExpParamsEnum.MID_JOIN.getCode());
+                if (ExpParamsEnum.PRE.getCode().equals(s1[0])) {
+                    String sufKey = ExpParamsEnum.NOT_BETWEEN.getCode() + ExpParamsEnum.JOIN.getCode()
+                            + ExpParamsEnum.SUF.getCode() + ExpParamsEnum.MID_JOIN.getCode() + s1[1];
+                    if (!StringUtils.isEmpty(params.get(k)) && !StringUtils.isEmpty(params.get(sufKey))) {
+                        wrapper.between(s1[1], params.get(k), params.get(sufKey));
+                    }
+                }
+            } else if (ExpParamsEnum.EQ.getCode().equals(s[0])) {
+                if (!StringUtils.isEmpty(params.get(k))) {
+                    wrapper.eq(s[1], params.get(k));
+                }
+            } else if (ExpParamsEnum.NE.getCode().equals(s[0])) {
+                if (!StringUtils.isEmpty(params.get(k))) {
+                    wrapper.ne(s[1], params.get(k));
+                }
+            } else if (ExpParamsEnum.GT.getCode().equals(s[0])) {
+                if (!StringUtils.isEmpty(params.get(k))) {
+                    wrapper.gt(s[1], params.get(k));
+                }
+            } else if (ExpParamsEnum.GE.getCode().equals(s[0])) {
+                if (!StringUtils.isEmpty(params.get(k))) {
+                    wrapper.ge(s[1], params.get(k));
+                }
+            } else if (ExpParamsEnum.LT.getCode().equals(s[0])) {
+                if (!StringUtils.isEmpty(params.get(k))) {
+                    wrapper.lt(s[1], params.get(k));
+                }
+            } else if (ExpParamsEnum.LE.getCode().equals(s[0])) {
+                if (!StringUtils.isEmpty(params.get(k))) {
+                    wrapper.le(s[1], params.get(k));
+                }
+            } else if (ExpParamsEnum.LIKE.getCode().equals(s[0])) {
+                if (!StringUtils.isEmpty(params.get(k))) {
+                    wrapper.like(s[1], params.get(k));
+                }
+            } else if (ExpParamsEnum.NOT_LIKE.getCode().equals(s[0])) {
+                if (!StringUtils.isEmpty(params.get(k))) {
+                    wrapper.notLike(s[1], params.get(k));
+                }
+            } else if (ExpParamsEnum.LIKE_LEFT.getCode().equals(s[0])) {
+                if (!StringUtils.isEmpty(params.get(k))) {
+                    wrapper.likeLeft(s[1], params.get(k));
+                }
+            } else if (ExpParamsEnum.LIKE_RIGHT.getCode().equals(s[0])) {
+                if (!StringUtils.isEmpty(params.get(k))) {
+                    wrapper.likeRight(s[1], params.get(k));
+                }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("查询参数包装出错");
-        }
-        consumer.accept(wrapper);
+        });
         return wrapper;
     }
 

@@ -1,22 +1,34 @@
-import {ref} from 'vue'
 import comCfg from "../../../../components/base-com/com-config/com-config";
 import enums from "../../../../utils/enums";
+import en from "element-plus/packages/locale/lang/en";
 
 export default function useSearch(searchRow, searchLoading, onSearch) {
-
-    searchRow.value = ref([
+    // todo 排序封装
+    searchRow.value = [
         [
             {
                 rowObj: {colStyle: {flex: '0 0 100px', margin: '0 5px 5px 0px'}},
-                formItemObj: {prop: 'name', labelWidth: '0px', size: 'medium', style: {marginBottom: '0'}},
+                formItemObj: {labelWidth: '0px', size: 'medium', style: {marginBottom: '0'}},
                 domObj: {model: 'name', placeholder: '名称', dom: 'input', type: 'text'},
-                searchObj: {exp: enums.exp.like, relation: 'pre'}
+                searchObj: {exp: enums.exp.like}
             },
             {
                 rowObj: {colStyle: {flex: '0 0 100px', margin: '0 5px 5px 5px'}},
-                formItemObj: {prop: '', labelWidth: '0px', size: 'medium', style: {marginBottom: '0'}},
+                formItemObj: {labelWidth: '0px', size: 'medium', style: {marginBottom: '0'}},
                 domObj: {model: 'code', placeholder: '编码', dom: 'input', type: 'text'},
                 searchObj: {exp: enums.exp.eq}
+            },
+            {
+                rowObj: {colStyle: {flex: '0 0 100px', margin: '0 5px 5px 0px'}},
+                formItemObj: {labelWidth: '0px', size: 'medium', style: {marginBottom: '0'}},
+                domObj: {model: enums.exp.pre + 'code', placeholder: '编码开始', dom: 'input', type: 'text'},
+                searchObj: {exp: enums.exp.between, range: enums.exp.pre}
+            },
+            {
+                rowObj: {colStyle: {flex: '0 0 100px', margin: '0 5px 5px 0px'}},
+                formItemObj: {labelWidth: '0px', size: 'medium', style: {marginBottom: '0'}},
+                domObj: {model: enums.exp.suf + 'code', placeholder: '编码结束', dom: 'input', type: 'text'},
+                searchObj: {exp: enums.exp.between, range: enums.exp.suf}
             },
             {
                 rowObj: {colStyle: {flex: '0 0 89px', margin: '0 5px 5px 15px'}},
@@ -47,7 +59,7 @@ export default function useSearch(searchRow, searchLoading, onSearch) {
                 }
             }
         ]
-    ]);
+    ];
 
     return {};
 }
