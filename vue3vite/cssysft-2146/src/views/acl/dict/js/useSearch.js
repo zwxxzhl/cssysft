@@ -1,9 +1,11 @@
 import comCfg from "../../../../components/base-com/com-config/com-config";
 import enums from "../../../../utils/enums";
-import en from "element-plus/packages/locale/lang/en";
 
-export default function useSearch(searchRow, searchLoading, onSearch) {
-    // todo 排序封装
+export default function useSearch(searchExp, searchRow, searchLoading, onSearch) {
+    searchExp[enums.exp.orDiff + 'code#Name' + 'code'] = '33';
+    searchExp[enums.exp.orDiff + 'code#Name' + 'name'] = '99';
+    searchExp[enums.exp.asc] = 'sequence';
+
     searchRow.value = [
         [
             {
@@ -22,13 +24,13 @@ export default function useSearch(searchRow, searchLoading, onSearch) {
                 rowObj: {colStyle: {flex: '0 0 100px', margin: '0 5px 5px 0px'}},
                 formItemObj: {labelWidth: '0px', size: 'medium', style: {marginBottom: '0'}},
                 domObj: {model: enums.exp.pre + 'code', placeholder: '编码开始', dom: 'input', type: 'text'},
-                searchObj: {exp: enums.exp.between, range: enums.exp.pre}
+                searchObj: {exp: enums.exp.between}
             },
             {
                 rowObj: {colStyle: {flex: '0 0 100px', margin: '0 5px 5px 0px'}},
                 formItemObj: {labelWidth: '0px', size: 'medium', style: {marginBottom: '0'}},
                 domObj: {model: enums.exp.suf + 'code', placeholder: '编码结束', dom: 'input', type: 'text'},
-                searchObj: {exp: enums.exp.between, range: enums.exp.suf}
+                searchObj: {exp: enums.exp.between}
             },
             {
                 rowObj: {colStyle: {flex: '0 0 89px', margin: '0 5px 5px 15px'}},

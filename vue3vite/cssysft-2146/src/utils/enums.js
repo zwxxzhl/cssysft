@@ -25,8 +25,19 @@ export default {
     notLike: 'notLike__',
     likeLeft: 'likeLeft__',
     likeRight: 'likeRight__',
-    // 范围表达式使用
+    orSame: 'orSame__',
+    orDiff: 'orDiff__',
+    in: 'in__', // 值逗号分隔
+    notIn: 'notIn__',
+
+    // 范围与orSame表达式使用，示例：between__pre_code / orSame__pre_code
     pre: 'pre_',
-    suf: 'suf_'
+    suf: 'suf_',
+    // orDiff使用，示例：qrDiff__code#Name_code / qrDiff__code#Name_name
+    orJoin: '#',
+
+    // 排序key
+    asc: 'orderByAsc',  // 值逗号分隔
+    desc: 'orderByDesc'
   }
 }

@@ -74,7 +74,7 @@ let refDialogMu = ref(null);
 let refDictForm = ref({});
 
 const {
-  refZwxListMu, refZwxFormMu, search, form, searchRow, tableColumn,
+  refZwxListMu, refZwxFormMu, search, form, searchRow, tableColumn, searchExp,
   searchLoading, total, currentPage, pageSize, multipleSelection,
   onAdd, onEdit, onDelete, onSelect, onSelectionChange,
   onSearch, onPageCurrentChange, onPageSizeChange
@@ -83,7 +83,7 @@ const {
 
 useList(tableColumn, multipleSelection);
 
-useSearch(searchRow, searchLoading, onSearch);
+useSearch(searchRow, searchExp, searchLoading, onSearch);
 
 onMounted(() => {
   onSearch();

@@ -14,11 +14,24 @@ public enum ExpParamsEnum {
     NOT_LIKE("notLike", "NOT LIKE '%值%'"),
     LIKE_LEFT("likeLeft", "LIKE '%值'"),
     LIKE_RIGHT("likeRight", "LIKE '值%'"),
+    IN("in", "IN(val,val,val)"),
+    NOT_IN("notIn", "NOT IN(val,val,val)"),
+    OR_SAME("orSame", "同名字段(key=val or key=val)"),
+    OR_DIFF("orDiff", "不同字段(key1=val or key2=val)"),
 
-    JOIN("__", "表达式与prop连接符"),
-    MID_JOIN("_", "范围表达式与prop中间连接符"),
-    PRE("pre", "范围表达式前缀"),
-    SUF("suf", "范围表达式后缀");
+    // 示例：eq__code / between__pre_code / orSame__pre_code
+    JOIN("__", "表达式前置连接符: eq__"),
+    MID_JOIN("_", "范围 或 OR_SAME 表达式中间连接符"),
+    PRE("pre", "范围 或 OR_SAME 表达式前缀"),
+    SUF("suf", "范围 或 OR_SAME 表达式后缀"),
+
+    // orDiff 示例：qrDiff__code#Name_code / qrDiff__code#Name_name
+    OR_JOIN("#", "OR_DIFF 表达式两字段间连接符"),
+
+    // 排序
+    ASC("orderByAsc", "升序"),
+    DESC("orderByDesc", "降序");
+
 
     private String code;
     private String msg;

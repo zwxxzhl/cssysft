@@ -15,10 +15,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class AuxProUtil {
 
@@ -145,67 +142,68 @@ public class AuxProUtil {
     /**
      * 通用 QueryWrapper 查询参数初始化
      */
-    public static <E> QueryWrapper<E> queryWrapper(QueryWrapper<E> wrapper, Map<String, Object> params) {
+    public static <E> QueryWrapper<E> queryWrapperParams(QueryWrapper<E> wrapper, Map<String, Object> params) {
         Set<String> keys = params.keySet();
         keys.forEach(k -> {
-            String[] s = k.split(ExpParamsEnum.JOIN.getCode());
-            if (ExpParamsEnum.BETWEEN.getCode().equals(s[0])) {
-                String[] s1 = s[1].split(ExpParamsEnum.MID_JOIN.getCode());
-                if (ExpParamsEnum.PRE.getCode().equals(s1[0])) {
-                    String sufKey = ExpParamsEnum.BETWEEN.getCode() + ExpParamsEnum.JOIN.getCode()
-                            + ExpParamsEnum.SUF.getCode() + ExpParamsEnum.MID_JOIN.getCode() + s1[1];
-                    if (!StringUtils.isEmpty(params.get(k)) && !StringUtils.isEmpty(params.get(sufKey))) {
-                        wrapper.between(s1[1], params.get(k), params.get(sufKey));
+            if (ExpParamsEnum.ASC.getCode().equals(k)) {
+                wrapper.orderByAsc(!StringUtils.isEmpty(params.get(k)), ((String) params.get(k)).split(","));
+            } else if (ExpParamsEnum.DESC.getCode().equals(k)) {
+                wrapper.orderByDesc(!StringUtils.isEmpty(params.get(k)), ((String) params.get(k)).split(","));
+            } else {
+                String[] s = k.split(ExpParamsEnum.JOIN.getCode());
+                if (ExpParamsEnum.BETWEEN.getCode().equals(s[0])) {
+                    String[] s1 = s[1].split(ExpParamsEnum.MID_JOIN.getCode());
+                    if (ExpParamsEnum.PRE.getCode().equals(s1[0])) {
+                        String sufKey = ExpParamsEnum.BETWEEN.getCode() + ExpParamsEnum.JOIN.getCode() + ExpParamsEnum.SUF.getCode() + ExpParamsEnum.MID_JOIN.getCode() + s1[1];
+                        wrapper.between(!StringUtils.isEmpty(params.get(k)) && !StringUtils.isEmpty(params.get(sufKey)), s1[1], params.get(k), params.get(sufKey));
                     }
-                }
-            } else if (ExpParamsEnum.NOT_BETWEEN.getCode().equals(s[0])) {
-                String[] s1 = s[1].split(ExpParamsEnum.MID_JOIN.getCode());
-                if (ExpParamsEnum.PRE.getCode().equals(s1[0])) {
-                    String sufKey = ExpParamsEnum.NOT_BETWEEN.getCode() + ExpParamsEnum.JOIN.getCode()
-                            + ExpParamsEnum.SUF.getCode() + ExpParamsEnum.MID_JOIN.getCode() + s1[1];
-                    if (!StringUtils.isEmpty(params.get(k)) && !StringUtils.isEmpty(params.get(sufKey))) {
-                        wrapper.between(s1[1], params.get(k), params.get(sufKey));
+                } else if (ExpParamsEnum.NOT_BETWEEN.getCode().equals(s[0])) {
+                    String[] s1 = s[1].split(ExpParamsEnum.MID_JOIN.getCode());
+                    if (ExpParamsEnum.PRE.getCode().equals(s1[0])) {
+                        String sufKey = ExpParamsEnum.NOT_BETWEEN.getCode() + ExpParamsEnum.JOIN.getCode() + ExpParamsEnum.SUF.getCode() + ExpParamsEnum.MID_JOIN.getCode() + s1[1];
+                        wrapper.between(!StringUtils.isEmpty(params.get(k)) && !StringUtils.isEmpty(params.get(sufKey)), s1[1], params.get(k), params.get(sufKey));
                     }
-                }
-            } else if (ExpParamsEnum.EQ.getCode().equals(s[0])) {
-                if (!StringUtils.isEmpty(params.get(k))) {
-                    wrapper.eq(s[1], params.get(k));
-                }
-            } else if (ExpParamsEnum.NE.getCode().equals(s[0])) {
-                if (!StringUtils.isEmpty(params.get(k))) {
-                    wrapper.ne(s[1], params.get(k));
-                }
-            } else if (ExpParamsEnum.GT.getCode().equals(s[0])) {
-                if (!StringUtils.isEmpty(params.get(k))) {
-                    wrapper.gt(s[1], params.get(k));
-                }
-            } else if (ExpParamsEnum.GE.getCode().equals(s[0])) {
-                if (!StringUtils.isEmpty(params.get(k))) {
-                    wrapper.ge(s[1], params.get(k));
-                }
-            } else if (ExpParamsEnum.LT.getCode().equals(s[0])) {
-                if (!StringUtils.isEmpty(params.get(k))) {
-                    wrapper.lt(s[1], params.get(k));
-                }
-            } else if (ExpParamsEnum.LE.getCode().equals(s[0])) {
-                if (!StringUtils.isEmpty(params.get(k))) {
-                    wrapper.le(s[1], params.get(k));
-                }
-            } else if (ExpParamsEnum.LIKE.getCode().equals(s[0])) {
-                if (!StringUtils.isEmpty(params.get(k))) {
-                    wrapper.like(s[1], params.get(k));
-                }
-            } else if (ExpParamsEnum.NOT_LIKE.getCode().equals(s[0])) {
-                if (!StringUtils.isEmpty(params.get(k))) {
-                    wrapper.notLike(s[1], params.get(k));
-                }
-            } else if (ExpParamsEnum.LIKE_LEFT.getCode().equals(s[0])) {
-                if (!StringUtils.isEmpty(params.get(k))) {
-                    wrapper.likeLeft(s[1], params.get(k));
-                }
-            } else if (ExpParamsEnum.LIKE_RIGHT.getCode().equals(s[0])) {
-                if (!StringUtils.isEmpty(params.get(k))) {
-                    wrapper.likeRight(s[1], params.get(k));
+                } else if (ExpParamsEnum.EQ.getCode().equals(s[0])) {
+                    wrapper.eq(!StringUtils.isEmpty(params.get(k)), s[1], params.get(k));
+                } else if (ExpParamsEnum.NE.getCode().equals(s[0])) {
+                    wrapper.ne(!StringUtils.isEmpty(params.get(k)), s[1], params.get(k));
+                } else if (ExpParamsEnum.GT.getCode().equals(s[0])) {
+                    wrapper.gt(!StringUtils.isEmpty(params.get(k)), s[1], params.get(k));
+                } else if (ExpParamsEnum.GE.getCode().equals(s[0])) {
+                    wrapper.ge(!StringUtils.isEmpty(params.get(k)), s[1], params.get(k));
+                } else if (ExpParamsEnum.LT.getCode().equals(s[0])) {
+                    wrapper.lt(!StringUtils.isEmpty(params.get(k)), s[1], params.get(k));
+                } else if (ExpParamsEnum.LE.getCode().equals(s[0])) {
+                    wrapper.le(!StringUtils.isEmpty(params.get(k)), s[1], params.get(k));
+                } else if (ExpParamsEnum.LIKE.getCode().equals(s[0])) {
+                    wrapper.like(!StringUtils.isEmpty(params.get(k)), s[1], params.get(k));
+                } else if (ExpParamsEnum.NOT_LIKE.getCode().equals(s[0])) {
+                    wrapper.notLike(!StringUtils.isEmpty(params.get(k)), s[1], params.get(k));
+                } else if (ExpParamsEnum.LIKE_LEFT.getCode().equals(s[0])) {
+                    wrapper.likeLeft(!StringUtils.isEmpty(params.get(k)), s[1], params.get(k));
+                } else if (ExpParamsEnum.LIKE_RIGHT.getCode().equals(s[0])) {
+                    wrapper.likeRight(!StringUtils.isEmpty(params.get(k)), s[1], params.get(k));
+                } else if (ExpParamsEnum.OR_SAME.getCode().equals(s[0])) {
+                    String[] s1 = s[1].split(ExpParamsEnum.MID_JOIN.getCode());
+                    if (ExpParamsEnum.PRE.getCode().equals(s1[0])) {
+                        String sufKey = ExpParamsEnum.OR_SAME.getCode() + ExpParamsEnum.JOIN.getCode() + ExpParamsEnum.SUF.getCode() + ExpParamsEnum.MID_JOIN.getCode() + s1[1];
+                        wrapper.between(!StringUtils.isEmpty(params.get(k)) && !StringUtils.isEmpty(params.get(sufKey)), s1[1], params.get(k), params.get(sufKey));
+                    }
+                } else if (ExpParamsEnum.OR_DIFF.getCode().equals(s[0])) {
+                    // 示例：qrDiff__code#Name_code / qrDiff__code#Name_name
+                    String[] s1 = s[1].split(ExpParamsEnum.MID_JOIN.getCode());
+
+                    String[] ks = s1[0].split(ExpParamsEnum.OR_JOIN.getCode());
+                    String otherKey = ExpParamsEnum.OR_DIFF.getCode() + ExpParamsEnum.JOIN.getCode() + s1[0] + ExpParamsEnum.MID_JOIN.getCode() + ks[1];
+
+                    wrapper.and(!StringUtils.isEmpty(params.get(k)) && !StringUtils.isEmpty(params.get(otherKey)), (wp) -> wp
+                            .eq(ks[0], params.get(k))
+                            .or()
+                            .eq(ks[1], params.get(otherKey)));
+                } else if (ExpParamsEnum.IN.getCode().equals(s[0])) {
+                    wrapper.in(!StringUtils.isEmpty(params.get(k)), s[1], Arrays.asList(((String) params.get(k)).split(",")));
+                } else if (ExpParamsEnum.NOT_IN.getCode().equals(s[0])) {
+                    wrapper.notIn(!StringUtils.isEmpty(params.get(k)), s[1], Arrays.asList(((String) params.get(k)).split(",")));
                 }
             }
         });

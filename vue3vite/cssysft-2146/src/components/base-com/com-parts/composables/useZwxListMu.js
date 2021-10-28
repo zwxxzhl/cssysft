@@ -1,4 +1,4 @@
-import {getCurrentInstance, reactive, ref} from "vue";
+import {getCurrentInstance, markRaw, reactive, ref} from "vue";
 import enums from "../../../../utils/enums";
 
 export default function useZwxListMu(api) {
@@ -11,6 +11,7 @@ export default function useZwxListMu(api) {
   const form = ref({formList: []});
   const searchRow = ref([]);
   const tableColumn = ref([]);
+  let searchExp = markRaw({});
 
   let searchLoading = ref(false);
   let total = ref(0);
@@ -81,33 +82,34 @@ export default function useZwxListMu(api) {
 
   // 处理查询参数
   const handleSearchParams = () => {
-    let searchCopy = JSON.parse(JSON.stringify(search));
+    let searchHandle = JSON.parse(JSON.stringify(search));
     for (const items of searchRow.value) {
       for (const item of items) {
         if (item.searchObj) {
           if (item.searchObj.exp) {
             // 配置
-            if (searchCopy[item.domObj.model]) {
-              searchCopy[item.searchObj.exp + item.domObj.model] = searchCopy[item.domObj.model];
+            if (searchHandle[item.domObj.model]) {
+              searchHandle[item.searchObj.exp + item.domObj.model] = searchHandle[item.domObj.model];
             }
-            delete searchCopy[item.domObj.model];
+            delete searchHandle[item.domObj.model];
           } else {
             // 默认
-            if (searchCopy[item.domObj.model]) {
-              searchCopy[enums.exp.eq + item.domObj.model] = searchCopy[item.domObj.model];
+            if (searchHandle[item.domObj.model]) {
+              searchHandle[enums.exp.eq + item.domObj.model] = searchHandle[item.domObj.model];
             }
-            delete searchCopy[item.domObj.model];
+            delete searchHandle[item.domObj.model];
           }
         } else {
           // 默认
-          if (searchCopy[item.domObj.model]) {
-            searchCopy[enums.exp.eq + item.domObj.model] = searchCopy[item.domObj.model];
+          if (searchHandle[item.domObj.model]) {
+            searchHandle[enums.exp.eq + item.domObj.model] = searchHandle[item.domObj.model];
           }
-          delete searchCopy[item.domObj.model];
+          delete searchHandle[item.domObj.model];
         }
       }
     }
-    return searchCopy;
+    Object.assign(searchHandle, searchExp);
+    return searchHandle;
   }
 
   const onSearch = (page = 1) => {
@@ -148,6 +150,7 @@ export default function useZwxListMu(api) {
     form,
     searchRow,
     tableColumn,
+    searchExp,
     searchLoading,
     total,
     currentPage,

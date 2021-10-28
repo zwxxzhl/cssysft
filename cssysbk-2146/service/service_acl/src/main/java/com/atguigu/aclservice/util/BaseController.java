@@ -26,7 +26,8 @@ public abstract class BaseController<E, S extends IService<E>> {
     protected String PK;
     protected boolean UNI_VALID = false;
     protected String UNI_PROP;
-    protected boolean LOGIC_DELETE = true;
+    // 前台如果是逻辑删除，保存与更新时的校验需考虑加上是否删除条件
+    protected boolean WRAPPER_ADD_DELETE = false;
     protected String DELETE_PROP;
 
     @Autowired(required = false)
@@ -44,7 +45,7 @@ public abstract class BaseController<E, S extends IService<E>> {
                 if (!StringUtils.isEmpty(code)) {
                     wrapper.eq(UNI_PROP, code);
                 }
-                if (LOGIC_DELETE) {
+                if (WRAPPER_ADD_DELETE) {
                     wrapper.eq(DELETE_PROP, false);
                 }
                 List<E> list = entityService.list(wrapper);
@@ -73,7 +74,7 @@ public abstract class BaseController<E, S extends IService<E>> {
                 if (!StringUtils.isEmpty(code)) {
                     wrapper.eq(UNI_PROP, code);
                 }
-                if (LOGIC_DELETE) {
+                if (WRAPPER_ADD_DELETE) {
                     wrapper.eq(DELETE_PROP, false);
                 }
                 List<E> list = entityService.list(wrapper);
@@ -127,16 +128,16 @@ public abstract class BaseController<E, S extends IService<E>> {
     public R index(
             @ApiParam(name = "page", value = "当前页码", required = true) @PathVariable Long page,
             @ApiParam(name = "limit", value = "每页记录数", required = true) @PathVariable Long limit,
-            @ApiParam(name = "courseQuery", value = "查询对象") @RequestParam Map<String, Object> params) {
+            @ApiParam(name = "params", value = "查询对象") @RequestParam Map<String, Object> params) {
 
-        IPage<E> pageModel = entityService.page(new Page<>(page, limit), AuxProUtil.queryWrapper(new QueryWrapper<>(), params));
+        IPage<E> pageModel = entityService.page(new Page<>(page, limit), AuxProUtil.queryWrapperParams(new QueryWrapper<>(), params));
         return R.ok().data("items", pageModel.getRecords()).data("total", pageModel.getTotal());
     }
 
     @ApiOperation(value = "列表(不分页)")
     @GetMapping("/select")
     public R select(@RequestParam Map<String, Object> params) {
-        List<E> list = entityService.list(AuxProUtil.queryWrapper(new QueryWrapper<>(), params));
+        List<E> list = entityService.list(AuxProUtil.queryWrapperParams(new QueryWrapper<>(), params));
         return R.ok().data(R.ITEMS, list);
     }
 
