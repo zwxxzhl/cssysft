@@ -25,10 +25,10 @@ public abstract class BaseController<E, S extends IService<E>> {
 
     protected String PK;
     protected boolean UNI_VALID = false;
-    protected String UNI_PROP;
-    // 前台如果是逻辑删除，保存与更新时的校验需考虑加上是否删除条件
+    protected String UNI_COLUMN;
+    // 保存与更新唯一校验时，是否加上删除条件
     protected boolean WRAPPER_ADD_DELETE = false;
-    protected String DELETE_PROP;
+    protected String DELETE_COLUMN;
 
     @Autowired(required = false)
     protected S entityService;
@@ -41,12 +41,12 @@ public abstract class BaseController<E, S extends IService<E>> {
         try {
             if (UNI_VALID) {
                 QueryWrapper<E> wrapper = new QueryWrapper<>();
-                String code = (String) AuxProUtil.getValue(entity, UNI_PROP);
+                String code = (String) AuxProUtil.getValue(entity, UNI_COLUMN);
                 if (!StringUtils.isEmpty(code)) {
-                    wrapper.eq(UNI_PROP, code);
+                    wrapper.eq(UNI_COLUMN, code);
                 }
                 if (WRAPPER_ADD_DELETE) {
-                    wrapper.eq(DELETE_PROP, false);
+                    wrapper.eq(DELETE_COLUMN, false);
                 }
                 List<E> list = entityService.list(wrapper);
                 if (list.size() > 0) {
@@ -69,13 +69,13 @@ public abstract class BaseController<E, S extends IService<E>> {
         try {
             if (UNI_VALID) {
                 QueryWrapper<E> wrapper = new QueryWrapper<>();
-                String code = (String) AuxProUtil.getValue(entity, UNI_PROP);
+                String code = (String) AuxProUtil.getValue(entity, UNI_COLUMN);
                 String id = (String) AuxProUtil.getValue(entity, PK);
                 if (!StringUtils.isEmpty(code)) {
-                    wrapper.eq(UNI_PROP, code);
+                    wrapper.eq(UNI_COLUMN, code);
                 }
                 if (WRAPPER_ADD_DELETE) {
-                    wrapper.eq(DELETE_PROP, false);
+                    wrapper.eq(DELETE_COLUMN, false);
                 }
                 List<E> list = entityService.list(wrapper);
 

@@ -22,9 +22,9 @@ public class DictController extends BaseController<Dict, IDictService> {
     public DictController() {
         super.PK = "id";
         super.UNI_VALID = true;
-        super.UNI_PROP = "code";
-        super.WRAPPER_ADD_DELETE = true;
-        super.DELETE_PROP = "isDeleted";
+        super.UNI_COLUMN = "code";
+        super.WRAPPER_ADD_DELETE = false;
+        super.DELETE_COLUMN = "is_deleted";
     }
 
 }

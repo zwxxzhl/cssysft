@@ -33,8 +33,9 @@ export default {
     // 范围与orSame表达式使用，示例：between__pre_code / orSame__pre_code
     pre: 'pre_',
     suf: 'suf_',
-    // orDiff使用，示例：qrDiff__code#Name_code / qrDiff__code#Name_name
+    // orDiff使用，示例：qrDiff__code#name_code / qrDiff__code#name_name
     orJoin: '#',
+    midJoin: '_',
 
     // 排序key
     asc: 'orderByAsc',  // 值逗号分隔

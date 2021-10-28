@@ -25,7 +25,7 @@ public enum ExpParamsEnum {
     PRE("pre", "范围 或 OR_SAME 表达式前缀"),
     SUF("suf", "范围 或 OR_SAME 表达式后缀"),
 
-    // orDiff 示例：qrDiff__code#Name_code / qrDiff__code#Name_name
+    // orDiff 示例：qrDiff__code#name_code / qrDiff__code#name_name
     OR_JOIN("#", "OR_DIFF 表达式两字段间连接符"),
 
     // 排序

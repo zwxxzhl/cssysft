@@ -1,11 +1,11 @@
 import comCfg from "../../../../components/base-com/com-config/com-config";
 import enums from "../../../../utils/enums";
 
-export default function useSearch(searchExp, searchRow, searchLoading, onSearch) {
-  searchExp[enums.exp.orDiff + 'code#Name' + 'code'] = '33';
-  searchExp[enums.exp.orDiff + 'code#Name' + 'name'] = '99';
+export default function useSearch(searchRow, searchExp, searchLoading, onSearch) {
+  searchExp[enums.exp.orDiff + 'code#name' + enums.exp.midJoin + 'code'] = '33';
+  searchExp[enums.exp.orDiff + 'code#name' + enums.exp.midJoin + 'name'] = '99';
   searchExp[enums.exp.asc] = 'sequence';
-
+  // todo 另外再封装一个json版
   searchRow.value = [
     [
       {
@@ -20,7 +20,7 @@ export default function useSearch(searchExp, searchRow, searchLoading, onSearch)
         domObj: {model: 'code', placeholder: '编码', dom: 'input', type: 'text'},
         searchObj: {exp: enums.exp.eq}
       },
-      {
+      /*{
         rowObj: {colStyle: {flex: '0 0 100px', margin: '0 5px 5px 0px'}},
         formItemObj: {labelWidth: '0px', size: 'medium', style: {marginBottom: '0'}},
         domObj: {model: enums.exp.pre + 'code', placeholder: '编码开始', dom: 'input', type: 'text'},
@@ -31,7 +31,7 @@ export default function useSearch(searchExp, searchRow, searchLoading, onSearch)
         formItemObj: {labelWidth: '0px', size: 'medium', style: {marginBottom: '0'}},
         domObj: {model: enums.exp.suf + 'code', placeholder: '编码结束', dom: 'input', type: 'text'},
         searchObj: {exp: enums.exp.between}
-      },
+      },*/
       {
         rowObj: {colStyle: {flex: '0 0 100px', margin: '0 5px 5px 0px'}},
         formItemObj: {labelWidth: '0px', size: 'medium', style: {marginBottom: '0'}},
