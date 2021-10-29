@@ -1,5 +1,6 @@
 import comCfg from "../../../../components/base-com/com-config/com-config";
 import enums from "../../../../utils/enums";
+import exps from "../../../../utils/exps";
 
 export default function useSearch(searchRow, searchExp, searchLoading, onSearch) {
   searchExp[enums.exp.orDiff + 'code#name' + enums.exp.midJoin + 'code'] = '33';
@@ -12,25 +13,25 @@ export default function useSearch(searchRow, searchExp, searchLoading, onSearch)
         rowObj: {colStyle: {flex: '0 0 100px', margin: '0 5px 5px 0px'}},
         formItemObj: {labelWidth: '0px', size: 'medium', style: {marginBottom: '0'}},
         domObj: {model: 'name', placeholder: '名称', dom: 'input', type: 'text'},
-        searchObj: {exp: enums.exp.like}
+        searchObj: {exp: exps.like}
       },
       {
         rowObj: {colStyle: {flex: '0 0 100px', margin: '0 5px 5px 5px'}},
         formItemObj: {labelWidth: '0px', size: 'medium', style: {marginBottom: '0'}},
         domObj: {model: 'code', placeholder: '编码', dom: 'input', type: 'text'},
-        searchObj: {exp: enums.exp.eq}
+        searchObj: {exp: exps.eq}
       },
       /*{
         rowObj: {colStyle: {flex: '0 0 100px', margin: '0 5px 5px 0px'}},
         formItemObj: {labelWidth: '0px', size: 'medium', style: {marginBottom: '0'}},
         domObj: {model: enums.exp.pre + 'code', placeholder: '编码开始', dom: 'input', type: 'text'},
-        searchObj: {exp: enums.exp.between}
+        searchObj: {exp: exps.between}
       },
       {
         rowObj: {colStyle: {flex: '0 0 100px', margin: '0 5px 5px 0px'}},
         formItemObj: {labelWidth: '0px', size: 'medium', style: {marginBottom: '0'}},
         domObj: {model: enums.exp.suf + 'code', placeholder: '编码结束', dom: 'input', type: 'text'},
-        searchObj: {exp: enums.exp.between}
+        searchObj: {exp: exps.between}
       },*/
       {
         rowObj: {colStyle: {flex: '0 0 100px', margin: '0 5px 5px 0px'}},
@@ -38,7 +39,7 @@ export default function useSearch(searchRow, searchExp, searchLoading, onSearch)
         domObj: {model: 'isDeleted', placeholder: '是否有效', dom: 'select', options: [{id: '1', code: '0', name: '有效'}, {id: '2', code: '1', name: '无效'}],
           option: {key: 'id', label: 'name', value: 'code'}, clearable: true,
         },
-        searchObj: {exp: enums.exp.eq}
+        searchObj: {exp: exps.eq}
       },
       {
         rowObj: {colStyle: {flex: '0 0 89px', margin: '0 5px 5px 15px'}},

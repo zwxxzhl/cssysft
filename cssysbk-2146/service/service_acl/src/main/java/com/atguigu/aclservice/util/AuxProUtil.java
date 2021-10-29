@@ -21,6 +21,7 @@ public class AuxProUtil {
 
     /**
      *  Gson 构建
+     *  todo 使用 Jackson fasterxml 有备注
      */
     public static Gson gsonBuilder(Type type) {
         return new GsonBuilder()

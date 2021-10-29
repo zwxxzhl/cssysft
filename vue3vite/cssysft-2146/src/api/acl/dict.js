@@ -17,6 +17,13 @@ export default {
       params: params
     })
   },
+  ceshi(params) {
+    return request({
+      url: `${api_name}/ceshi`,
+      method: "get",
+      params: params
+    })
+  },
   update(form) {
     return request({
       url: `${api_name}/update`,

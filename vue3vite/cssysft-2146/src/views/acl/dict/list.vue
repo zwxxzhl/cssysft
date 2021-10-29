@@ -68,7 +68,9 @@ import useSearch from './js/useSearch';
 import useList from './js/useList';
 import useZwxListMu from "../../../components/base-com/com-parts/composables/useZwxListMu";
 
-import {ref, onMounted} from "vue";
+import {ref, onMounted, getCurrentInstance} from "vue";
+
+const gp = getCurrentInstance().appContext.config.globalProperties;
 
 let refDialogMu = ref(null);
 let refDictForm = ref({});
@@ -87,6 +89,12 @@ useSearch(searchRow, searchExp, searchLoading, onSearch);
 
 onMounted(() => {
   onSearch();
+  // qs.stringify({ a: ['b', 'c', 'd'] })
+  // gp.qs.stringify({params: [{id: 1, code: '001'},{id:2, code: '002'}]}, { arrayFormat: 'brackets' })
+  dictApi.ceshi({jsonParams: JSON.stringify({id: 1, name: 2})}).then(res => {
+    console.log('测试list参数结果');
+    console.log(res);
+  })
 });
 
 </script>
