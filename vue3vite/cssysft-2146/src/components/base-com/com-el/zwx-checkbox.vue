@@ -3,12 +3,14 @@
   <el-checkbox
     v-model="form[config.model]"
     :class="config.class"
+    :style="config.style"
     :size="config.size"
     :border="config.border"
+    :label="config.label"
     :true-label="config.trueLabel"
     :false-label="config.falseLabel"
     :disabled=config.disabled>
-    {{ config.checkboxLabel }}
+    {{ config.show }}
   </el-checkbox>
 
 </template>

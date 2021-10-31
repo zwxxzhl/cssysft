@@ -1,21 +1,21 @@
 <template>
 
-  <el-radio-group
+  <el-checkbox-group
       v-model="form[config.model]"
       :class="config.class"
       :style="config.style"
       :size="config.size"
       :disabled="config.disabled">
 
-    <el-radio
+    <el-checkbox
         v-for="item in config.options"
         :label="item.label"
         :border="item.border">
 
       {{ item.show }}
 
-    </el-radio>
-  </el-radio-group>
+    </el-checkbox>
+  </el-checkbox-group>
 
 </template>
 

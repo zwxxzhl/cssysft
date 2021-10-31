@@ -37,7 +37,7 @@ public abstract class BaseController<E, S extends IService<E>> {
 
     @ApiOperation(value = "新增")
     @PostMapping("save")
-    public R save(@RequestBody E entity) {
+    public R save(@ApiParam(name = "entity", value = "数据对象") @RequestBody E entity) {
         try {
             if (UNI_VALID) {
                 QueryWrapper<E> wrapper = new QueryWrapper<>();
@@ -65,7 +65,7 @@ public abstract class BaseController<E, S extends IService<E>> {
 
     @ApiOperation(value = "更新")
     @PutMapping("update")
-    public R update(@RequestBody E entity) {
+    public R update(@ApiParam(name = "entity", value = "数据对象") @RequestBody E entity) {
         try {
             if (UNI_VALID) {
                 QueryWrapper<E> wrapper = new QueryWrapper<>();
@@ -94,7 +94,7 @@ public abstract class BaseController<E, S extends IService<E>> {
 
     @ApiOperation(value = "真实删除字典")
     @DeleteMapping("remove")
-    public R remove(@RequestBody List<String> ids) {
+    public R remove(@ApiParam(name = "ids", value = "id数组") @RequestBody List<String> ids) {
         if (Optional.ofNullable(ids).isPresent() && ids.size() > 0) {
             entityService.removeByIds(ids);
         } else {
@@ -105,7 +105,7 @@ public abstract class BaseController<E, S extends IService<E>> {
 
     @ApiOperation(value = "逻辑删除字典")
     @DeleteMapping("remove/logic")
-    public R removeLogic(@RequestBody List<String> ids) {
+    public R removeLogic(@ApiParam(name = "ids", value = "id数组") @RequestBody List<String> ids) {
         if (Optional.ofNullable(ids).isPresent() && ids.size() > 0) {
             Collection<E> dicts = entityService.listByIds(ids);
             for (E item : dicts) {
@@ -130,14 +130,14 @@ public abstract class BaseController<E, S extends IService<E>> {
             @ApiParam(name = "limit", value = "每页记录数", required = true) @PathVariable Long limit,
             @ApiParam(name = "params", value = "查询对象") @RequestParam Map<String, Object> params) {
 
-        IPage<E> pageModel = entityService.page(new Page<>(page, limit), AuxProUtil.queryWrapperParams(new QueryWrapper<>(), params));
+        IPage<E> pageModel = entityService.page(new Page<>(page, limit), AuxProUtil.jsonParamsWrapper(new QueryWrapper<>(), params));
         return R.ok().data("items", pageModel.getRecords()).data("total", pageModel.getTotal());
     }
 
     @ApiOperation(value = "列表(不分页)")
     @GetMapping("/select")
-    public R select(@RequestParam Map<String, Object> params) {
-        List<E> list = entityService.list(AuxProUtil.queryWrapperParams(new QueryWrapper<>(), params));
+    public R select(@ApiParam(name = "params", value = "查询对象") @RequestParam Map<String, Object> params) {
+        List<E> list = entityService.list(AuxProUtil.jsonParamsWrapper(new QueryWrapper<>(), params));
         return R.ok().data(R.ITEMS, list);
     }
 

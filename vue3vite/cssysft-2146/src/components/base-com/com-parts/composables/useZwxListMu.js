@@ -1,7 +1,8 @@
 import {getCurrentInstance, markRaw, reactive, ref} from "vue";
-import enums from "../../../../utils/enums";
+import Enums from "../../../../utils/enums";
+import Exps from "../../../../utils/exps";
 
-export default function useZwxListMu(api) {
+export default function useZwxListMu(api, pk) {
   const gp = getCurrentInstance().appContext.config.globalProperties;
 
   let refZwxListMu = ref(null);
@@ -20,14 +21,18 @@ export default function useZwxListMu(api) {
 
   let multipleSelection = ref([]);
 
-  const onAdd = (refDialogMu) => {
-    refDialogMu.open(null, enums.formType.add);
+  const onView = (data, refDialogMu) => {
+    refDialogMu.open(data, Enums.formType.add);
+  }
+
+  const onAdd = (data, refDialogMu) => {
+    refDialogMu.open(data, Enums.formType.add);
   }
 
   const onEdit = (row, refDialogMu) => {
     if (row || multipleSelection.value.length === 1) {
       let data = (row || multipleSelection.value.length === 1 && multipleSelection.value[0])
-      refDialogMu.open(data, enums.formType.edit);
+      refDialogMu.open(data, Enums.formType.edit);
     } else {
       gp.$message.warning("请选择单行");
     }
@@ -36,9 +41,9 @@ export default function useZwxListMu(api) {
   const onDelete = (row) => {
     let ids = [];
     if (row || multipleSelection.value.length > 0) {
-      ids.push(row.id);
+      ids.push(row[pk]);
     } else if (multipleSelection.value.length > 0) {
-      ids = multipleSelection.value.map(m => m.id);
+      ids = multipleSelection.value.map(m => m[pk]);
     } else {
       gp.$message.warning("请选择行");
       return;
@@ -74,7 +79,7 @@ export default function useZwxListMu(api) {
   // 搜索后，回显选中项，若有
   const echoListSelect = (list) => {
     list.forEach(e => {
-      if (-1 !== multipleSelection.value.findIndex(f => f.id === e.id)) {
+      if (-1 !== multipleSelection.value.findIndex(f => f[pk] === e[pk])) {
         refZwxListMu.value.refZwxTable.refTable.toggleRowSelection(e, true);
       }
     })
@@ -82,34 +87,49 @@ export default function useZwxListMu(api) {
 
   // 处理查询参数
   const handleSearchParams = () => {
-    let searchHandle = JSON.parse(JSON.stringify(search));
+    let temp = {};
     for (const items of searchRow.value) {
       for (const item of items) {
-        if (item.searchObj) {
-          if (item.searchObj.exp) {
-            // 配置
-            if (searchHandle[item.domObj.model]) {
-              searchHandle[item.searchObj.exp + item.domObj.model] = searchHandle[item.domObj.model];
+        if (item.searchObj && search[item.domObj.model]) {
+          if (Exps.between === item.searchObj[Exps.exp]) {
+            if (-1 !== item.domObj.model.indexOf(Exps.pre)) {
+              let key = item.domObj.model.substring(Exps.pre.length);
+              if (temp[key]) {
+                temp[key][Exps.preProp] = key;
+                temp[key][Exps.preVal] = search[item.domObj.model];
+              } else {
+                temp[key] = {
+                  [Exps.exp]: item.searchObj[Exps.exp],
+                  [Exps.preProp]: key,
+                  [Exps.preVal]: search[item.domObj.model]
+                };
+              }
+            } else if (-1 !== item.domObj.model.indexOf(Exps.suf)) {
+              let key = item.domObj.model.substring(Exps.suf.length);
+              if (temp[key]) {
+                temp[key][Exps.sufProp] = key;
+                temp[key][Exps.sufVal] = search[item.domObj.model];
+              } else {
+                temp[key] = {
+                  [Exps.exp]: item.searchObj[Exps.exp],
+                  [Exps.sufProp]: key,
+                  [Exps.sufVal]: search[item.domObj.model]
+                };
+              }
             }
-            delete searchHandle[item.domObj.model];
           } else {
-            // 默认
-            if (searchHandle[item.domObj.model]) {
-              searchHandle[enums.exp.eq + item.domObj.model] = searchHandle[item.domObj.model];
-            }
-            delete searchHandle[item.domObj.model];
+            let key = item.domObj.model;
+            temp[key] = {
+              [Exps.exp]: item.searchObj[Exps.exp],
+              [Exps.prop]: key,
+              [Exps.val]: search[item.domObj.model]
+            };
           }
-        } else {
-          // 默认
-          if (searchHandle[item.domObj.model]) {
-            searchHandle[enums.exp.eq + item.domObj.model] = searchHandle[item.domObj.model];
-          }
-          delete searchHandle[item.domObj.model];
         }
       }
     }
-    Object.assign(searchHandle, searchExp);
-    return searchHandle;
+    Object.assign(temp, searchExp);
+    return temp;
   }
 
   const onSearch = (page = 1) => {
@@ -122,7 +142,8 @@ export default function useZwxListMu(api) {
         total.value = res.data.total;
         echoListSelect(form.value.formList);
 
-        gp.$message.success(res.message);
+        // 业务操作频繁时,影响体验
+        // gp.$message.success(res.message);
         searchLoading.value = false;
       } else {
         gp.$message.error(res.message);
@@ -156,6 +177,7 @@ export default function useZwxListMu(api) {
     currentPage,
     pageSize,
     multipleSelection,
+    onView,
     onAdd,
     onEdit,
     onDelete,

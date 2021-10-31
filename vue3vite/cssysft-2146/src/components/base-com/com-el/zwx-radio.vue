@@ -1,21 +1,15 @@
 <template>
 
-  <el-radio-group
+  <el-radio
       v-model="form[config.model]"
       :class="config.class"
       :style="config.style"
       :size="config.size"
-      :disabled="config.disabled">
-
-    <el-radio
-        v-for="item in config.options"
-        :label="item.label"
-        :border="item.border">
-
-      {{ item.show }}
-
-    </el-radio>
-  </el-radio-group>
+      :border="config.border"
+      :label="config.label"
+      :disabled=config.disabled>
+    {{ config.show }}
+  </el-radio>
 
 </template>
 

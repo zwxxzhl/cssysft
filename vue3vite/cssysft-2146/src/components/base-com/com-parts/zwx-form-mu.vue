@@ -6,7 +6,7 @@
 
         <template v-for="(item, index) in row" :key="index">
 
-          <el-col :span="item.rowObj.span || 2" :style="item.rowObj.colStyle" v-if="'select' === item.domObj.dom">
+          <el-col :span="item.rowObj.span || 4" :style="item.rowObj.colStyle" v-if="'select' === item.domObj.dom">
             <zwx-form-item :config="item.formItemObj">
 
               <zwx-select :form="form" :config="item.domObj" @change="val => item.domObj.change && $emit(item.domObj.change, val)"></zwx-select>
@@ -14,7 +14,7 @@
             </zwx-form-item>
           </el-col>
 
-          <el-col :span="item.rowObj.span || 2" :style="item.rowObj.colStyle" v-else-if="'cascader' === item.domObj.dom">
+          <el-col :span="item.rowObj.span || 4" :style="item.rowObj.colStyle" v-else-if="'cascader' === item.domObj.dom">
             <zwx-form-item :config="item.formItemObj">
 
               <zwx-cascader :form="form" :config="item.domObj" @change="val => item.domObj.change && $emit(item.domObj.change, val)"></zwx-cascader>
@@ -22,7 +22,7 @@
             </zwx-form-item>
           </el-col>
 
-          <el-col :span="item.rowObj.span || 2" :style="item.rowObj.colStyle" v-else-if="'date-picker' === item.domObj.dom">
+          <el-col :span="item.rowObj.span || 4" :style="item.rowObj.colStyle" v-else-if="'date-picker' === item.domObj.dom">
             <zwx-form-item :config="item.formItemObj">
 
               <zwx-date-picker :form="form" :config="item.domObj" @change="val => item.domObj.change && $emit(item.domObj.change, val)"></zwx-date-picker>
@@ -30,7 +30,7 @@
             </zwx-form-item>
           </el-col>
 
-          <el-col :span="item.rowObj.span || 2" :style="item.rowObj.colStyle" v-else-if="'input' === item.domObj.dom">
+          <el-col :span="item.rowObj.span || 4" :style="item.rowObj.colStyle" v-else-if="'input' === item.domObj.dom">
             <zwx-form-item :config="item.formItemObj">
 
               <zwx-input :form="form" :config="item.domObj" @change="val => item.domObj.change && $emit(item.domObj.change, val)"></zwx-input>
@@ -38,7 +38,7 @@
             </zwx-form-item>
           </el-col>
 
-          <el-col :span="item.rowObj.span || 2" :style="item.rowObj.colStyle" v-else-if="'checkbox' === item.domObj.dom">
+          <el-col :span="item.rowObj.span || 4" :style="item.rowObj.colStyle" v-else-if="'checkbox' === item.domObj.dom">
             <zwx-form-item :config="item.formItemObj">
 
               <zwx-checkbox :form="form" :config="item.domObj" @change="val => item.domObj.change && $emit(item.domObj.change, val)"></zwx-checkbox>
@@ -46,7 +46,7 @@
             </zwx-form-item>
           </el-col>
 
-          <el-col :span="item.rowObj.span || 2" :style="item.rowObj.colStyle" v-else-if="'radio-group' === item.domObj.dom">
+          <el-col :span="item.rowObj.span || 4" :style="item.rowObj.colStyle" v-else-if="'radio-group' === item.domObj.dom">
             <zwx-form-item :config="item.formItemObj">
 
               <zwx-radio-group :form="form" :config="item.domObj" @change="val => item.domObj.change && $emit(item.domObj.change, val)"></zwx-radio-group>
@@ -54,13 +54,21 @@
             </zwx-form-item>
           </el-col>
 
-          <el-col :span="item.rowObj.span || 2" :style="item.rowObj.colStyle" v-else-if="'button' === item.domObj.dom">
+          <el-col :span="item.rowObj.span || 4" :style="item.rowObj.colStyle" v-else-if="'radio' === item.domObj.dom">
+            <zwx-form-item :config="item.formItemObj">
+
+              <zwx-radio :form="form" :config="item.domObj" @change="val => item.domObj.change && $emit(item.domObj.change, val)"></zwx-radio>
+
+            </zwx-form-item>
+          </el-col>
+
+          <el-col :span="item.rowObj.span || 4" :style="item.rowObj.colStyle" v-else-if="'button' === item.domObj.dom">
 
             <zwx-button :config="item.domObj" @click="val => item.domObj.click && $emit(item.domObj.click, val)"></zwx-button>
 
           </el-col>
 
-          <el-col :span="item.rowObj.span || 2" :style="item.rowObj.colStyle" v-else-if="'slot' === item.domObj.dom">
+          <el-col :span="item.rowObj.span || 4" :style="item.rowObj.colStyle" v-else-if="'slot' === item.domObj.dom">
 
             <slot :name="item.domObj.slotName" v-bind="this"></slot>
 
@@ -81,6 +89,7 @@ import ZwxDatePicker from "../com-el/zwx-date-picker.vue";
 import ZwxInput from "../com-el/zwx-input.vue";
 import ZwxCheckbox from "../com-el/zwx-checkbox.vue";
 import ZwxRadioGroup from "../com-el/zwx-radio-group.vue";
+import ZwxRadio from "../com-el/zwx-radio.vue";
 import ZwxButton from '../com-el/zwx-button.vue';
 
 import {

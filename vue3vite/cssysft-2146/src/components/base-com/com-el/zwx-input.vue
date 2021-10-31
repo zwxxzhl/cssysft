@@ -3,6 +3,7 @@
   <el-input
     v-model="form[config.model]"
     :class="config.class"
+    :style="config.style"
     :size="config.size"
     :type="config.type"
     :rows="config.rows"

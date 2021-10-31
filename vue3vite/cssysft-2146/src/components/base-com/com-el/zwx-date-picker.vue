@@ -3,6 +3,7 @@
   <el-date-picker
     v-model="form[config.model]"
     :class="config.class"
+    :style="config.style"
     :size="config.size"
     :type="config.type"
     :value-format="config.valueFormat"

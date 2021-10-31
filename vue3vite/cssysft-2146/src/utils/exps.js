@@ -1,4 +1,17 @@
 export default {
+  // key
+  exp: 'exp',
+  prop: 'prop',
+  preProp: 'preProp',
+  sufProp: 'sufProp',
+  val: 'val',
+  preVal: 'preVal',
+  sufVal: 'sufVal',
+
+  pre: 'pre',
+  suf: 'suf',
+
+  // 表达式
   eq: 'eq',
   ne: 'ne',
   gt: 'gt',
@@ -11,8 +24,7 @@ export default {
   notLike: 'notLike',
   likeLeft: 'likeLeft',
   likeRight: 'likeRight',
-  orSame: 'orSame',
-  orDiff: 'orDiff',
+  or: 'or',
   in: 'in',
   notIn: 'notIn',
 

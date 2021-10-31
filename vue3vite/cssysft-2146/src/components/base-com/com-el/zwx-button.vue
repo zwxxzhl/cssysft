@@ -2,6 +2,7 @@
 
   <el-button
     :class="config.class"
+    :style="config.style"
     :size="config.size"
     :type="config.type"
     :plain="config.plain"

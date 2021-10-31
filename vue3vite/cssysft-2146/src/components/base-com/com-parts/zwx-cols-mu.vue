@@ -5,13 +5,13 @@
 
         <template v-for="(item, index) in row" :key="index">
 
-          <el-col :span="item.rowObj.span || 2" :style="item.rowObj.colStyle" v-if="'button' === item.domObj.dom">
+          <el-col :span="item.rowObj.span || 4" :style="item.rowObj.colStyle" v-if="'button' === item.domObj.dom">
 
             <zwx-button :config="item.domObj" @click="val => item.domObj.click && $emit(item.domObj.click, val)"></zwx-button>
 
           </el-col>
 
-          <el-col :span="item.rowObj.span || 2" :style="item.rowObj.colStyle" v-else-if="'slot' === item.domObj.dom">
+          <el-col :span="item.rowObj.span || 4" :style="item.rowObj.colStyle" v-else-if="'slot' === item.domObj.dom">
 
             <slot :name="item.domObj.slotName"></slot>
 

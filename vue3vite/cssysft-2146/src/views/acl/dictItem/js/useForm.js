@@ -1,7 +1,7 @@
 import {getCurrentInstance, reactive, ref} from "vue";
 import Enums from "../../../../utils/enums";
 import Exps from "../../../../utils/exps";
-import dictApi from "../../../../api/acl/dict";
+import dictItemApi from "../../../../api/acl/dictItem";
 import comCfg from "../../../../components/base-com/com-config/com-config";
 
 export default function useForm(emit) {
@@ -17,31 +17,35 @@ export default function useForm(emit) {
   const formRow = reactive([
     [{
       rowObj: {span: 24},
+      formItemObj: {prop: 'code', label: '编码：'},
+      domObj: {model: 'code', dom: 'input', type: 'text'},
+    }],
+    [{
+      rowObj: {span: 24},
       formItemObj: {prop: 'name', label: '名称：'},
       domObj: {model: 'name', dom: 'input', type: 'text'},
     }],
     [{
       rowObj: {span: 24},
-      formItemObj: {prop: 'code', label: '编码：'},
-      domObj: {model: 'code', dom: 'input', type: 'text'},
+      formItemObj: {prop: 'name1', label: '扩展名1：'},
+      domObj: {model: 'name1', dom: 'input', type: 'text'},
+    }],
+    [{
+      rowObj: {span: 24},
+      formItemObj: {prop: 'name2', label: '扩展名2：'},
+      domObj: {model: 'name2', dom: 'input', type: 'text'},
     }],
     [{
       rowObj: {span: 24},
       formItemObj: {label: '顺序：'},
       domObj: {model: 'sequence', dom: 'input', type: 'text'},
     }],
-    [
-      {
-        rowObj: {span: 6},
-        formItemObj: {label: '有效：'},
-        domObj: {model: 'isDeleted', dom: 'radio', label: false, show: '有效'}
-      },
-      {
-        rowObj: {span: 4},
-        formItemObj: {labelWidth: '0px'},
-        domObj: {model: 'isDeleted', dom: 'radio', label: true, show: '无效'}
-      }
-    ]
+    [{
+      rowObj: {span: 24},
+      formItemObj: {label: '有效：'},
+      domObj: {model: 'isDeleted', dom: 'radio-group', style: {display: 'flex'},
+        options: [{label: false, show: '有效'}, {label: true, show: '无效'}]},
+    }]
   ]);
 
   const rules = ref({
@@ -68,7 +72,7 @@ export default function useForm(emit) {
     ]
   ]);
 
-  const initData = (dialogData, openType, close) => {
+  const initData = (data, openType, close) => {
     loading.value = false;
     refFormMu.value.refForm.clearValidate();
 
@@ -77,9 +81,10 @@ export default function useForm(emit) {
     dialogClose = close;
 
     if (Enums.formType.add === dialogOpenType.value) {
+      form.value.pid = data.value.id;
       form.value.isDeleted = false;
     } else if (Enums.formType.edit === dialogOpenType.value) {
-      dictApi.select({id: {exp: Exps.eq, prop: 'id', val: dialogData.value.id}}).then(res => {
+      dictItemApi.select({id: {exp: Exps.eq, prop: 'id', val: data.value.id}}).then(res => {
         form.value = res.data.items[0];
       })
     }
@@ -87,7 +92,7 @@ export default function useForm(emit) {
 
   const updateForm = () => {
     loading.value = true;
-    dictApi.update(form.value).then(res => {
+    dictItemApi.update(form.value).then(res => {
       if (res.success) {
         emit('after-save');
         dialogClose();
@@ -100,7 +105,7 @@ export default function useForm(emit) {
 
   const saveForm = () => {
     loading.value = true;
-    dictApi.save(form.value).then(res => {
+    dictItemApi.save(form.value).then(res => {
       if (res.success) {
         emit('after-save');
         dialogClose();

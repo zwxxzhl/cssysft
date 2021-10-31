@@ -6,7 +6,7 @@
       :form="search"
       :form-row="searchRow"
       @search-click="onSearch()"
-      @add-click="onAdd(refDialogMu)"
+      @add-click="onAdd(null, refDialogMu)"
       @edit-click="onEdit(null, refDialogMu)"
       @delete-click="onDelete()">
     </zwx-form-mu>
@@ -28,7 +28,10 @@
       @page-size-change="onPageSizeChange">
 
       <template #operation="scope">
-        <el-tooltip v-if="hasPerm('dict.update')" effect="dark" content="编辑" placement="left-start">
+        <el-tooltip v-if="hasPerm('dict.list')" effect="dark" content="明细" placement="left-start">
+          <i class="el-icon-view icon-layout-mini color-blue" @click="onView(scope.row, refDialogMuDictItemList)"></i>
+        </el-tooltip>
+        <el-tooltip v-if="hasPerm('dict.update')" effect="dark" content="编辑" placement="bottom">
           <i class="el-icon-edit icon-layout-mini color-orange" @click="onEdit(scope.row, refDialogMu)"></i>
         </el-tooltip>
         <el-tooltip v-if="hasPerm('dict.remove')" effect="dark" content="删除" placement="bottom-end">
@@ -51,6 +54,19 @@
       </template>
     </zwx-dialog-mu>
 
+    <zwx-dialog-mu
+        ref="refDialogMuDictItemList" title="字典明细列表"
+        width="80%" top="3vh" :height-pct="0.75"
+        :page-vm="refDictItemList">
+      <dict-item-list ref="refDictItemList"></dict-item-list>
+      <template #footer>
+        <zwx-cols-mu
+            type="flex" justify="center" :col-list="refDictItemList.bottomList"
+            @close-click="refDictItemList.onPageClose">
+        </zwx-cols-mu>
+      </template>
+    </zwx-dialog-mu>
+
   </div>
 </template>
 
@@ -60,6 +76,7 @@ import ZwxListMu from "../../../components/base-com/com-parts/zwx-list-mu.vue";
 import ZwxFormMu from "../../../components/base-com/com-parts/zwx-form-mu.vue";
 import DictForm from "./component/form.vue";
 import ZwxColsMu from "../../../components/base-com/com-parts/zwx-cols-mu.vue";
+import DictItemList from "../dictItem/list.vue";
 
 import comCfg from "../../../components/base-com/com-config/com-config";
 import dictApi from "../../../api/acl/dict";
@@ -74,27 +91,24 @@ const gp = getCurrentInstance().appContext.config.globalProperties;
 
 let refDialogMu = ref(null);
 let refDictForm = ref({});
+let refDialogMuDictItemList = ref(null);
+let refDictItemList = ref({});
 
 const {
   refZwxListMu, refZwxFormMu, search, form, searchRow, tableColumn, searchExp,
   searchLoading, total, currentPage, pageSize, multipleSelection,
-  onAdd, onEdit, onDelete, onSelect, onSelectionChange,
+  onView, onAdd, onEdit, onDelete, onSelect, onSelectionChange,
   onSearch, onPageCurrentChange, onPageSizeChange
-} = useZwxListMu(dictApi);
-
+} = useZwxListMu(dictApi, 'id');
 
 useList(tableColumn, multipleSelection);
 
-useSearch(searchRow, searchExp, searchLoading, onSearch);
+useSearch(searchRow, searchExp, search, searchLoading, onSearch);
+
+
 
 onMounted(() => {
   onSearch();
-  // qs.stringify({ a: ['b', 'c', 'd'] })
-  // gp.qs.stringify({params: [{id: 1, code: '001'},{id:2, code: '002'}]}, { arrayFormat: 'brackets' })
-  dictApi.ceshi({jsonParams: JSON.stringify({id: 1, name: 2})}).then(res => {
-    console.log('测试list参数结果');
-    console.log(res);
-  })
 });
 
 </script>

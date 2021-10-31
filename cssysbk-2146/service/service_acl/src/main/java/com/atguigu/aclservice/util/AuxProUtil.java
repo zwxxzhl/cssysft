@@ -4,6 +4,9 @@ import com.atguigu.aclservice.config.gson.GsonTypeAdapter;
 import com.atguigu.aclservice.enums.ExpParamsEnum;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.springframework.beans.BeanUtils;
@@ -194,77 +197,108 @@ public class AuxProUtil {
     }
 
     /**
-     * 通用 QueryWrapper 查询参数初始化
+     *  json 参数绑定 QueryWrapper
      */
-    public static <E> QueryWrapper<E> queryWrapperParams(QueryWrapper<E> wrapper, Map<String, Object> params) {
-        Set<String> keys = params.keySet();
-        keys.forEach(k -> {
-            if (ExpParamsEnum.ASC.getCode().equals(k)) {
-                wrapper.orderByAsc(!StringUtils.isEmpty(params.get(k)), ((String) params.get(k)).split(","));
-            } else if (ExpParamsEnum.DESC.getCode().equals(k)) {
-                wrapper.orderByDesc(!StringUtils.isEmpty(params.get(k)), ((String) params.get(k)).split(","));
-            } else {
-                String[] s = k.split(ExpParamsEnum.JOIN.getCode());
-                if (ExpParamsEnum.BETWEEN.getCode().equals(s[0])) {
-                    String[] s1 = s[1].split(ExpParamsEnum.MID_JOIN.getCode());
-                    if (ExpParamsEnum.PRE.getCode().equals(s1[0])) {
-                        String sufKey = ExpParamsEnum.BETWEEN.getCode() + ExpParamsEnum.JOIN.getCode() + ExpParamsEnum.SUF.getCode() + ExpParamsEnum.MID_JOIN.getCode() + s1[1];
-                        wrapper.between(!StringUtils.isEmpty(params.get(k)) && !StringUtils.isEmpty(params.get(sufKey)), toUnderlineCase(s1[1]), params.get(k), params.get(sufKey));
-                    }
-                } else if (ExpParamsEnum.NOT_BETWEEN.getCode().equals(s[0])) {
-                    String[] s1 = s[1].split(ExpParamsEnum.MID_JOIN.getCode());
-                    if (ExpParamsEnum.PRE.getCode().equals(s1[0])) {
-                        String sufKey = ExpParamsEnum.NOT_BETWEEN.getCode() + ExpParamsEnum.JOIN.getCode() + ExpParamsEnum.SUF.getCode() + ExpParamsEnum.MID_JOIN.getCode() + s1[1];
-                        wrapper.between(!StringUtils.isEmpty(params.get(k)) && !StringUtils.isEmpty(params.get(sufKey)), toUnderlineCase(s1[1]), params.get(k), params.get(sufKey));
-                    }
-                } else if (ExpParamsEnum.EQ.getCode().equals(s[0])) {
-                    wrapper.eq(!StringUtils.isEmpty(params.get(k)), toUnderlineCase(s[1]), params.get(k));
-                } else if (ExpParamsEnum.NE.getCode().equals(s[0])) {
-                    wrapper.ne(!StringUtils.isEmpty(params.get(k)), toUnderlineCase(s[1]), params.get(k));
-                } else if (ExpParamsEnum.GT.getCode().equals(s[0])) {
-                    wrapper.gt(!StringUtils.isEmpty(params.get(k)), toUnderlineCase(s[1]), params.get(k));
-                } else if (ExpParamsEnum.GE.getCode().equals(s[0])) {
-                    wrapper.ge(!StringUtils.isEmpty(params.get(k)), toUnderlineCase(s[1]), params.get(k));
-                } else if (ExpParamsEnum.LT.getCode().equals(s[0])) {
-                    wrapper.lt(!StringUtils.isEmpty(params.get(k)), toUnderlineCase(s[1]), params.get(k));
-                } else if (ExpParamsEnum.LE.getCode().equals(s[0])) {
-                    wrapper.le(!StringUtils.isEmpty(params.get(k)), toUnderlineCase(s[1]), params.get(k));
-                } else if (ExpParamsEnum.LIKE.getCode().equals(s[0])) {
-                    wrapper.like(!StringUtils.isEmpty(params.get(k)), toUnderlineCase(s[1]), params.get(k));
-                } else if (ExpParamsEnum.NOT_LIKE.getCode().equals(s[0])) {
-                    wrapper.notLike(!StringUtils.isEmpty(params.get(k)), toUnderlineCase(s[1]), params.get(k));
-                } else if (ExpParamsEnum.LIKE_LEFT.getCode().equals(s[0])) {
-                    wrapper.likeLeft(!StringUtils.isEmpty(params.get(k)), toUnderlineCase(s[1]), params.get(k));
-                } else if (ExpParamsEnum.LIKE_RIGHT.getCode().equals(s[0])) {
-                    wrapper.likeRight(!StringUtils.isEmpty(params.get(k)), toUnderlineCase(s[1]), params.get(k));
-                } else if (ExpParamsEnum.OR_SAME.getCode().equals(s[0])) {
-                    // 示例：qrSame__pre_code / qrSame__suf_code
-                    String[] s1 = s[1].split(ExpParamsEnum.MID_JOIN.getCode());
-                    if (ExpParamsEnum.PRE.getCode().equals(s1[0])) {
-                        String sufKey = ExpParamsEnum.OR_SAME.getCode() + ExpParamsEnum.JOIN.getCode() + ExpParamsEnum.SUF.getCode() + ExpParamsEnum.MID_JOIN.getCode() + s1[1];
-
-                        wrapper.and(!StringUtils.isEmpty(params.get(k)) && !StringUtils.isEmpty(params.get(sufKey)), (wp) -> wp
-                                .eq(toUnderlineCase(s1[1]), params.get(k))
-                                .or()
-                                .eq(toUnderlineCase(s1[1]), params.get(sufKey)));
-                    }
-                } else if (ExpParamsEnum.OR_DIFF.getCode().equals(s[0])) {
-                    // 示例：qrDiff__code#name_code / qrDiff__code#name_name
-                    String[] s1 = s[1].split(ExpParamsEnum.MID_JOIN.getCode());
-                    String[] ks = s1[0].split(ExpParamsEnum.OR_JOIN.getCode());
-                    String otherKey = ExpParamsEnum.OR_DIFF.getCode() + ExpParamsEnum.JOIN.getCode() + s1[0] + ExpParamsEnum.MID_JOIN.getCode() + ks[1];
-
-                    wrapper.and(!StringUtils.isEmpty(params.get(k)) && !StringUtils.isEmpty(params.get(otherKey)), (wp) -> wp
-                            .eq(toUnderlineCase(ks[0]), params.get(k))
-                            .or()
-                            .eq(toUnderlineCase(ks[1]), params.get(otherKey)));
-                } else if (ExpParamsEnum.IN.getCode().equals(s[0])) {
-                    wrapper.in(!StringUtils.isEmpty(params.get(k)), toUnderlineCase(s[1]), Arrays.asList(((String) params.get(k)).split(",")));
-                } else if (ExpParamsEnum.NOT_IN.getCode().equals(s[0])) {
-                    wrapper.notIn(!StringUtils.isEmpty(params.get(k)), toUnderlineCase(s[1]), Arrays.asList(((String) params.get(k)).split(",")));
-                }
+    public static <E> QueryWrapper<E> jsonParamsWrapper(QueryWrapper<E> wrapper, Map<String, Object> jsonParams) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Map<String, Object>> list = new ArrayList<>();
+        jsonParams.forEach((k, v) -> {
+            Map<String, Object> km = null;
+            try {
+                km = objectMapper.readValue(jsonParams.get(k).toString(), new TypeReference<Map<String,Object>>(){});
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+            if (Optional.ofNullable(km).isPresent()) {
+                list.add(km);
             }
         });
+
+        for (Map<String, Object> m : list) {
+            if (!StringUtils.isEmpty(m.get(ExpParamsEnum.EXP.getCode()))
+                    && !StringUtils.isEmpty(m.get(ExpParamsEnum.PROP.getCode()))) {
+
+                if (ExpParamsEnum.IN.getCode().equals(m.get(ExpParamsEnum.EXP.getCode()))) {
+                    wrapper.in(!StringUtils.isEmpty(m.get(ExpParamsEnum.VAL.getCode())),
+                            toUnderlineCase(m.get(ExpParamsEnum.PROP.getCode()).toString()),
+                            Arrays.asList(m.get(ExpParamsEnum.VAL.getCode()).toString().split(",")));
+                } else if (ExpParamsEnum.NOT_IN.getCode().equals(m.get(ExpParamsEnum.EXP.getCode()))) {
+                    wrapper.notIn(!StringUtils.isEmpty(m.get(ExpParamsEnum.VAL.getCode())),
+                            toUnderlineCase(m.get(ExpParamsEnum.PROP.getCode()).toString()),
+                            Arrays.asList(m.get(ExpParamsEnum.VAL.getCode()).toString().split(",")));
+                } else if (ExpParamsEnum.EQ.getCode().equals(m.get(ExpParamsEnum.EXP.getCode()))) {
+                    wrapper.eq(!StringUtils.isEmpty(m.get(ExpParamsEnum.VAL.getCode())),
+                            toUnderlineCase(m.get(ExpParamsEnum.PROP.getCode()).toString()), m.get(ExpParamsEnum.VAL.getCode()));
+                } else if (ExpParamsEnum.NE.getCode().equals(m.get(ExpParamsEnum.EXP.getCode()))) {
+                    wrapper.ne(!StringUtils.isEmpty(m.get(ExpParamsEnum.VAL.getCode())),
+                            toUnderlineCase(m.get(ExpParamsEnum.PROP.getCode()).toString()), m.get(ExpParamsEnum.VAL.getCode()));
+                } else if (ExpParamsEnum.GT.getCode().equals(m.get(ExpParamsEnum.EXP.getCode()))) {
+                    wrapper.gt(!StringUtils.isEmpty(m.get(ExpParamsEnum.VAL.getCode())),
+                            toUnderlineCase(m.get(ExpParamsEnum.PROP.getCode()).toString()), m.get(ExpParamsEnum.VAL.getCode()));
+                } else if (ExpParamsEnum.GE.getCode().equals(m.get(ExpParamsEnum.EXP.getCode()))) {
+                    wrapper.ge(!StringUtils.isEmpty(m.get(ExpParamsEnum.VAL.getCode())),
+                            toUnderlineCase(m.get(ExpParamsEnum.PROP.getCode()).toString()), m.get(ExpParamsEnum.VAL.getCode()));
+                } else if (ExpParamsEnum.LT.getCode().equals(m.get(ExpParamsEnum.EXP.getCode()))) {
+                    wrapper.lt(!StringUtils.isEmpty(m.get(ExpParamsEnum.VAL.getCode())),
+                            toUnderlineCase(m.get(ExpParamsEnum.PROP.getCode()).toString()), m.get(ExpParamsEnum.VAL.getCode()));
+                } else if (ExpParamsEnum.LE.getCode().equals(m.get(ExpParamsEnum.EXP.getCode()))) {
+                    wrapper.le(!StringUtils.isEmpty(m.get(ExpParamsEnum.VAL.getCode())),
+                            toUnderlineCase(m.get(ExpParamsEnum.PROP.getCode()).toString()), m.get(ExpParamsEnum.VAL.getCode()));
+                } else if (ExpParamsEnum.LIKE.getCode().equals(m.get(ExpParamsEnum.EXP.getCode()))) {
+                    wrapper.like(!StringUtils.isEmpty(m.get(ExpParamsEnum.VAL.getCode())),
+                            toUnderlineCase(m.get(ExpParamsEnum.PROP.getCode()).toString()), m.get(ExpParamsEnum.VAL.getCode()));
+                } else if (ExpParamsEnum.LIKE_LEFT.getCode().equals(m.get(ExpParamsEnum.EXP.getCode()))) {
+                    wrapper.likeLeft(!StringUtils.isEmpty(m.get(ExpParamsEnum.VAL.getCode())),
+                            toUnderlineCase(m.get(ExpParamsEnum.PROP.getCode()).toString()), m.get(ExpParamsEnum.VAL.getCode()));
+                } else if (ExpParamsEnum.LIKE_RIGHT.getCode().equals(m.get(ExpParamsEnum.EXP.getCode()))) {
+                    wrapper.likeRight(!StringUtils.isEmpty(m.get(ExpParamsEnum.VAL.getCode())),
+                            toUnderlineCase(m.get(ExpParamsEnum.PROP.getCode()).toString()), m.get(ExpParamsEnum.VAL.getCode()));
+                } else if (ExpParamsEnum.NOT_LIKE.getCode().equals(m.get(ExpParamsEnum.EXP.getCode()))) {
+                    wrapper.notLike(!StringUtils.isEmpty(m.get(ExpParamsEnum.VAL.getCode())),
+                            toUnderlineCase(m.get(ExpParamsEnum.PROP.getCode()).toString()), m.get(ExpParamsEnum.VAL.getCode()));
+                } else if (ExpParamsEnum.ASC.getCode().equals(m.get(ExpParamsEnum.EXP.getCode()))) {
+                    if (!StringUtils.isEmpty(m.get(ExpParamsEnum.PROP.getCode()))) {
+                        String[] props = m.get(ExpParamsEnum.PROP.getCode()).toString().split(",");
+                        String[] columns = new String[props.length];
+                        for (int i = 0; i < props.length; i++) {
+                            columns[i] = toUnderlineCase(props[i]);
+                        }
+                        wrapper.orderByAsc(columns);
+                    }
+                } else if (ExpParamsEnum.DESC.getCode().equals(m.get(ExpParamsEnum.EXP.getCode()))) {
+                    if (!StringUtils.isEmpty(m.get(ExpParamsEnum.PROP.getCode()))) {
+                        String[] props = m.get(ExpParamsEnum.PROP.getCode()).toString().split(",");
+                        String[] columns = new String[props.length];
+                        for (int i = 0; i < props.length; i++) {
+                            columns[i] = toUnderlineCase(props[i]);
+                        }
+                        wrapper.orderByDesc(columns);
+                    }
+                }
+            } else if (!StringUtils.isEmpty(m.get(ExpParamsEnum.EXP.getCode()))
+                    && !StringUtils.isEmpty(m.get(ExpParamsEnum.PRE_PROP.getCode()))
+                    && !StringUtils.isEmpty(m.get(ExpParamsEnum.SUF_PROP.getCode()))) {
+
+                if (ExpParamsEnum.BETWEEN.getCode().equals(m.get(ExpParamsEnum.EXP.getCode()))) {
+                    wrapper.between(!StringUtils.isEmpty(m.get(ExpParamsEnum.PRE_VAL.getCode()))
+                                    && !StringUtils.isEmpty(m.get(ExpParamsEnum.SUF_VAL.getCode())),
+                            toUnderlineCase(m.get(ExpParamsEnum.PRE_PROP.getCode()).toString()),
+                            m.get(ExpParamsEnum.PRE_VAL.getCode()), m.get(ExpParamsEnum.SUF_VAL.getCode()));
+                } else if (ExpParamsEnum.NOT_BETWEEN.getCode().equals(m.get(ExpParamsEnum.EXP.getCode()))) {
+                    wrapper.notBetween(!StringUtils.isEmpty(m.get(ExpParamsEnum.PRE_VAL.getCode()))
+                                    && !StringUtils.isEmpty(m.get(ExpParamsEnum.SUF_VAL.getCode())),
+                            toUnderlineCase(m.get(ExpParamsEnum.PRE_PROP.getCode()).toString()),
+                            m.get(ExpParamsEnum.PRE_VAL.getCode()), m.get(ExpParamsEnum.SUF_VAL.getCode()));
+                } else if (ExpParamsEnum.OR.getCode().equals(m.get(ExpParamsEnum.EXP.getCode()))) {
+                    wrapper.and((wp) -> wp
+                            .eq(toUnderlineCase(m.get(ExpParamsEnum.PRE_PROP.getCode()).toString()), m.get(ExpParamsEnum.PRE_VAL.getCode()))
+                            .or()
+                            .eq(toUnderlineCase(m.get(ExpParamsEnum.SUF_PROP.getCode()).toString()), m.get(ExpParamsEnum.SUF_VAL.getCode())));
+
+                }
+            }
+        }
+
         return wrapper;
     }
 

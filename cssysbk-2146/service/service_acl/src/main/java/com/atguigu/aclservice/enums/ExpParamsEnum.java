@@ -2,6 +2,14 @@ package com.atguigu.aclservice.enums;
 
 public enum ExpParamsEnum {
 
+    EXP("exp", "表达式 key"),
+    PROP("prop", "参数名"),
+    PRE_PROP("preProp", "参数名"),
+    SUF_PROP("sufProp", "参数名"),
+    VAL("val", "参数值"),
+    PRE_VAL("preVal", "参数值"),
+    SUF_VAL("sufVal", "参数值"),
+
     EQ("eq", "等于 ="),
     NE("ne", "不等于 <>"),
     GT("gt", "大于 >"),
@@ -16,17 +24,7 @@ public enum ExpParamsEnum {
     LIKE_RIGHT("likeRight", "LIKE '值%'"),
     IN("in", "IN(val,val,val)"),
     NOT_IN("notIn", "NOT IN(val,val,val)"),
-    OR_SAME("orSame", "同名字段(key=val or key=val)"),
-    OR_DIFF("orDiff", "不同字段(key1=val or key2=val)"),
-
-    // 示例：eq__code / between__pre_code / orSame__pre_code
-    JOIN("__", "表达式前置连接符: eq__"),
-    MID_JOIN("_", "范围 或 OR_SAME 表达式中间连接符"),
-    PRE("pre", "范围 或 OR_SAME 表达式前缀"),
-    SUF("suf", "范围 或 OR_SAME 表达式后缀"),
-
-    // orDiff 示例：qrDiff__code#name_code / qrDiff__code#name_name
-    OR_JOIN("#", "OR_DIFF 表达式两字段间连接符"),
+    OR("or", "(key=val or key=val)"),
 
     // 排序
     ASC("orderByAsc", "升序"),

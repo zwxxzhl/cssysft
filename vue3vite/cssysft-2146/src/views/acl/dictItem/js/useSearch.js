@@ -2,8 +2,7 @@ import comCfg from "../../../../components/base-com/com-config/com-config";
 import Exps from "../../../../utils/exps";
 
 export default function useSearch(searchRow, searchExp, search, searchLoading, onSearch) {
-  // searchExp.codeOrName = { [Exps.exp]: Exps.or, [Exps.preProp]: 'code', [Exps.sufProp]: 'name', [Exps.preVal]: '33', [Exps.sufVal]: 'ceshi' };
-  searchExp[Exps.desc] = { [Exps.exp]: Exps.desc, [Exps.prop]: 'sequence' };
+  searchExp[Exps.asc] = { [Exps.exp]: Exps.asc, [Exps.prop]: 'sequence' };
 
   search.isDeleted = '0';
 
@@ -21,18 +20,6 @@ export default function useSearch(searchRow, searchExp, search, searchLoading, o
         domObj: {model: 'code', placeholder: '编码', dom: 'input', type: 'text'},
         searchObj: {[Exps.exp]: Exps.eq}
       },
-      /*{
-        rowObj: {colStyle: {flex: '0 0 100px', margin: '0 5px 5px 5px'}},
-        formItemObj: {labelWidth: '0px', size: 'medium', style: {marginBottom: '0'}},
-        domObj: {model: Exps.pre + 'code', placeholder: '编码开始', dom: 'input', type: 'text'},
-        searchObj: {[Exps.exp]: Exps.between}
-      },
-      {
-        rowObj: {colStyle: {flex: '0 0 100px', margin: '0 5px 5px 5px'}},
-        formItemObj: {labelWidth: '0px', size: 'medium', style: {marginBottom: '0'}},
-        domObj: {model: Exps.suf + 'code', placeholder: '编码结束', dom: 'input', type: 'text'},
-        searchObj: {[Exps.exp]: Exps.between}
-      },*/
       {
         rowObj: {colStyle: {flex: '0 0 100px', margin: '0 5px 5px 5px'}},
         formItemObj: {labelWidth: '0px', size: 'medium', style: {marginBottom: '0'}},
