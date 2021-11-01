@@ -143,10 +143,10 @@ let columnRowSlot = computed(() => {
 
 const attrs = useAttrs();
 const slots = useSlots();
-console.log('zwx-table attrs');
-console.log(attrs);
-console.log('zwx-table slots');
-console.log(slots);
+// console.log('zwx-table attrs');
+// console.log(attrs);
+// console.log('zwx-table slots');
+// console.log(slots);
 
 const indexMethod = (index) => {
   if (attrs['page-size']) {
@@ -161,12 +161,12 @@ const refTable = ref(null);
 const refTableForm = ref(null);
 
 onMounted(() => {
-  console.log('zwx-table refTableForm');
-  console.log(refTableForm.value);
+  // console.log('zwx-table refTableForm');
+  // console.log(refTableForm.value);
 })
 
 watchEffect(() => {
-  console.log('zwx-table ==> watchEffect');
+  // console.log('zwx-table ==> watchEffect');
 })
 
 defineExpose({

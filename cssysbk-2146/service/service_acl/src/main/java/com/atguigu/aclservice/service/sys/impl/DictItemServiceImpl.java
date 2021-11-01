@@ -6,6 +6,9 @@ import com.atguigu.aclservice.service.sys.IDictItemService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * <p>
  * 字典明细表 服务实现类
@@ -17,4 +20,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class DictItemServiceImpl extends ServiceImpl<DictItemMapper, DictItem> implements IDictItemService {
 
+    @Override
+    public List<Map<String, Object>> listByParentCodes(List<String> codes) {
+        return baseMapper.listByParentCodes(codes);
+    }
 }

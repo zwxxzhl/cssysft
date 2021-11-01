@@ -1,6 +1,7 @@
 package com.atguigu.aclservice.entity.sys;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -41,6 +42,11 @@ public class DepRefUser implements Serializable {
     private String userId;
 
     /**
+     * 部门层级关系
+     */
+    private String depRelation;
+
+    /**
      * 逻辑删除 1（true）已删除， 0（false）未删除
      */
     private Boolean isDeleted;
@@ -48,6 +54,7 @@ public class DepRefUser implements Serializable {
     /**
      * 创建时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "zh", timezone = "GMT+8")
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime gmtCreate;
 
@@ -64,6 +71,7 @@ public class DepRefUser implements Serializable {
     /**
      * 更新时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "zh", timezone = "GMT+8")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime gmtModified;
 

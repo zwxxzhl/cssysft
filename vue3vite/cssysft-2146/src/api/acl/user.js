@@ -34,7 +34,7 @@ export default {
     })
   },
 
-  updateById(user) {
+  update(user) {
     return request({
       url: `${api_name}/update`,
       method: 'put',

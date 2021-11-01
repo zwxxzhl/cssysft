@@ -6,7 +6,6 @@ export default function useSearch(searchRow, searchExp, search, searchLoading, o
   searchExp[Exps.desc] = { [Exps.exp]: Exps.desc, [Exps.prop]: 'sequence' };
 
   search.isDeleted = '0';
-
   searchRow.value = [
     [
       {

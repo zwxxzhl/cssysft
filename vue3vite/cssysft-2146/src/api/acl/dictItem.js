@@ -17,6 +17,13 @@ export default {
             params: params
         })
     },
+    listBatch(params) {
+        return request({
+            url: `${api_name}/list/batch`,
+            method: "get",
+            params: params
+        })
+    },
     update(form) {
         return request({
             url: `${api_name}/update`,

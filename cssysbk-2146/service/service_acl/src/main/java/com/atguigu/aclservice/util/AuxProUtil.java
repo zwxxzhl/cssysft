@@ -9,14 +9,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 
-import java.beans.PropertyDescriptor;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import java.util.*;
 
@@ -24,7 +19,6 @@ public class AuxProUtil {
 
     /**
      *  Gson 构建
-     *  todo 使用 Jackson fasterxml 有备注
      */
     public static Gson gsonBuilder(Type type) {
         return new GsonBuilder()
@@ -36,62 +30,12 @@ public class AuxProUtil {
     }
 
     /**
-     * 获取类注解
+     * 清除线程
      */
-    public static <T, A extends Annotation> A getClassAnnotation(Class<T> clazzT, Class<A> clazzA) {
-        if (clazzT.isAnnotationPresent(clazzA)) {
-            return clazzT.getAnnotation(clazzA);
+    public static void removeThread(ThreadLocal<?> ...tls) {
+        for (ThreadLocal<?> tl : tls) {
+            tl.remove();
         }
-        return null;
-    }
-
-    /**
-     * 获取类属性注解
-     */
-    public static <T, A extends Annotation> A getPropAnnotation(Class<T> clazzT, Class<A> clazzA) {
-        Field[] fields = clazzT.getDeclaredFields();
-        for(Field field: fields){
-            if(field.isAnnotationPresent(clazzA)){
-                return field.getAnnotation(clazzA);
-            }
-        }
-        return null;
-    }
-
-    /**
-     * 获取对象属性列表
-     */
-    public static <T> List<String> getEntityProps(Class<T> clazz, List<String> exclude) {
-        List<String> columns = new ArrayList<>();
-        PropertyDescriptor[] propertyDescriptors = BeanUtils.getPropertyDescriptors(clazz);
-        if (propertyDescriptors.length > 0) {
-            for (PropertyDescriptor prop : propertyDescriptors) {
-                if (!"class".equals(prop.getName())) {
-                    if (!exclude.contains(prop.getName())) {
-                        columns.add(prop.getName());
-                    }
-                }
-            }
-        }
-        return columns;
-    }
-
-    /**
-     * 获取对象属性值
-     */
-    public static Object getValue(Object o, String propertyName) throws InvocationTargetException, IllegalAccessException {
-        PropertyDescriptor pd = BeanUtils.getPropertyDescriptor(o.getClass(), propertyName);
-        assert pd != null;
-        return pd.getReadMethod().invoke(o);
-    }
-
-    /**
-     * 设置对象属性值
-     */
-    public static void setValue(Object o, String propertyName, Object value) throws InvocationTargetException, IllegalAccessException {
-        PropertyDescriptor pd = BeanUtils.getPropertyDescriptor(o.getClass(), propertyName);
-        assert pd != null;
-        pd.getWriteMethod().invoke(o, value);
     }
 
     /**
@@ -114,9 +58,9 @@ public class AuxProUtil {
      */
     public static <U> void bindEntityCreate(Object o, U user) {
         try {
-            AuxProUtil.setValue(o, "gmtCreateUser", AuxProUtil.getValue(user, "id"));
-            AuxProUtil.setValue(o, "gmtUpdateUser", AuxProUtil.getValue(user, "id"));
-        } catch (InvocationTargetException | IllegalAccessException e) {
+            ReflectCusUtil.setValue(o, "gmtCreateUser", ReflectCusUtil.getValue(user, "id"));
+            ReflectCusUtil.setValue(o, "gmtUpdateUser", ReflectCusUtil.getValue(user, "id"));
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
             throw new RuntimeException("新增绑定user出错");
         }
@@ -127,19 +71,10 @@ public class AuxProUtil {
      */
     public static <U> void bindEntityUpdate(Object o, U user) {
         try {
-            AuxProUtil.setValue(o, "gmtUpdateUser", AuxProUtil.getValue(user, "id"));
-        } catch (InvocationTargetException | IllegalAccessException e) {
+            ReflectCusUtil.setValue(o, "gmtUpdateUser", ReflectCusUtil.getValue(user, "id"));
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
             throw new RuntimeException("更新绑定user出错");
-        }
-    }
-
-    /**
-     * 清除线程
-     */
-    public static void removeThread(ThreadLocal<?> ...tls) {
-        for (ThreadLocal<?> tl : tls) {
-            tl.remove();
         }
     }
 

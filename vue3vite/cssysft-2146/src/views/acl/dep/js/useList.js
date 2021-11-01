@@ -1,11 +1,23 @@
+import dictItemApi from "../../../../api/acl/dictItem";
+import {ref} from "vue";
+
 export default function useList(tableColumn, multipleSelection) {
 
-    const sequenceFormatter = (row, column) => {
-        let data = row[column.property];
-        if (1 === data) {
-            return '是';
+    let depTypeList = ref([]);
+    const getDictList = () => {
+        dictItemApi.listBatch({codes: 'DepType'}).then(res => {
+            depTypeList.value = res.data.items.DepType;
+        })
+    }
+    getDictList();
+
+    const depTypeFormatter = (row, column) => {
+        let val = row[column.property];
+        if (depTypeList.value.length > 0) {
+            let obj = depTypeList.value.find(f => f.code === val);
+            if (obj) return obj.name;
         } else {
-            return '否';
+            return '';
         }
     }
 
@@ -17,7 +29,7 @@ export default function useList(tableColumn, multipleSelection) {
             columnObj: {type: 'index', label: '序号'}
         },
         {
-            columnObj: {prop: 'sequence', label: '部门类型', formatter: sequenceFormatter}
+            columnObj: {prop: 'type', label: '部门类型', formatter: depTypeFormatter}
         },
         {
             columnObj: {prop: 'depName', label: '部门', headerAk: true, headerEvent: 'header-event'}

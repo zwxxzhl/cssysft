@@ -68,9 +68,14 @@ export default function useForm(emit) {
     ]
   ]);
 
-  const initData = (dialogData, openType, close) => {
+  const clearValidate = () => {
+    setTimeout(() => {
+      refFormMu.value.refForm.clearValidate();
+    }, 0);
+  }
+
+  const initData = (data, openType, close) => {
     loading.value = false;
-    refFormMu.value.refForm.clearValidate();
 
     form.value = {};
     dialogOpenType = openType;
@@ -78,9 +83,11 @@ export default function useForm(emit) {
 
     if (Enums.formType.add === dialogOpenType.value) {
       form.value.isDeleted = false;
+      clearValidate();
     } else if (Enums.formType.edit === dialogOpenType.value) {
-      dictApi.select({id: {exp: Exps.eq, prop: 'id', val: dialogData.value.id}}).then(res => {
+      dictApi.select({id: {[Exps.exp]: Exps.eq, [Exps.prop]: 'id', [Exps.val]: data.value.id}}).then(res => {
         form.value = res.data.items[0];
+        clearValidate();
       })
     }
   }

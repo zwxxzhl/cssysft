@@ -3,12 +3,14 @@ package com.atguigu.aclservice.controller.sys;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.atguigu.aclservice.entity.bus.BusTaskForm;
 import com.atguigu.aclservice.entity.sys.User;
 import com.atguigu.aclservice.service.sys.RoleService;
 import com.atguigu.aclservice.service.sys.UserService;
 import com.atguigu.utils.utils.MD5;
 import com.atguigu.utils.utils.R;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiOperation;
@@ -65,6 +67,14 @@ public class UserController {
     public R save(@RequestBody User user) {
         user.setPassword(MD5.encrypt(user.getPassword()));
         userService.save(user);
+        return R.ok();
+    }
+
+    @ApiOperation(value = "更新用户")
+    @PutMapping("update")
+    public R update(@RequestBody User user) {
+        user.setPassword(null);
+        userService.updateById(user);
         return R.ok();
     }
 

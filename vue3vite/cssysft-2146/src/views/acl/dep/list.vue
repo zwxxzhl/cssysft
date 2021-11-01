@@ -46,7 +46,7 @@
       ref="refDialogMu" title="部门表单"
       width="50%" top="10vh" :height-pct="0.6"
       :page-vm="refDepForm">
-      <dep-form ref="refDepForm" @after-save="onAfterFormSave"></dep-form>
+      <dep-form ref="refDepForm" @after-save="refDepForm.onAfterFormSave(onSearch)"></dep-form>
       <template #footer>
         <zwx-cols-mu
           type="flex" justify="center" :col-list="refDepForm.colList"
@@ -75,6 +75,7 @@ import useList from './js/useList';
 import useZwxListMu from "../../../components/base-com/com-parts/composables/useZwxListMu";
 
 import {ref, provide, onMounted, getCurrentInstance} from "vue";
+
 const gp = getCurrentInstance().appContext.config.globalProperties;
 
 let {dateYMDHmsFormat} = comUtils;
@@ -87,11 +88,11 @@ let refDialogMu = ref(null);
 let refDepForm = ref({});
 
 const {
-  refZwxListMu, refZwxFormMu, search, form, searchRow, tableColumn,
+  refZwxListMu, refZwxFormMu, search, form, searchRow, tableColumn, searchExp,
   searchLoading, total, currentPage, pageSize, multipleSelection,
-  onAdd, onEdit, onDelete, onSelect, onSelectionChange,
+  onView, onAdd, onEdit, onDelete, onSelect, onSelectionChange,
   onSearch, onPageCurrentChange, onPageSizeChange
-} = useZwxListMu(depApi);
+} = useZwxListMu(depApi, 'id');
 
 
 const {
@@ -100,7 +101,7 @@ const {
 
 const {
   onDepNameChange
-} = useSearch(searchRow, searchLoading, onSearch);
+} = useSearch(searchRow, searchExp, search, searchLoading, onSearch);
 
 onMounted(() => {
   onSearch();

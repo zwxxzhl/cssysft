@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -25,10 +24,10 @@ public abstract class BaseController<E, S extends IService<E>> {
 
     protected String PK;
     protected boolean UNI_VALID = false;
-    protected String UNI_COLUMN;
+    protected String UNI_PROP;
     // 保存与更新唯一校验时，是否加上删除条件
     protected boolean WRAPPER_ADD_DELETE = false;
-    protected String DELETE_COLUMN;
+    protected String DELETE_PROP;
 
     @Autowired(required = false)
     protected S entityService;
@@ -41,12 +40,12 @@ public abstract class BaseController<E, S extends IService<E>> {
         try {
             if (UNI_VALID) {
                 QueryWrapper<E> wrapper = new QueryWrapper<>();
-                String code = (String) AuxProUtil.getValue(entity, UNI_COLUMN);
+                String code = (String) ReflectCusUtil.getValue(entity, UNI_PROP);
                 if (!StringUtils.isEmpty(code)) {
-                    wrapper.eq(UNI_COLUMN, code);
+                    wrapper.eq(AuxProUtil.toUnderlineCase(UNI_PROP), code);
                 }
                 if (WRAPPER_ADD_DELETE) {
-                    wrapper.eq(DELETE_COLUMN, false);
+                    wrapper.eq(AuxProUtil.toUnderlineCase(DELETE_PROP), false);
                 }
                 List<E> list = entityService.list(wrapper);
                 if (list.size() > 0) {
@@ -69,17 +68,17 @@ public abstract class BaseController<E, S extends IService<E>> {
         try {
             if (UNI_VALID) {
                 QueryWrapper<E> wrapper = new QueryWrapper<>();
-                String code = (String) AuxProUtil.getValue(entity, UNI_COLUMN);
-                String id = (String) AuxProUtil.getValue(entity, PK);
+                String code = (String) ReflectCusUtil.getValue(entity, UNI_PROP);
+                String id = (String) ReflectCusUtil.getValue(entity, PK);
                 if (!StringUtils.isEmpty(code)) {
-                    wrapper.eq(UNI_COLUMN, code);
+                    wrapper.eq(AuxProUtil.toUnderlineCase(UNI_PROP), code);
                 }
                 if (WRAPPER_ADD_DELETE) {
-                    wrapper.eq(DELETE_COLUMN, false);
+                    wrapper.eq(AuxProUtil.toUnderlineCase(DELETE_PROP), false);
                 }
                 List<E> list = entityService.list(wrapper);
 
-                if (list.size() > 2 || (list.size() == 1 && !AuxProUtil.getValue(list.get(0), PK).equals(id))) {
+                if (list.size() > 2 || (list.size() == 1 && !ReflectCusUtil.getValue(list.get(0), PK).equals(id))) {
                     return R.ok().success(false).message("唯一校验失败");
                 }
             }
@@ -110,8 +109,8 @@ public abstract class BaseController<E, S extends IService<E>> {
             Collection<E> dicts = entityService.listByIds(ids);
             for (E item : dicts) {
                 try {
-                    AuxProUtil.setValue(item, "isDeleted", true);
-                } catch (InvocationTargetException | IllegalAccessException e) {
+                    ReflectCusUtil.setValue(item, DELETE_PROP, true);
+                } catch (IllegalAccessException e) {
                     e.printStackTrace();
                     throw new RuntimeException("删除出错");
                 }
@@ -131,7 +130,7 @@ public abstract class BaseController<E, S extends IService<E>> {
             @ApiParam(name = "params", value = "查询对象") @RequestParam Map<String, Object> params) {
 
         IPage<E> pageModel = entityService.page(new Page<>(page, limit), AuxProUtil.jsonParamsWrapper(new QueryWrapper<>(), params));
-        return R.ok().data("items", pageModel.getRecords()).data("total", pageModel.getTotal());
+        return R.ok().data(R.ITEMS, pageModel.getRecords()).data(R.TOTAL, pageModel.getTotal());
     }
 
     @ApiOperation(value = "列表(不分页)")

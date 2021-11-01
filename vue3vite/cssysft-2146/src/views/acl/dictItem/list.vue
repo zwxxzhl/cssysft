@@ -68,7 +68,7 @@ import useSearch from './js/useSearch';
 import useList from './js/useList';
 import useZwxListMu from "../../../components/base-com/com-parts/composables/useZwxListMu";
 
-import {ref, onMounted, getCurrentInstance, reactive} from "vue";
+import {ref, onMounted, getCurrentInstance, watch} from "vue";
 import Exps from "../../../utils/exps";
 
 const gp = getCurrentInstance().appContext.config.globalProperties;
@@ -83,16 +83,20 @@ const {
   onSearch, onPageCurrentChange, onPageSizeChange
 } = useZwxListMu(dictItemApi, 'id');
 
-
 const {initData, bottomList, dialogData, onPageClose} = useList(tableColumn, multipleSelection);
 
-useSearch(searchRow, searchExp, search, dialogData, searchLoading, onSearch);
+useSearch(searchRow, searchExp, search, searchLoading, onSearch);
 
-// todo 与onSearch有时差; 使用watchEffect
-searchExp.pid = { [Exps.exp]: Exps.eq, [Exps.prop]: 'pid', [Exps.val]: dialogData.value.id };
+
+watch(() => dialogData.value.id, (nv, ov) => {
+  if (nv) {
+    searchExp.pid = { [Exps.exp]: Exps.eq, [Exps.prop]: 'pid', [Exps.val]: dialogData.value.id };
+    onSearch();
+  }
+});
 
 onMounted(() => {
-  onSearch();
+
 });
 
 defineExpose({

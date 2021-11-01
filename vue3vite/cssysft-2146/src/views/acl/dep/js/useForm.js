@@ -1,7 +1,9 @@
 import {getCurrentInstance, reactive, ref} from "vue";
-import enums from "../../../../utils/enums";
+import Enums from "../../../../utils/enums";
 import depApi from "../../../../api/acl/dep";
 import comCfg from "../../../../components/base-com/com-config/com-config";
+import dictItemApi from "../../../../api/acl/dictItem";
+import Exps from "../../../../utils/exps";
 
 export default function useForm(emit) {
   const gp = getCurrentInstance().appContext.config.globalProperties;
@@ -10,9 +12,10 @@ export default function useForm(emit) {
   const form = ref({});
   const loading = ref(false);
 
-  let dialogOpenType = ref(enums.formType.add);
+  let dialogOpenType = ref(Enums.formType.add);
   let dialogClose = null;
 
+  // 获取部门树
   let options = ref([]);
   const depTree = () => {
     depApi.selectTree({}).then(res => {
@@ -20,6 +23,15 @@ export default function useForm(emit) {
     })
   }
   depTree();
+
+  // 获取部门类型
+  let depTypeList = ref([]);
+  const getDictList = () => {
+    dictItemApi.listBatch({codes: 'DepType'}).then(res => {
+      depTypeList.value = res.data.items.DepType;
+    })
+  }
+  getDictList();
 
   const formRow = reactive([
     [{
@@ -37,7 +49,7 @@ export default function useForm(emit) {
       rowObj: {span: 24},
       formItemObj: {prop: 'type', label: '部门类型：'},
       domObj: {
-        model: 'type', dom: 'select', options: [{id: '1', code: '1', name: '行政部门'}, {id: '2', code: '2', name: '业务部门'}],
+        model: 'type', dom: 'select', options: depTypeList,
         option: {key: 'id', label: 'name', value: 'code'}, clearable: true,
         style: {width: '100%'}
       },
@@ -50,12 +62,18 @@ export default function useForm(emit) {
     [{
       rowObj: {span: 24},
       formItemObj: {prop: 'depNo', label: '部门编码：'},
-      domObj: {model: 'depNo', change: 'dep-no-change', dom: 'input', type: 'text'},
+      domObj: {model: 'depNo', dom: 'input', type: 'text'},
     }],
     [{
       rowObj: {span: 24},
       formItemObj: {label: '顺序：'},
-      domObj: {model: 'sequence', change: 'dep-no-change', dom: 'input', type: 'text'},
+      domObj: {model: 'sequence', dom: 'input', type: 'text'},
+    }],
+    [{
+      rowObj: {span: 24},
+      formItemObj: {label: '有效：'},
+      domObj: {model: 'isDeleted', dom: 'radio-group', style: {display: 'flex'},
+        options: [{label: false, show: '有效'}, {label: true, show: '无效'}]},
     }]
   ]);
 
@@ -84,20 +102,29 @@ export default function useForm(emit) {
     ]
   ]);
 
-  const initData = (dialogData, openType, close) => {
+  const clearValidate = () => {
+    setTimeout(() => {
+      refFormMu.value.refForm.clearValidate();
+    }, 0);
+  }
+
+  const initData = (data, openType, close) => {
     loading.value = false;
-    refFormMu.value.refForm.clearValidate();
 
     form.value = {};
     dialogOpenType = openType;
     dialogClose = close;
 
-    if (enums.formType.add !== dialogOpenType.value) {
-      depApi.select({id: dialogData.value.id}).then(res => {
+    if (Enums.formType.add === dialogOpenType.value) {
+      form.value.isDeleted = false;
+      clearValidate();
+    } else if (Enums.formType.edit === dialogOpenType.value) {
+      depApi.select({id: {[Exps.exp]: Exps.eq, [Exps.prop]: 'id', [Exps.val]: data.value.id}}).then(res => {
         form.value = res.data.items[0];
         if (form.value.relation) {
           form.value.relations = form.value.relation.split(',');
         }
+        clearValidate();
       })
     }
   }
@@ -154,9 +181,9 @@ export default function useForm(emit) {
   const onSaveOrUpdate = () => {
     refFormMu.value.refForm.validate(valid => {
       if (valid) {
-        if (enums.formType.add === dialogOpenType.value) {
+        if (Enums.formType.add === dialogOpenType.value) {
           saveForm();
-        } else if (enums.formType.edit === dialogOpenType.value) {
+        } else if (Enums.formType.edit === dialogOpenType.value) {
           updateForm();
         }
       }
