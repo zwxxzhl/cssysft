@@ -3,7 +3,6 @@ package com.atguigu.aclservice.controller.sys;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.atguigu.aclservice.entity.bus.BusTaskForm;
 import com.atguigu.aclservice.entity.sys.User;
 import com.atguigu.aclservice.service.sys.RoleService;
 import com.atguigu.aclservice.service.sys.UserService;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * <p>
@@ -75,6 +75,37 @@ public class UserController {
     public R update(@RequestBody User user) {
         user.setPassword(null);
         userService.updateById(user);
+        return R.ok();
+    }
+
+    @ApiOperation(value = "更新用户密码")
+    @PutMapping("update/pwd")
+    public R updatePwd(@RequestBody Map<String, Object> params) {
+        User user = userService.getById(params.get("id").toString());
+        if (Optional.ofNullable(user).isPresent()) {
+            if (user.getPassword().equals(MD5.encrypt(params.get("password").toString()))) {
+                user.setPassword(MD5.encrypt(params.get("pwdOne").toString()));
+                userService.updateById(user);
+            } else {
+                return R.ok().success(false).message("旧密码输入有误");
+            }
+        } else {
+            return R.ok().success(false).message("用户不存在");
+        }
+        return R.ok();
+    }
+
+    @ApiOperation(value = "校验用户旧密码")
+    @PutMapping("update/pwd/valid")
+    public R updatePwdValid(@RequestBody Map<String, Object> params) {
+        User user = userService.getById(params.get("id").toString());
+        if (Optional.ofNullable(user).isPresent()) {
+            if (!user.getPassword().equals(MD5.encrypt(params.get("password").toString()))) {
+                return R.ok().success(false).message("旧密码输入有误");
+            }
+        } else {
+            return R.ok().success(false).message("用户不存在");
+        }
         return R.ok();
     }
 

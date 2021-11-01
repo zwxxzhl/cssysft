@@ -41,15 +41,15 @@
 
       <el-table-column prop="roleName" label="角色名称" />
 
-      <el-table-column label="操作" width="200" align="center">
+      <el-table-column label="操作" width="230" align="center">
         <template #default="scope">
           <router-link :to="'/dispatchweb/acl/role/distribution/'+scope.row.id">
-            <el-button type="info" size="mini" icon="el-icon-info" v-if="hasPerm('role.acl')"></el-button>
+            <el-button type="info" size="mini" icon="el-icon-info" v-if="hasPerm('role.acl')"/>
           </router-link>
           <router-link :to="'/dispatchweb/acl/role/update/'+scope.row.id">
-            <el-button type="primary" size="mini" icon="el-icon-edit"  v-if="hasPerm('role.update')"></el-button>
+            <el-button type="primary" size="mini" icon="el-icon-edit"  v-if="hasPerm('role.update')"/>
           </router-link>
-          <el-button type="danger" size="mini" icon="el-icon-delete" @click="removeDataById(scope.row.id)" v-if="hasPerm('role.remove')"></el-button>
+          <el-button type="danger" size="mini" icon="el-icon-delete" @click="removeDataById(scope.row.id)" v-if="hasPerm('role.remove')"/>
         </template>
       </el-table-column>
     </el-table>

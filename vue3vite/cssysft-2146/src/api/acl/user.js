@@ -41,12 +41,30 @@ export default {
       data: user
     })
   },
+
+  updatePwd(user) {
+    return request({
+      url: `${api_name}/update/pwd`,
+      method: 'put',
+      data: user
+    })
+  },
+
+  updatePwdVlid(user) {
+    return request({
+      url: `${api_name}/update/pwd/valid`,
+      method: 'put',
+      data: user
+    })
+  },
+
   getAssign(userId) {
     return request({
       url: `${api_name}/toAssign/${userId}`,
       method: 'get'
     })
   },
+
   saveAssign(userId, roleId) {
     return request({
       url: `${api_name}/doAssign`,
@@ -54,12 +72,14 @@ export default {
       params: {userId, roleId}
     })
   },
+
   removeById(id) {
     return request({
       url: `${api_name}/remove/${id}`,
       method: 'delete'
     })
   },
+
   removeRows(idList) {
     return request({
       url: `${api_name}/batchRemove`,
