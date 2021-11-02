@@ -69,6 +69,7 @@ import ZwxColsMu from "../../../components/base-com/com-parts/zwx-cols-mu.vue";
 import comCfg from "../../../components/base-com/com-config/com-config";
 import comUtils from "../../../utils/comUtils";
 import depApi from "../../../api/acl/dep";
+import machineApi from "../../../api/acl/machine";
 
 import useSearch from './js/useSearch';
 import useList from './js/useList';
@@ -82,6 +83,15 @@ let {dateYMDHmsFormat} = comUtils;
 provide('comMethod', {
   dateYMDHmsFormat
 });
+
+// 获取部门树
+let options = ref([]);
+const testMachine = () => {
+  machineApi.machine({}).then(res => {
+    options.value = res.data.items;
+  })
+}
+testMachine();
 
 let screenWidth = ref(0);
 let refDialogMu = ref(null);
