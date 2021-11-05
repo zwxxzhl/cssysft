@@ -42,7 +42,7 @@ public class DepController extends BaseController<Dep, IDepService> {
     @GetMapping("/selectTree")
     public R selectTree(@ApiParam(name = "entity", value = "数据对象") Dep dep) {
         List<Dep> list = entityService.list(getQueryWrapper(dep));
-        List<Map<String, Object>> allList = JacksonCusUtil.toListMap(list);
+        List<Map<String, Object>> allList = JacksonCusUtil.toListMap(list, "yy-MM-dd HH:mm:ss");
 
         List<Map<String, Object>> treeList = allList.stream().filter(f -> Objects.equals(f.get("pid"), "0"))
                 .peek(m -> {
