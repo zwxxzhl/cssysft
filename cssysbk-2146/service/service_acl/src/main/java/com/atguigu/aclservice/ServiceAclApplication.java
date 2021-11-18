@@ -9,7 +9,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
+import reactor.core.publisher.Mono;
 
 @SpringBootApplication
 @EnableDiscoveryClient
@@ -21,13 +23,13 @@ public class ServiceAclApplication implements CommandLineRunner {
         SpringApplication.run(ServiceAclApplication.class, args);
     }
 
-    @Autowired
+    @Autowired(required = false)
     private StateMachine<States, Events> stateMachine;
 
     @Override
     public void run(String... args) throws Exception {
         System.out.println("======================初始化方法===========================");
-        stateMachine.sendEvent(Events.E1);
-        stateMachine.sendEvent(Events.E2);
+        // stateMachine.startReactively();
+        stateMachine.sendEvent(Mono.just(MessageBuilder.withPayload(Events.RUN).build()));
     }
 }
