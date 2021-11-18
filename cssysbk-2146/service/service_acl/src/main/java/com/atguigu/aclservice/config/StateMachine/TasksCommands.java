@@ -1,34 +1,33 @@
 package com.atguigu.aclservice.config.StateMachine;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.shell.core.CommandMarker;
-import org.springframework.shell.core.annotation.CliCommand;
-import org.springframework.shell.core.annotation.CliOption;
-import org.springframework.stereotype.Component;
+import org.springframework.shell.standard.ShellComponent;
+import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellOption;
 
-@Component
-public class TasksCommands implements CommandMarker {
+@ShellComponent
+public class TasksCommands {
 
     @Autowired
     private Tasks tasks;
 
-    @CliCommand(value = "tasks run", help = "Run tasks")
+    @ShellMethod(value = "tasks run")
     public void run() {
         tasks.run();
     }
 
-    @CliCommand(value = "tasks list", help = "List tasks")
+    @ShellMethod(value = "tasks list")
     public String list() {
         return tasks.toString();
     }
 
-    @CliCommand(value = "tasks fix", help = "Fix tasks")
+    @ShellMethod(value = "tasks fix")
     public void fix() {
         tasks.fix();
     }
 
-    @CliCommand(value = "tasks fail", help = "Fail task")
-    public void fail(@CliOption(key = {"", "task"}, help = "Task id") String task) {
+    @ShellMethod(value = "tasks fail")
+    public void fail(@ShellOption(value = {"", "task"}, help = "Task id") String task) {
         tasks.fail(task);
     }
 

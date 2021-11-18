@@ -1,33 +1,32 @@
 package com.atguigu.aclservice.config.StateMachine;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.shell.standard.ShellComponent;
+import org.springframework.shell.standard.ShellMethod;
+import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.state.State;
+import org.springframework.util.StringUtils;
+
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.shell.core.CommandMarker;
-import org.springframework.shell.core.annotation.CliCommand;
-import org.springframework.statemachine.StateMachine;
-import org.springframework.statemachine.state.State;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+@ShellComponent
+public class AbstractStateMachineCommands<S, E>{
 
-@Component
-public class AbstractStateMachineCommands<S, E> implements CommandMarker{
-
-    @Autowired
+    @Autowired(required = false)
     private StateMachine<S, E> stateMachine;
 
     protected StateMachine<S, E> getStateMachine() {
         return stateMachine;
     }
 
-    @Autowired
+    @Autowired(required = false)
     @Qualifier("stateChartModel")
     private String stateChartModel;
 
-    @CliCommand(value = "sm state", help = "Prints current state")
+    @ShellMethod(value = "sm state -- Prints current state")
     public String state() {
         State<S, E> state = stateMachine.getState();
         if (state != null) {
@@ -37,24 +36,24 @@ public class AbstractStateMachineCommands<S, E> implements CommandMarker{
         }
     }
 
-    @CliCommand(value = "sm start", help = "Start a state machine")
+    @ShellMethod(value = "sm start -- Start a state machine")
     public String start() {
         stateMachine.startReactively().subscribe();
         return "State machine started";
     }
 
-    @CliCommand(value = "sm stop", help = "Stop a state machine")
+    @ShellMethod(value = "sm stop -- Stop a state machine")
     public String stop() {
         stateMachine.stopReactively().subscribe();
         return "State machine stopped";
     }
 
-    @CliCommand(value = "sm print", help = "Print state machine")
+    @ShellMethod(value = "sm print -- Print state machine")
     public String print() {
         return stateChartModel;
     }
 
-    @CliCommand(value = "sm variables", help = "Prints extended state variables")
+    @ShellMethod(value = "sm variables -- Prints extended state variables")
     public String variables() {
         StringBuilder buf = new StringBuilder();
         Set<Entry<Object, Object>> entrySet = stateMachine.getExtendedState().getVariables().entrySet();

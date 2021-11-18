@@ -3,17 +3,16 @@ package com.atguigu.aclservice.config.StateMachine;
 import com.atguigu.aclservice.enums.Events;
 import com.atguigu.aclservice.enums.States;
 import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.shell.core.annotation.CliCommand;
-import org.springframework.shell.core.annotation.CliOption;
-import org.springframework.stereotype.Component;
-
+import org.springframework.shell.standard.ShellComponent;
+import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellOption;
 import reactor.core.publisher.Mono;
 
-@Component
+@ShellComponent
 public class StateMachineCommands extends AbstractStateMachineCommands<States, Events> {
 
-    @CliCommand(value = "sm event", help = "Sends an event to a state machine")
-    public String event(@CliOption(key = { "", "event" }, mandatory = true, help = "The event") final Events event) {
+    @ShellMethod(value = "sm event -- Sends an event to a state machine")
+    public String event(@ShellOption(value = { "", "event" }, help = "The event") final Events event) {
         getStateMachine()
                 .sendEvent(Mono.just(MessageBuilder
                         .withPayload(event).build()))
