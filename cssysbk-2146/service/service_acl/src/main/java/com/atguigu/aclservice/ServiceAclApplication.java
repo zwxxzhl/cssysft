@@ -30,6 +30,7 @@ public class ServiceAclApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         System.out.println("======================初始化方法===========================");
         // stateMachine.startReactively();
-        stateMachine.sendEvent(Mono.just(MessageBuilder.withPayload(Events.RUN).build()));
+        // stateMachine.sendEvent(Mono.just(MessageBuilder.withPayload(Events.RUN).build()));
+        stateMachine.sendEvent(Mono.just(MessageBuilder.withPayload(Events.RUN).build())).subscribe();
     }
 }
