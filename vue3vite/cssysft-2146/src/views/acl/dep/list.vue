@@ -9,7 +9,8 @@
       @search-click="onSearch()"
       @add-click="onAdd(null, refDialogMu)"
       @edit-click="onEdit(null, refDialogMu)"
-      @delete-click="onDelete()">
+      @delete-click="onDelete()"
+      @ceshi-click="testMachine()">
     </zwx-form-mu>
 
     <zwx-list-mu
@@ -91,7 +92,6 @@ const testMachine = () => {
     options.value = res.data.items;
   })
 }
-testMachine();
 
 let screenWidth = ref(0);
 let refDialogMu = ref(null);

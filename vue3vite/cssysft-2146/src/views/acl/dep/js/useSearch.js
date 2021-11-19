@@ -56,6 +56,13 @@ export default function useSearch(searchRow, searchExp, search, searchLoading, o
           dom: 'button', label: '删除', click: 'delete-click', type: comCfg.elButton.delete,
           icon: comCfg.elButton.deleteIcon, size: comCfg.elButton.size
         }
+      },
+      {
+        rowObj: {colStyle: {flex: '0 0 89px', margin: '0 5px 5px 5px'}},
+        domObj: {
+          dom: 'button', label: '测试', click: 'ceshi-click', type: comCfg.elButton.delete,
+          icon: comCfg.elButton.deleteIcon, size: comCfg.elButton.size
+        }
       }
     ]
   ];
