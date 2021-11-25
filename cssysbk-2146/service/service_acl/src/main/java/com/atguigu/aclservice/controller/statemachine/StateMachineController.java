@@ -20,9 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Slf4j
 @RestController
 @RequestMapping("/admin/acl/flow")
@@ -66,18 +63,21 @@ public class StateMachineController {
         // 创建流程
         System.out.println("-------------------form1------------------");
 
-        stateMachine.start();
-        Message message = MessageBuilder.withPayload(ComplexFormEvents.WRITE).setHeader("form", form1).build();
-        stateMachine.sendEvent(message);
+        // stateMachine.start();
+        // stateMachine.startReactively().block();
+        stateMachine.startReactively().subscribe();
+        Message<ComplexFormEvents> message = MessageBuilder.withPayload(ComplexFormEvents.WRITE).setHeader("form", form1).build();
+        // stateMachine.sendEvent(message);
+        stateMachine.sendEvent(Mono.just(message)).subscribe();
         System.out.println("当前状态：" + stateMachine.getState().getId());
         message = MessageBuilder.withPayload(ComplexFormEvents.CHECK).setHeader("form", form1).build();
-        stateMachine.sendEvent(message);
+        stateMachine.sendEvent(Mono.just(message)).subscribe();
         System.out.println("当前状态：" + stateMachine.getState().getId());
         message = MessageBuilder.withPayload(ComplexFormEvents.DEAL).setHeader("form", form1).build();
-        stateMachine.sendEvent(message);
+        stateMachine.sendEvent(Mono.just(message)).subscribe();
         System.out.println("当前状态：" + stateMachine.getState().getId());
         message = MessageBuilder.withPayload(ComplexFormEvents.SUBMIT).setHeader("form", form1).build();
-        stateMachine.sendEvent(message);
+        stateMachine.sendEvent(Mono.just(message)).subscribe();
         System.out.println("最终状态：" + stateMachine.getState().getId());
 
         System.out.println("-------------------form2------------------");
