@@ -7,15 +7,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
- * 流程实例与子实例关系 前端控制器
+ * 业务表单用户报告情况 前端控制器
  * </p>
  *
- * @author jobob
- * @since 2021-05-20
+ * @author zwx
+ * @since 2021-11-29
  */
 @RestController
-@RequestMapping("/admin/acl/rel/procinst-sub")
-public class ProcinstSubController {
+@RequestMapping("/aclservice/bus-form-user-report")
+public class BusFormUserReportController {
 
 }
 
