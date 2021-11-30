@@ -44,7 +44,7 @@
     </zwx-list-mu>
 
     <zwx-dialog-mu
-      ref="refDialogMu" title="部门表单"
+      ref="refDialogMu" title="派发表单"
       width="50%" top="10vh" :height-pct="0.6"
       :page-vm="refDepForm">
       <dep-form ref="refDepForm" @after-save="refDepForm.onAfterFormSave(onSearch)"></dep-form>

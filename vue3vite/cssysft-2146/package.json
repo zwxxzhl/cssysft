@@ -13,7 +13,7 @@
     "camunda-bpmn-moddle": "^6.0.0",
     "custom-translate": "^2.2.8",
     "dayjs": "^1.10.7",
-    "element-plus": "^1.1.0-beta.10",
+    "element-plus": "^1.2.0-beta.4",
     "inherits": "^2.0.4",
     "js-cookie": "^3.0.1",
     "min-dash": "^3.8.0",

@@ -14,6 +14,14 @@
             </zwx-form-item>
           </el-col>
 
+          <el-col :span="item.rowObj.span || 4" :style="item.rowObj.colStyle" v-if="'select-v2' === item.domObj.dom">
+            <zwx-form-item :config="item.formItemObj">
+              <!-- todo 有问题，估计是测试版的原因 -->
+              <zwx-select-v2 :form="form" :config="item.domObj" @change="val => item.domObj.change && $emit(item.domObj.change, val)"></zwx-select-v2>
+
+            </zwx-form-item>
+          </el-col>
+
           <el-col :span="item.rowObj.span || 4" :style="item.rowObj.colStyle" v-else-if="'cascader' === item.domObj.dom">
             <zwx-form-item :config="item.formItemObj">
 
@@ -70,7 +78,7 @@
 
           <el-col :span="item.rowObj.span || 4" :style="item.rowObj.colStyle" v-else-if="'slot' === item.domObj.dom">
 
-            <slot :name="item.domObj.slotName" v-bind="this"></slot>
+            <slot :name="item.domObj.slotName"></slot>
 
           </el-col>
 
@@ -84,6 +92,7 @@
 <script setup>
 import ZwxFormItem from '../com-el/zwx-form-item.vue';
 import ZwxSelect from '../com-el/zwx-select.vue';
+import ZwxSelectV2 from '../com-el/zwx-select-v2.vue';
 import ZwxCascader from "../com-el/zwx-cascader.vue";
 import ZwxDatePicker from "../com-el/zwx-date-picker.vue";
 import ZwxInput from "../com-el/zwx-input.vue";

@@ -1,6 +1,7 @@
 import {getCurrentInstance, reactive, ref} from "vue";
 import Enums from "../../../../utils/enums";
 import depApi from "../../../../api/acl/dep";
+import userApi from "../../../../api/acl/user";
 import comCfg from "../../../../components/base-com/com-config/com-config";
 import dictItemApi from "../../../../api/acl/dictItem";
 import Exps from "../../../../utils/exps";
@@ -25,10 +26,10 @@ export default function useForm(emit) {
   depTree();
 
   // 获取部门类型
-  let depTypeList = ref([]);
+  let userList = ref([]);
   const getDictList = () => {
-    dictItemApi.listBatch({codes: 'DepType'}).then(res => {
-      depTypeList.value = res.data.items.DepType;
+    userApi.select().then(res => {
+      userList.value = res.data.items;
     })
   }
   getDictList();
@@ -36,9 +37,32 @@ export default function useForm(emit) {
   const formRow = reactive([
     [{
       rowObj: {span: 24},
-      formItemObj: {label: '部门层级：'},
+      formItemObj: {prop: 'title', label: '标题：'},
+      domObj: {model: 'title', dom: 'input', type: 'text'},
+    }],
+    [{
+      rowObj: {span: 24},
+      formItemObj: {prop: 'content', label: '内容：'},
+      domObj: {model: 'content', dom: 'input', type: 'text'},
+    }],
+    [{
+      rowObj: {span: 24},
+      formItemObj: {prop: 'deadline', label: '截止日期：'},
+      domObj: {model: 'deadline', dom: 'date-picker', type: 'datetime', valueFormat: 'YYYY-MM-DD HH:mm:ss', style: {width: '100%'}},
+    }],
+    [{
+      rowObj: {span: 24},
+      domObj: {model: 'content', dom: 'slot', slotName: 'mid-divider'},
+    }],
+    [{
+      rowObj: {span: 24},
+      domObj: {model: 'content', dom: 'slot', slotName: 'user-select'},
+    }],
+    [{
+      rowObj: {span: 24},
+      formItemObj: {label: '部门筛选：'},
       domObj: {
-        model: 'relations', dom: 'cascader', options: options, clearable: true,
+        model: 'relations', dom: 'cascader', options: options, change: 'relations-change', clearable: true,
         style: {width: '100%'},
         props: {
           expandTrigger: 'hover', checkStrictly: true, value: 'id', label: 'depName'
@@ -47,27 +71,11 @@ export default function useForm(emit) {
     }],
     [{
       rowObj: {span: 24},
-      formItemObj: {prop: 'type', label: '部门类型：'},
+      formItemObj: {prop: 'userIds', label: '选择人员：'},
       domObj: {
-        model: 'type', dom: 'select', options: depTypeList,
-        option: {key: 'id', label: 'name', value: 'code'}, clearable: true,
-        style: {width: '100%'}
+        model: 'userIds', dom: 'select', valueKey: 'id', options: userList, option: {key: 'id', label: 'username', value: 'id'},
+        multiple: true, clearable: true, style: {width: '100%'}
       },
-    }],
-    [{
-      rowObj: {span: 24},
-      formItemObj: {prop: 'depName', label: '部门名称：'},
-      domObj: {model: 'depName', dom: 'input', type: 'text'},
-    }],
-    [{
-      rowObj: {span: 24},
-      formItemObj: {prop: 'depNo', label: '部门编码：'},
-      domObj: {model: 'depNo', dom: 'input', type: 'text'},
-    }],
-    [{
-      rowObj: {span: 24},
-      formItemObj: {label: '顺序：'},
-      domObj: {model: 'sequence', dom: 'input', type: 'text'},
     }],
     [{
       rowObj: {span: 24},
@@ -78,9 +86,9 @@ export default function useForm(emit) {
   ]);
 
   const rules = ref({
-    type: [{required: true, trigger: 'change', message: '类型必须输入'}],
-    depName: [{required: true, trigger: 'blur', message: '名称必须输入'}],
-    depNo: [{required: true, trigger: 'blur', message: '编码必须输入'}]
+    title: [{required: true, trigger: 'blur', message: '标题必须输入'}],
+    content: [{required: true, trigger: 'blur', message: '内容必须输入'}],
+    userIds: [{required: true, trigger: 'blur', message: '必须选择员工'}]
   });
 
   const colList = reactive([

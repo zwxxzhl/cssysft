@@ -2,7 +2,7 @@ import axios from 'axios'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import store from '../store'
 import {getToken} from '@/utils/auth'
-import de from "element-plus/packages/locale/lang/de";
+import de from "element-plus/es/locale/lang/de";
 
 
 // 创建axios实例
