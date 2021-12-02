@@ -16,23 +16,14 @@ export default function useForm(emit) {
   let dialogOpenType = ref(Enums.formType.add);
   let dialogClose = null;
 
-  // 获取部门树
-  let options = ref([]);
-  const depTree = () => {
-    depApi.selectTree({}).then(res => {
-      options.value = res.data.items;
-    })
-  }
-  depTree();
-
-  // 获取部门类型
+  // 获取用户
   let userList = ref([]);
-  const getDictList = () => {
+  const getUserList = () => {
     userApi.select().then(res => {
       userList.value = res.data.items;
     })
   }
-  getDictList();
+  getUserList();
 
   const formRow = reactive([
     [{
@@ -56,25 +47,10 @@ export default function useForm(emit) {
     }],
     [{
       rowObj: {span: 24},
-      domObj: {model: 'content', dom: 'slot', slotName: 'user-select'},
-    }],
-    [{
-      rowObj: {span: 24},
-      formItemObj: {label: '部门筛选：'},
-      domObj: {
-        model: 'relations', dom: 'cascader', options: options, change: 'relations-change', clearable: true,
-        style: {width: '100%'},
-        props: {
-          expandTrigger: 'hover', checkStrictly: true, value: 'id', label: 'depName'
-        }
-      },
-    }],
-    [{
-      rowObj: {span: 24},
-      formItemObj: {prop: 'userIds', label: '选择人员：'},
+      formItemObj: {prop: 'userIds', label: '接收者：'},
       domObj: {
         model: 'userIds', dom: 'select', valueKey: 'id', options: userList, option: {key: 'id', label: 'username', value: 'id'},
-        multiple: true, clearable: true, style: {width: '100%'}
+        multiple: true, filterable: true, clearable: true, style: {width: '100%'}
       },
     }],
     [{
@@ -88,7 +64,7 @@ export default function useForm(emit) {
   const rules = ref({
     title: [{required: true, trigger: 'blur', message: '标题必须输入'}],
     content: [{required: true, trigger: 'blur', message: '内容必须输入'}],
-    userIds: [{required: true, trigger: 'blur', message: '必须选择员工'}]
+    userIds: [{required: true, trigger: 'blur', message: '必须选择接收者'}]
   });
 
   const colList = reactive([
