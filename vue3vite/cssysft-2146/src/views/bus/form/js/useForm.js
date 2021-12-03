@@ -87,9 +87,7 @@ export default function useForm(emit) {
   ]);
 
   const clearValidate = () => {
-    setTimeout(() => {
-      refFormMu.value.refForm.clearValidate();
-    }, 0);
+    refFormMu.value.refForm.clearValidate();
   }
 
   const initData = (data, openType, close) => {
@@ -99,6 +97,7 @@ export default function useForm(emit) {
     dialogOpenType = openType;
     dialogClose = close;
 
+    // todo 查询封装参数，可定义函数处理：{id: {[Exps.exp]: Exps.eq, [Exps.prop]: 'id', [Exps.val]: data.value.id}}
     if (Enums.formType.add === dialogOpenType.value) {
       form.value.isDeleted = false;
       clearValidate();

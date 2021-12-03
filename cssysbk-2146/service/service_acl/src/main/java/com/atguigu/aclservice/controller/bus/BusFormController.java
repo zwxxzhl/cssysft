@@ -3,9 +3,17 @@ package com.atguigu.aclservice.controller.bus;
 
 import com.atguigu.aclservice.entity.bus.BusForm;
 import com.atguigu.aclservice.service.bus.IBusFormService;
+import com.atguigu.aclservice.service.sys.UserService;
 import com.atguigu.aclservice.util.BaseController;
+import com.atguigu.utils.utils.R;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 /**
  * <p>
@@ -19,8 +27,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/admin/acl/busform")
 public class BusFormController extends BaseController<BusForm, IBusFormService> {
 
-    public BusFormController() {
+    public BusFormController(IBusFormService entityService, UserService userService) {
+        super(entityService, userService);
         super.PK = "id";
+    }
+
+    @ApiOperation(value = "自定义新增")
+    @PostMapping("saveCus")
+    public R save(@ApiParam(name = "entity", value = "数据对象") @RequestBody Map<String, Object> params) {
+        entityService.saveCus(params);
+        return R.ok();
     }
 
 }

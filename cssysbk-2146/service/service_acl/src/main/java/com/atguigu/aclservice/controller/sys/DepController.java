@@ -2,6 +2,7 @@ package com.atguigu.aclservice.controller.sys;
 
 import com.atguigu.aclservice.entity.sys.Dep;
 import com.atguigu.aclservice.service.sys.IDepService;
+import com.atguigu.aclservice.service.sys.UserService;
 import com.atguigu.aclservice.util.BaseController;
 import com.atguigu.aclservice.util.JacksonCusUtil;
 import com.atguigu.utils.utils.Helpers;
@@ -30,7 +31,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/admin/acl/dep")
 public class DepController extends BaseController<Dep, IDepService> {
 
-    public DepController() {
+    public DepController(IDepService entityService, UserService userService) {
+        super(entityService, userService);
         super.PK = "id";
         super.UNI_VALID = true;
         super.UNI_PROP = "depNo";

@@ -3,6 +3,7 @@ package com.atguigu.aclservice.controller.sys;
 
 import com.atguigu.aclservice.entity.sys.Dict;
 import com.atguigu.aclservice.service.sys.IDictService;
+import com.atguigu.aclservice.service.sys.UserService;
 import com.atguigu.aclservice.util.BaseController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/admin/acl/dict")
 public class DictController extends BaseController<Dict, IDictService> {
 
-    public DictController() {
+    public DictController(IDictService entityService, UserService userService) {
+        super(entityService, userService);
         super.PK = "id";
         super.UNI_VALID = true;
         super.UNI_PROP = "code";

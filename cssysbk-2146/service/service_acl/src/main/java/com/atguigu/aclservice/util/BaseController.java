@@ -8,7 +8,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,10 +28,13 @@ public abstract class BaseController<E, S extends IService<E>> {
     protected boolean WRAPPER_ADD_DELETE = false;
     protected String DELETE_PROP;
 
-    @Autowired(required = false)
-    protected S entityService;
-    @Autowired
-    protected UserService userService;
+    protected final S entityService;
+    protected final UserService userService;
+
+    public BaseController(S entityService, UserService userService) {
+        this.entityService = entityService;
+        this.userService = userService;
+    }
 
     @ApiOperation(value = "新增")
     @PostMapping("save")
@@ -41,12 +43,13 @@ public abstract class BaseController<E, S extends IService<E>> {
             if (UNI_VALID) {
                 QueryWrapper<E> wrapper = new QueryWrapper<>();
                 String code = (String) ReflectCusUtil.getValue(entity, UNI_PROP);
-                if (!StringUtils.isEmpty(code)) {
+                if (!StringUtils.hasText(code)) {
                     wrapper.eq(AuxProUtil.toUnderlineCase(UNI_PROP), code);
                 }
                 if (WRAPPER_ADD_DELETE) {
                     wrapper.eq(AuxProUtil.toUnderlineCase(DELETE_PROP), false);
                 }
+                wrapper.last("limit 1");
                 List<E> list = entityService.list(wrapper);
                 if (list.size() > 0) {
                     return R.ok().success(false).message("唯一校验失败");
@@ -70,15 +73,16 @@ public abstract class BaseController<E, S extends IService<E>> {
                 QueryWrapper<E> wrapper = new QueryWrapper<>();
                 String code = (String) ReflectCusUtil.getValue(entity, UNI_PROP);
                 String id = (String) ReflectCusUtil.getValue(entity, PK);
-                if (!StringUtils.isEmpty(code)) {
+                if (!StringUtils.hasText(code)) {
                     wrapper.eq(AuxProUtil.toUnderlineCase(UNI_PROP), code);
                 }
                 if (WRAPPER_ADD_DELETE) {
                     wrapper.eq(AuxProUtil.toUnderlineCase(DELETE_PROP), false);
                 }
+                wrapper.last("limit 2");
                 List<E> list = entityService.list(wrapper);
 
-                if (list.size() > 2 || (list.size() == 1 && !ReflectCusUtil.getValue(list.get(0), PK).equals(id))) {
+                if (list.size() >= 2 || (list.size() == 1 && !ReflectCusUtil.getValue(list.get(0), PK).equals(id))) {
                     return R.ok().success(false).message("唯一校验失败");
                 }
             }
@@ -91,7 +95,7 @@ public abstract class BaseController<E, S extends IService<E>> {
         return R.ok();
     }
 
-    @ApiOperation(value = "真实删除字典")
+    @ApiOperation(value = "真实删除")
     @DeleteMapping("remove")
     public R remove(@ApiParam(name = "ids", value = "id数组") @RequestBody List<String> ids) {
         if (Optional.ofNullable(ids).isPresent() && ids.size() > 0) {
@@ -102,7 +106,7 @@ public abstract class BaseController<E, S extends IService<E>> {
         return R.ok();
     }
 
-    @ApiOperation(value = "逻辑删除字典")
+    @ApiOperation(value = "逻辑删除")
     @DeleteMapping("remove/logic")
     public R removeLogic(@ApiParam(name = "ids", value = "id数组") @RequestBody List<String> ids) {
         if (Optional.ofNullable(ids).isPresent() && ids.size() > 0) {

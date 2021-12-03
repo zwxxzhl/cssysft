@@ -3,6 +3,7 @@ package com.atguigu.aclservice.controller.sys;
 
 import com.atguigu.aclservice.entity.sys.DictItem;
 import com.atguigu.aclservice.service.sys.IDictItemService;
+import com.atguigu.aclservice.service.sys.UserService;
 import com.atguigu.aclservice.util.BaseController;
 import com.atguigu.utils.utils.R;
 import io.swagger.annotations.ApiOperation;
@@ -28,7 +29,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/admin/acl/dict/item")
 public class DictItemController extends BaseController<DictItem, IDictItemService> {
 
-    public DictItemController() {
+    public DictItemController(IDictItemService entityService, UserService userService) {
+        super(entityService, userService);
         super.PK = "id";
         super.UNI_VALID = true;
         super.UNI_PROP = "code";
