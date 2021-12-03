@@ -32,7 +32,7 @@ public class BusFormController extends BaseController<BusForm, IBusFormService> 
         super.PK = "id";
     }
 
-    @ApiOperation(value = "自定义新增")
+    @ApiOperation(value = "保存业务表单")
     @PostMapping("saveCus")
     public R save(@ApiParam(name = "entity", value = "数据对象") @RequestBody Map<String, Object> params) {
         entityService.saveCus(params);
