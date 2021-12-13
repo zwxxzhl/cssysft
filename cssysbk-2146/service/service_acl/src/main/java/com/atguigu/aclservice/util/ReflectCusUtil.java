@@ -9,6 +9,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ReflectCusUtil {
 
@@ -76,7 +77,9 @@ public class ReflectCusUtil {
      */
     public static Object getObjectValue(Object o, String propertyName) throws InvocationTargetException, IllegalAccessException {
         PropertyDescriptor pd = BeanUtils.getPropertyDescriptor(o.getClass(), propertyName);
-        assert pd != null;
+        if (!Optional.ofNullable(pd).isPresent()) {
+            throw new RuntimeException("不存在属性：" + propertyName);
+        }
         return pd.getReadMethod().invoke(o);
     }
 
@@ -85,7 +88,9 @@ public class ReflectCusUtil {
      */
     public static void setObjectValue(Object o, String propertyName, Object value) throws InvocationTargetException, IllegalAccessException {
         PropertyDescriptor pd = BeanUtils.getPropertyDescriptor(o.getClass(), propertyName);
-        assert pd != null;
+        if (!Optional.ofNullable(pd).isPresent()) {
+            throw new RuntimeException("不存在属性：" + propertyName);
+        }
         pd.getWriteMethod().invoke(o, value);
     }
 

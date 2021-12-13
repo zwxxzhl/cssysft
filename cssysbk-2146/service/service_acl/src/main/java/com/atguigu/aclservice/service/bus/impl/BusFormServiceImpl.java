@@ -50,15 +50,19 @@ public class BusFormServiceImpl extends ServiceImpl<BusFormMapper, BusForm> impl
     public void saveCus(Map<String, Object> params) {
         try {
             User loginUser = AuxProUtil.getLoginUser(userService);
-            assert Optional.ofNullable(loginUser).isPresent();
+            if (!Optional.ofNullable(loginUser).isPresent()) {
+                throw new RuntimeException("用户未登录");
+            }
             // 业务表单
             BusForm busForm = JacksonCusUtil.mapToBean(params, BusForm.class);
-            assert Optional.ofNullable(busForm).isPresent();
+            if (!Optional.ofNullable(busForm).isPresent()) {
+                throw new RuntimeException("表单数据为空");
+            }
 
             busForm.setPid("0");
             busForm.setUserId(loginUser.getId());
             busForm.setFormStatus(FormStatusEnum.REPORTING.getCode());
-            busForm.setTimeStatus(TimeStatusEnum.TIMEOUT.getCode());
+            busForm.setTimeStatus(TimeStatusEnum.NORMAL.getCode());
             AuxProUtil.bindEntityCreate(busForm, loginUser);
             busFormMapper.insert(busForm);
 
