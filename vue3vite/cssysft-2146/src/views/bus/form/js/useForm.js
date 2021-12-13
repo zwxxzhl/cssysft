@@ -1,10 +1,10 @@
 import {getCurrentInstance, reactive, ref} from "vue";
 import Enums from "../../../../utils/enums";
-import depApi from "../../../../api/acl/dep";
-import userApi from "../../../../api/acl/user";
-import comCfg from "../../../../components/base-com/com-config/com-config";
-import dictItemApi from "../../../../api/acl/dictItem";
+import ComUtils from "../../../../utils/comUtils";
+import ComCfg from "../../../../components/base-com/com-config/com-config";
 import Exps from "../../../../utils/exps";
+import UserApi from "../../../../api/acl/user";
+import BusFormApi from "../../../../api/acl/busForm";
 
 export default function useForm(emit) {
   const gp = getCurrentInstance().appContext.config.globalProperties;
@@ -19,7 +19,7 @@ export default function useForm(emit) {
   // 获取用户
   let userList = ref([]);
   const getUserList = () => {
-    userApi.select().then(res => {
+    UserApi.select().then(res => {
       userList.value = res.data.items;
     })
   }
@@ -72,15 +72,15 @@ export default function useForm(emit) {
       {
         rowObj: {span: 6, colStyle: {flex: '0 0 89px', margin: '0 10px'}},
         domObj: {
-          dom: 'button', label: '关闭', click: 'close-click', type: comCfg.elButton.close,
-          icon: comCfg.elButton.closeIcon, size: comCfg.elButton.size
+          dom: 'button', label: '关闭', click: 'close-click', type: ComCfg.elButton.close,
+          icon: ComCfg.elButton.closeIcon, size: ComCfg.elButton.size
         }
       },
       {
         rowObj: {span: 6, colStyle: {flex: '0 0 89px', margin: '0 10px'}},
         domObj: {
-          dom: 'button', label: '保存', click: 'save-click', type: comCfg.elButton.confirm,
-          icon: comCfg.elButton.confirmIcon, size: comCfg.elButton.size, loading: loading
+          dom: 'button', label: '保存', click: 'save-click', type: ComCfg.elButton.confirm,
+          icon: ComCfg.elButton.confirmIcon, size: ComCfg.elButton.size, loading: loading
         }
       }
     ]
@@ -97,38 +97,21 @@ export default function useForm(emit) {
     dialogOpenType = openType;
     dialogClose = close;
 
-    // todo 查询封装参数，可定义函数处理：{id: {[Exps.exp]: Exps.eq, [Exps.prop]: 'id', [Exps.val]: data.value.id}}
     if (Enums.formType.add === dialogOpenType.value) {
       form.value.isDeleted = false;
       clearValidate();
     } else if (Enums.formType.edit === dialogOpenType.value) {
-      depApi.select({id: {[Exps.exp]: Exps.eq, [Exps.prop]: 'id', [Exps.val]: data.value.id}}).then(res => {
+      BusFormApi.select({id: ComUtils.expVal(Exps.eq, 'id', data.value.id)}).then(res => {
         form.value = res.data.items[0];
-        if (form.value.relation) {
-          form.value.relations = form.value.relation.split(',');
-        }
         clearValidate();
-      })
+      });
     }
   }
 
   const updateForm = () => {
     loading.value = true;
 
-    if (form.value.relations) {
-      form.value.pid = form.value.relations[form.value.relations.length - 1];
-      if (form.value.pid === form.value.id) {
-        gp.$message.error('不允许把自己做为父级');
-        loading.value = false;
-        return;
-      }
-      form.value.relation = form.value.relations.join(",");
-    } else {
-      form.value.pid = '0';
-      form.value.relation = null;
-    }
-
-    depApi.update(form.value).then(res => {
+    BusFormApi.update(form.value).then(res => {
       if (res.success) {
         emit('after-save');
         dialogClose();
@@ -136,21 +119,13 @@ export default function useForm(emit) {
         gp.$message.error(res.message);
       }
       loading.value = false;
-    })
+    });
   }
 
   const saveForm = () => {
     loading.value = true;
 
-    if (form.value.relations) {
-      form.value.pid = form.value.relations[form.value.relations.length - 1];
-      form.value.relation = form.value.relations.join(",");
-    } else {
-      form.value.pid = '0';
-      form.value.relation = null;
-    }
-
-    depApi.save(form.value).then(res => {
+    BusFormApi.save(form.value).then(res => {
       if (res.success) {
         emit('after-save');
         dialogClose();
@@ -158,7 +133,9 @@ export default function useForm(emit) {
         gp.$message.error(res.message);
       }
       loading.value = false;
-    })
+    }).catch(err => {
+      loading.value = false;
+    });
   }
 
   const onSaveOrUpdate = () => {
@@ -170,10 +147,11 @@ export default function useForm(emit) {
           updateForm();
         }
       }
-    })
+    });
   }
 
   const onAfterFormSave = (call) => {
+    // 其它逻辑
     call();
   }
 

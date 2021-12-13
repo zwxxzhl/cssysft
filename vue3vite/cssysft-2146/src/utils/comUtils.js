@@ -1,11 +1,12 @@
 import dayjs from "dayjs";
 import 'dayjs/locale/zh-cn'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import Exps from "./exps";
 dayjs.locale('zh-cn')
 dayjs.extend(relativeTime)
 
 export default {
-  /*
+  /**
       生成table格式化方法 genColumnFormat(listData,'unitIdFormat','mixProp','unitList','unitId','name') 普通数据
                     genColumnFormat(listData,'clearingFormFormat','dictObj','clearingFormList','dictCode','dictName') 字典数据
   */
@@ -22,7 +23,10 @@ export default {
     }
     return fun;
   },
-  //日期格式化方法 YYYY-MM-DD
+
+  /**
+   * 日期格式化方法 YYYY-MM-DD
+   */
   dateYMDFormat(row,column){
     let data = row[column.property];
     if (data) {
@@ -31,7 +35,10 @@ export default {
       return '';
     }
   },
-  //日期格式化方法 YYYY-MM-DD HH:mm:ss
+
+  /**
+   * 日期格式化方法 YYYY-MM-DD HH:mm:ss
+   */
   dateYMDHmsFormat(row,column){
     let data = row[column.property];
     if (data) {
@@ -40,7 +47,17 @@ export default {
       return '';
     }
   },
-  //获取uuid
+
+  /**
+   * 表达式值拼接
+   */
+  expVal(exp, prop, val) {
+      return {[Exps.exp]: exp, [Exps.prop]: prop, [Exps.val]: val}
+  },
+
+  /**
+   * 获取uuid
+   */
   getUuid() {
     var s = [];
     var hexDigits = "0123456789abcdef";
