@@ -42,7 +42,7 @@ export default function useList(tableColumn, multipleSelection) {
         },
         {
             columnObj: {prop: 'sequence', label: '有效'},
-            formItemObj: {prop: '', labelWidth: '0px', size: 'mini', style: {marginBottom: '0'}},
+            formItemObj: {prop: '', labelWidth: '0px', size: 'small', style: {marginBottom: '0'}},
             domObj: {dom: 'input', type: 'text', model: 'sequence', change: 'dom-input-change'}
         },
         {

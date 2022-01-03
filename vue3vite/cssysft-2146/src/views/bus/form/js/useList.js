@@ -26,7 +26,7 @@ export default function useList(tableColumn, multipleSelection) {
             columnObj: {type: 'selection'}
         },
         {
-            columnObj: {type: 'index', label: '序号'}
+            columnObj: {type: 'index', label: '序号', width: '80'}
         },
         {
             columnObj: {prop: 'type', label: '部门类型', formatter: depTypeFormatter}
@@ -42,7 +42,7 @@ export default function useList(tableColumn, multipleSelection) {
         },
         {
             columnObj: {prop: 'sequence', label: '有效'},
-            formItemObj: {prop: '', labelWidth: '0px', size: 'mini', style: {marginBottom: '0'}},
+            formItemObj: {prop: '', labelWidth: '0px', size: 'small', style: {marginBottom: '0'}},
             domObj: {dom: 'input', type: 'text', model: 'sequence', change: 'dom-input-change'}
         },
         {

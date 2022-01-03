@@ -19,17 +19,17 @@
 
   <el-row class="dialog-bottom" type="flex" justify="center">
     <el-col :span="6">
-      <el-button size="medium" type="info" icon="el-icon-close"
+      <el-button size="default" type="info" icon="el-icon-close"
                  @click="onPageClose">关闭
       </el-button>
     </el-col>
     <el-col :span="6" v-if="openType !== enums.formType.detail">
-      <el-button size="medium" type="danger" icon="el-icon-check"
+      <el-button size="default" type="danger" icon="el-icon-check"
                  :loading="loading" @click="onSaveOrUpdate(true)">直接完成
       </el-button>
     </el-col>
     <el-col :span="6" v-if="openType !== enums.formType.detail">
-      <el-button size="medium" type="primary" icon="el-icon-check"
+      <el-button size="default" type="primary" icon="el-icon-check"
                  :loading="loading" @click="onSaveOrUpdate(false)">阶段汇报
       </el-button>
     </el-col>

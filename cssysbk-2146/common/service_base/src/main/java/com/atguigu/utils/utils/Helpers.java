@@ -9,14 +9,14 @@ public class Helpers {
      * 判断字符串为空
      */
     public static boolean isBlank(String str) {
-        return StringUtils.isEmpty(StringUtils.trimWhitespace(str));
+        return StringUtils.hasText(StringUtils.trimWhitespace(str));
     }
 
     /**
      * 判断字符串不为空
      */
     public static boolean isNotBlank(String str) {
-        return !StringUtils.isEmpty(StringUtils.trimWhitespace(str));
+        return !StringUtils.hasText(StringUtils.trimWhitespace(str));
     }
 
     /**

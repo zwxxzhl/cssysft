@@ -183,7 +183,7 @@
             size:{
                 type: String,
                 required: false,
-                default: 'medium'
+                default: 'default'
             },
             disabled:{
                 type: Boolean,

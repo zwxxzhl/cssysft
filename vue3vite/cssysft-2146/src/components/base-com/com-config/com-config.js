@@ -1,11 +1,11 @@
 export default {
     elTable: {
-        size: 'medium',
+        size: 'default',
         stripe: true,
         headerRowClassName: 'table-header'
     },
     elButton: {
-        size: 'medium',
+        size: 'default',
         search: 'primary',
         searchIcon: 'el-icon-search',
         add: 'success',

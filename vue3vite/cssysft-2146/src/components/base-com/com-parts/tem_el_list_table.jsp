@@ -28,7 +28,7 @@
 <template id="tem-el-list-table" >
     <div id="tem-el-list-table-div">
 
-        <el-form class="form-css" :model="form" :rules="rules" ref="ruleForm" size="mini">
+        <el-form class="form-css" :model="form" :rules="rules" ref="ruleForm" size="small">
             <div>
                 <el-table 
                     ref="refTable"

@@ -19,12 +19,12 @@
 
   <el-row class="dialog-bottom" type="flex" justify="center">
     <el-col :span="4">
-      <el-button size="medium" type="info" icon="el-icon-close"
+      <el-button size="default" type="info" icon="el-icon-close"
                  @click="onPageClose">关闭
       </el-button>
     </el-col>
     <el-col :span="4" v-if="openType !== enums.formType.detail">
-      <el-button size="medium" type="primary" icon="el-icon-check"
+      <el-button size="default" type="primary" icon="el-icon-check"
                  :loading="loading" @click="onSaveOrUpdate">保存
       </el-button>
     </el-col>

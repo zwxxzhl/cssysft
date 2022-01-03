@@ -17,7 +17,7 @@
 
   <el-row class="dialog-bottom" type="flex" justify="center">
     <el-col :span="4">
-      <el-button size="medium" type="info" icon="el-icon-close"
+      <el-button size="default" type="info" icon="el-icon-close"
                  @click="onPageClose">关闭
       </el-button>
     </el-col>

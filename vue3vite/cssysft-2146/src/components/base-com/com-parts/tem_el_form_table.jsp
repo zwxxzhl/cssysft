@@ -45,21 +45,21 @@
                 <div ref="refTableBtnShow" v-if="tableBtnShow" class="table-btn-layout">
 
                     <el-button v-if="!formObj.tableBtnArr && true || formObj.tableBtnArr.includes('add')" 
-                        size="medium" class="text-green" type="text" icon="el-icon-plus" @click="onAddRow">添加</el-button>
+                        size="default" class="text-green" type="text" icon="el-icon-plus" @click="onAddRow">添加</el-button>
 
                     <el-button v-if="!formObj.tableBtnArr && true || formObj.tableBtnArr.includes('addBatch') " 
-                        size="medium" class="text-aqua-blue" type="text" icon="el-icon-circle-plus-outline" @click="onAddBatch">批量添加</el-button>
+                        size="default" class="text-aqua-blue" type="text" icon="el-icon-circle-plus-outline" @click="onAddBatch">批量添加</el-button>
 
                     <el-button v-if="!formObj.tableBtnArr && true || formObj.tableBtnArr.includes('import') " 
-                        size="medium" class="text-aqua-blue" type="text" icon="el-icon-circle-plus-outline" @click="onAddBatch"
+                        size="default" class="text-aqua-blue" type="text" icon="el-icon-circle-plus-outline" @click="onAddBatch"
                         :disabled="!(disDynamic === 'all' || disDynamic === 'import')">导入</el-button>
 
                     <el-button v-if="!formObj.tableBtnArr && true || formObj.tableBtnArr.includes('remove')" 
-                        size="medium" class="text-orange" type="text" icon="el-icon-minus" @click="onRemoveRow">移除</el-button>
+                        size="default" class="text-orange" type="text" icon="el-icon-minus" @click="onRemoveRow">移除</el-button>
 
                     <div class="scan-layout" v-if="!formObj.tableBtnArr && true || formObj.tableBtnArr.includes('scaninput')" >
                         <!-- <el-image style="width: 32px; height: 32px" :src="`${Sys_Url}/static/imgs/barcode.png`" fit="contain"></el-image> -->
-                        <el-input size="mini" class="form-width-10" v-model="scanVal" @keyup.enter.native="scanValChange(scanVal)" suffix-icon="el-icon-full-screen"
+                        <el-input size="small" class="form-width-10" v-model="scanVal" @keyup.enter.native="scanValChange(scanVal)" suffix-icon="el-icon-full-screen"
                             :placeholder="scanPlaceholder" autocomplete="off" :disabled="!(disDynamic === 'all' || disDynamic === 'scan')">
                         </el-input>
                     </div>
@@ -262,7 +262,7 @@
             size:{
                 type: String,
                 required: false,
-                default: 'medium'
+                default: 'default'
             },
             disabled:{
                 type: Boolean,

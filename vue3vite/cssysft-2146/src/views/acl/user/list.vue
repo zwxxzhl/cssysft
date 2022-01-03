@@ -12,8 +12,8 @@
 
     <!-- 工具条 -->
     <div>
-      <el-button type="danger" size="mini" @click="addUser()" v-if="hasPerm('user.add')">添加</el-button>
-      <el-button type="danger" size="mini" @click="removeRows()" v-if="hasPerm('user.remove')">批量删除</el-button>
+      <el-button type="danger" size="small" @click="addUser()" v-if="hasPerm('user.add')">添加</el-button>
+      <el-button type="danger" size="small" @click="removeRows()" v-if="hasPerm('user.remove')">批量删除</el-button>
     </div>
 
     <!-- 讲师列表 -->
@@ -45,13 +45,13 @@
       <el-table-column label="操作" width="230" align="center">
         <template #default="scope">
           <router-link :to="'/dispatchweb/acl/user/role/' + scope.row.id">
-            <el-button type="info" size="mini" icon="el-icon-info" v-if="hasPerm('user.assgin')"/>
+            <el-button type="info" size="small" icon="el-icon-info" v-if="hasPerm('user.assgin')"/>
           </router-link>
           <router-link :to="'/dispatchweb/acl/user/update/' + scope.row.id">
-            <el-button type="primary" size="mini" icon="el-icon-edit" v-if="hasPerm('user.update')"/>
+            <el-button type="primary" size="small" icon="el-icon-edit" v-if="hasPerm('user.update')"/>
           </router-link>
-          <el-button type="warning" size="mini" icon="el-icon-edit-outline" @click="onEditPassword(scope.row)" v-if="hasPerm('user.update')"/>
-          <el-button type="danger" size="mini" icon="el-icon-delete" @click="removeDataById(scope.row.id)" v-if="hasPerm('user.remove')"/>
+          <el-button type="warning" size="small" icon="el-icon-edit-outline" @click="onEditPassword(scope.row)" v-if="hasPerm('user.update')"/>
+          <el-button type="danger" size="small" icon="el-icon-delete" @click="removeDataById(scope.row.id)" v-if="hasPerm('user.remove')"/>
         </template>
       </el-table-column>
     </el-table>

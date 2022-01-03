@@ -10,19 +10,19 @@ export default function useSearch(searchRow, searchExp, search, searchLoading, o
     [
       {
         rowObj: {colStyle: {flex: '0 0 100px', margin: '0 5px 5px 0px'}},
-        formItemObj: {labelWidth: '0px', size: 'medium', style: {marginBottom: '0'}},
+        formItemObj: {labelWidth: '0px', size: 'default', style: {marginBottom: '0'}},
         domObj: {model: 'name', placeholder: '名称', dom: 'input', type: 'text'},
         searchObj: {[Exps.exp]: Exps.like}
       },
       {
         rowObj: {colStyle: {flex: '0 0 100px', margin: '0 5px 5px 5px'}},
-        formItemObj: {labelWidth: '0px', size: 'medium', style: {marginBottom: '0'}},
+        formItemObj: {labelWidth: '0px', size: 'default', style: {marginBottom: '0'}},
         domObj: {model: 'code', placeholder: '编码', dom: 'input', type: 'text'},
         searchObj: {[Exps.exp]: Exps.eq}
       },
       {
         rowObj: {colStyle: {flex: '0 0 100px', margin: '0 5px 5px 5px'}},
-        formItemObj: {labelWidth: '0px', size: 'medium', style: {marginBottom: '0'}},
+        formItemObj: {labelWidth: '0px', size: 'default', style: {marginBottom: '0'}},
         domObj: {model: 'isDeleted', placeholder: '有效', dom: 'select', clearable: true,
           options: [{id: 'a', code: '0', name: '有效'}, {id: 'b', code: '1', name: '无效'}],
           option: {key: 'id', label: 'name', value: 'code'}

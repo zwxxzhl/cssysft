@@ -28,7 +28,7 @@
 <template id="tem-el-list-table-expand" >
     <div id="tem-el-list-table-expand-div">
 
-        <el-form class="form-css" :model="form" :rules="rules" ref="ruleForm" size="mini">
+        <el-form class="form-css" :model="form" :rules="rules" ref="ruleForm" size="small">
             <div>
                 <el-table 
                     ref="refTable"
@@ -57,7 +57,7 @@
                             <el-table
                                 :data="supscope.row[expandRowProp]"
                                 style="width: 100%"
-                                size="mini"
+                                size="small"
                                 stripe
                                 :header-row-class-name="headerRowClassNameSub"
                                 :header-cell-class-name="headerCellClassNameSub"

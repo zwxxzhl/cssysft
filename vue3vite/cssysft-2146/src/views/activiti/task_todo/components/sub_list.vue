@@ -10,7 +10,7 @@
     </el-form>
 
     <div>
-      <el-button v-if="hasPerm('definition.add')" type="danger" size="mini" @click="onOpenBpmn">创建转派流程</el-button>
+      <el-button v-if="hasPerm('definition.add')" type="danger" size="small" @click="onOpenBpmn">创建转派流程</el-button>
     </div>
 
     <el-table

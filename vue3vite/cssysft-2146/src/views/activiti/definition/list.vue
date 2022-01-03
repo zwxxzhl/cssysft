@@ -10,7 +10,7 @@
     </el-form>
 
     <div>
-      <el-button v-if="hasPerm('definition.add')" type="danger" size="mini" @click="onOpenBpmn">添加</el-button>
+      <el-button v-if="hasPerm('definition.add')" type="danger" size="small" @click="onOpenBpmn">添加</el-button>
     </div>
 
     <el-table

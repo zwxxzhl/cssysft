@@ -18,30 +18,30 @@
           <el-button
             v-if="(scope.row.level == 1 || scope.row.level == 2) && hasPerm('permission.add')"
             type="text"
-            size="mini"
+            size="small"
             @click="() => {dialogFormVisible = true, menu.pid = scope.row.id}">添加菜单
           </el-button>
           <el-button
             v-if="scope.row.level == 3 &&  hasPerm('permission.add')"
             type="text"
-            size="mini"
+            size="small"
             @click="() => {dialogPermissionVisible = true, permission.pid = scope.row.id}">添加功能
           </el-button>
           <el-button
             v-if="scope.row.level == 4 &&  hasPerm('permission.update')"
             type="text"
-            size="mini"
+            size="small"
             @click="() => updateFunction(scope.row)">修改功能
           </el-button>
           <el-button
             v-if="scope.row.level != 4 &&  hasPerm('permission.update')"
             type="text"
-            size="mini"
+            size="small"
             @click="() => getById(scope.row)">修改
           </el-button>
           <el-button
             type="text"
-            size="mini"
+            size="small"
             @click="() => remove(scope.row)" v-if="hasPerm('permission.remove')">删除
           </el-button>
         </template>

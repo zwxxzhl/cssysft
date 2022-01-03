@@ -13,8 +13,8 @@
 
     <!-- 工具条 -->
     <div>
-      <el-button type="danger" size="mini" @click="addUser()" v-if="hasPerm('role.add')">添加</el-button>
-      <el-button type="danger" size="mini" @click="removeRows()" v-if="hasPerm('role.remove')">批量删除</el-button>
+      <el-button type="danger" size="small" @click="addUser()" v-if="hasPerm('role.add')">添加</el-button>
+      <el-button type="danger" size="small" @click="removeRows()" v-if="hasPerm('role.remove')">批量删除</el-button>
 
     </div>
 
@@ -44,12 +44,12 @@
       <el-table-column label="操作" width="230" align="center">
         <template #default="scope">
           <router-link :to="'/dispatchweb/acl/role/distribution/'+scope.row.id">
-            <el-button type="info" size="mini" icon="el-icon-info" v-if="hasPerm('role.acl')"/>
+            <el-button type="info" size="small" icon="el-icon-info" v-if="hasPerm('role.acl')"/>
           </router-link>
           <router-link :to="'/dispatchweb/acl/role/update/'+scope.row.id">
-            <el-button type="primary" size="mini" icon="el-icon-edit"  v-if="hasPerm('role.update')"/>
+            <el-button type="primary" size="small" icon="el-icon-edit"  v-if="hasPerm('role.update')"/>
           </router-link>
-          <el-button type="danger" size="mini" icon="el-icon-delete" @click="removeDataById(scope.row.id)" v-if="hasPerm('role.remove')"/>
+          <el-button type="danger" size="small" icon="el-icon-delete" @click="removeDataById(scope.row.id)" v-if="hasPerm('role.remove')"/>
         </template>
       </el-table-column>
     </el-table>
