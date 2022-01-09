@@ -7,22 +7,22 @@ export default {
     elButton: {
         size: 'default',
         search: 'primary',
-        searchIcon: 'el-icon-search',
+        searchIcon: 'i-search',
         add: 'success',
-        addIcon: 'el-icon-plus',
+        addIcon: 'i-plus',
         edit: 'danger',
-        editIcon: 'el-icon-edit',
+        editIcon: 'i-edit',
         delete: 'info',
-        deleteIcon: 'el-icon-delete',
+        deleteIcon: 'i-delete',
         print: 'warning',
-        printIcon: 'el-icon-printer',
+        printIcon: 'i-printer',
         confirm: 'success',
-        confirmIcon: 'el-icon-check',
+        confirmIcon: 'i-check',
         close: 'info',
-        closeIcon: 'el-icon-close',
+        closeIcon: 'i-close',
         upload: 'danger',
         uploadIcon: 'el-icon-top',
         download: 'info',
-        downloadIcon: 'el-icon-bottom'
+        downloadIcon: 'i-bottom'
     }
 }

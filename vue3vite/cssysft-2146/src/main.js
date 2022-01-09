@@ -1,9 +1,9 @@
-import { createApp } from 'vue'
+import { createApp, markRaw } from 'vue'
 import App from '@/App.vue'
 
 import ElementPlus from 'element-plus'
+import * as icons from '@element-plus/icons-vue'
 import 'element-plus/dist/index.css'
-import ElZhCn from 'element-plus/es/locale/lang/zh-cn'
 
 import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn'
@@ -25,16 +25,14 @@ app.config.globalProperties.hasPerm = hasBtnPermission
 app.config.globalProperties.dayjs = dayjs
 app.config.globalProperties.qs = qs
 
-import {Search} from '@element-plus/icons-vue'
+Object.keys(icons).forEach(key => {
+  app.component(transIconName(key), markRaw(icons[key]))
+})
+function transIconName(iconName) {
+  return 'i' + iconName.replace(/[A-Z]/g, (match) => '-' + match.toLowerCase())
+}
 
-/*Object.keys(ElPlusIcon).forEach(key => {
-  app.component(key, ElPlusIcon[key])
-})*/
-// todo
-app.component('search', Search)
-
-app
-    .use(router)
+app.use(router)
     .use(store)
-    .use(ElementPlus, {locale: ElZhCn,})
+    .use(ElementPlus)
     .mount('#app')

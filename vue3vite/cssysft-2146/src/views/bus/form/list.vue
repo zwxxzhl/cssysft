@@ -13,7 +13,8 @@
       @ceshi-click="testMachine()">
     </zwx-form-mu>
 
-    <el-icon><search /></el-icon>
+    <el-icon><i-search/></el-icon>
+    <el-icon><i-zoom-out/></el-icon>
 
     <zwx-list-mu
       ref="refZwxListMu"
@@ -68,8 +69,6 @@ import ZwxListMu from "../../../components/base-com/com-parts/zwx-list-mu.vue";
 import ZwxFormMu from "../../../components/base-com/com-parts/zwx-form-mu.vue";
 import DepForm from "./component/form.vue";
 import ZwxColsMu from "../../../components/base-com/com-parts/zwx-cols-mu.vue";
-//todo
-import {Search} from "@element-plus/icons-vue";
 
 import comCfg from "../../../components/base-com/com-config/com-config";
 import comUtils from "../../../utils/comUtils";
