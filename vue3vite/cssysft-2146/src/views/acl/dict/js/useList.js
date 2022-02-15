@@ -5,7 +5,7 @@ export default function useList(tableColumn, multipleSelection) {
       columnObj: {type: 'selection'}
     },
     {
-      columnObj: {type: 'index', label: '序号'}
+      columnObj: {type: 'index', label: '序号',width: '80'}
     },
     {
       columnObj: {prop: 'name', label: '名称'}

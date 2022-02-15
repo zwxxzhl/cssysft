@@ -26,7 +26,7 @@ export default function useList(tableColumn, multipleSelection) {
             columnObj: {type: 'selection'}
         },
         {
-            columnObj: {type: 'index', label: '序号'}
+            columnObj: {type: 'index', label: '序号', width: '80'}
         },
         {
             columnObj: {prop: 'type', label: '部门类型', formatter: depTypeFormatter}
