@@ -5,6 +5,7 @@
       v-bind="$attrs"
       :data="form.formList">
 
+      <!-- todo 新需求，根据权限展示不同字段列 -->
       <template v-for="(col, index) in tableColumn" :key="index">
         <el-table-column
           :type="col.columnObj.type"
@@ -48,6 +49,7 @@
 
               <template v-else-if="col.domObj && 'input' === col.domObj.dom">
                 <zwx-form-item :config="col.formItemObj">
+                  <!-- todo 业务需求根据不同数据禁用input时，不支持，需修改 :config="col.domObj，能根据数据禁用，配置方式会导致所有行全部禁用 -->
                   <zwx-input
                     :form="scope.row" :config="col.domObj"
                     @change="val => col.domObj.change && $emit(col.domObj.change, val, scope.row)"
